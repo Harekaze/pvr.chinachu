@@ -25,8 +25,20 @@
 #include <string>
 
 namespace chinachu {
-	extern std::map<std::string, int> genre;
-	void initGenreType();
-} // namespace Chinachu
+	static std::map<std::string, int> genre;
+
+	inline void initGenreType() {
+		genre["anime"] =       0x01;
+		genre["information"] = 0x02;
+		genre["news"] =        0x03;
+		genre["sports"] =      0x04;
+		genre["variety"] =     0x05;
+		genre["drama"] =       0x06;
+		genre["music"] =       0x07;
+		genre["cinema"] =      0x08;
+		genre["etc"] =         0x09;
+	}
+
+} // namespace chinachu
 
 #endif /* end of include guard */
