@@ -19,6 +19,9 @@
  * along with pvr.chinachu.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#ifndef CHINACHU_API_H
+#define CHINACHU_API_H
+
 #include <iostream>
 #include "xbmc/xbmc_addon_dll.h"
 #include "xbmc/libXBMC_pvr.h"
@@ -41,3 +44,5 @@ namespace chinachu {
 
 	} // namespace api
 } // namespace chinachu
+
+#endif /* end of include guard */
