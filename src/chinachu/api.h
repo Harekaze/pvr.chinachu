@@ -24,11 +24,6 @@
 
 #include <iostream>
 #include "xbmc/xbmc_addon_dll.h"
-#include "xbmc/libXBMC_pvr.h"
-#include "xbmc/libXBMC_addon.h"
-
-extern ADDON::CHelper_libXBMC_addon *XBMC;
-extern CHelper_libXBMC_pvr *PVR;
 
 namespace chinachu {
 	namespace api {

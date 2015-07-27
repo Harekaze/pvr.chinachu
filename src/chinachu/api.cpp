@@ -19,8 +19,7 @@
  * along with pvr.chinachu.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#include <iostream>
-#include "xbmc/xbmc_addon_dll.h"
+#include "api.h"
 #include "xbmc/libXBMC_pvr.h"
 #include "xbmc/libXBMC_addon.h"
 
