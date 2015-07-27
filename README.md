@@ -1,3 +1,3 @@
-# Chinachu client for Kodi/XBMC
+# Chinachu client for Kodi/XBMC (WIP)
 
 
