@@ -32,13 +32,7 @@
 typedef intptr_t      ssize_t;
 #define _SSIZE_T_DEFINED
 #endif // !_SSIZE_T_DEFINED
-
-#if defined(BUILD_KODI_ADDON)
-	#include "platform/windows/dlfcn-win32.h"
-#else
-	#include "dlfcn-win32.h"
-#endif
-
+#include "dlfcn-win32.h"
 #define ADDON_DLL               "\\library.xbmc.addon\\libXBMC_addon" ADDON_HELPER_EXT
 #define ADDON_HELPER_EXT        ".dll"
 #else
