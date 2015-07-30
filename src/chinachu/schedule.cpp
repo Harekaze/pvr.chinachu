@@ -76,19 +76,16 @@ namespace chinachu {
 			}
 
 			ch.channel.iUniqueId = std::stoi(json::get<std::string>(o["sid"])) * 10 + chType;
-			ch.channel.bIsRadio = false;
 
 			while (channel.find_first_of("0123456789") != 0) {
 				channel.erase(channel.begin());
 			}
 			ch.channel.iChannelNumber = std::stoi(channel);
 			ch.channel.iSubChannelNumber = std::stoi(json::get<std::string>(o["sid"]));
-			json::jstrncpy(ch.channel.strChannelName, o["name"], PVR_ADDON_NAME_STRING_LENGTH);
-			// strncpy(ch.channel.strInputFormat, "InputFormat", PVR_ADDON_INPUT_FORMAT_STRING_LENGTH); /* not implemented */
-			snprintf(ch.channel.strStreamURL, PVR_ADDON_URL_STRING_LENGTH, (const char*)liveStreamingUrl.c_str(), json::get<std::string>(o["id"]).c_str());
-			// ch.channel.iEncryptionSystem = 0; /* not implemented */
-			// strncpy(ch.channel.strIconPath, "IconPath", PVR_ADDON_URL_STRING_LENGTH); /* not implemented */
-			// ch.channel.bIsHidden = false; /* not implemented */
+			ch.channel.strChannelName = json::get<std::string>(o["name"]);
+			char strStreamURL[2048];
+			snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH, (const char*)liveStreamingUrl.c_str(), json::get<std::string>(o["id"]).c_str(), json::get<std::string>(o["id"]).c_str());
+			ch.channel.strStreamURL = strStreamURL;
 			
 			picojson::array pa = o["programs"].get<picojson::array>();
 			for (unsigned int j = 0, p_size = pa.size(); j < p_size; j++) {

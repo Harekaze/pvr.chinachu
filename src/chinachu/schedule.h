@@ -41,8 +41,15 @@ namespace chinachu {
 		std::string strGenreDescription;
 		int iEpisodeNumber;
 	};
+	struct CHANNEL_INFO {
+		unsigned int iUniqueId;
+		unsigned int iChannelNumber;
+		unsigned int iSubChannelNumber;
+		std::string strChannelName;
+		std::string strStreamURL;
+	};
 	struct CHANNEL_EPG {
-		PVR_CHANNEL channel;
+		CHANNEL_INFO channel;
 		std::vector<EPG_PROGRAM> epgs;
 	};
 	class Schedule {
