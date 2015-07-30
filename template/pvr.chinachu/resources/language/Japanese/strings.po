@@ -1,0 +1,78 @@
+# XBMC Media Center language file
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC-Addons\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2015-02-23 08:11+0000\n"
+"PO-Revision-Date: 2015-02-23 17:15+0900\n"
+"Last-Translator: Yuki MIZUNO <mizuyuu0904@gmail.com>\n"
+"Language-Team: LANGUAGE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+msgctxt "#30200"
+msgid "General"
+msgstr "基本"
+
+msgctxt "#30201"
+msgid "Chinachu WUI URL"
+msgstr "Chinachu WUIのURL"
+
+msgctxt "#30300"
+msgid "Streaming"
+msgstr "ストリーミング"
+
+msgctxt "#30301"
+msgid "Encode video"
+msgstr "映像エンコード"
+
+msgctxt "#30302"
+msgid "Encode audio"
+msgstr "音声エンコード"
+
+msgctxt "#30310"
+msgid "Video encode options"
+msgstr "映像エンコードオプション"
+
+msgctxt "#30320"
+msgid "Audio encode options"
+msgstr "音声エンコードオプション"
+
+msgctxt "#30331"
+msgid "Codec"
+msgstr "コーデック"
+
+msgctxt "#30332"
+msgid "Bitrate(kbps)"
+msgstr "ビットレート(kbps)"
+
+msgctxt "#30333"
+msgid "Size"
+msgstr "サイズ"
+
+msgctxt "#30400"
+msgid "Thumbnail"
+msgstr "サムネイル"
+
+msgctxt "#30401"
+msgid "Show thumbnail"
+msgstr "サムネイルを表示する"
+
+msgctxt "#30402"
+msgid "Clear thumbnail cache"
+msgstr "キャッシュを削除"
+
+msgctxt "#30500"
+msgid "Movie Information"
+msgstr "動画情報"
+
+msgctxt "#30501"
+msgid "Force set episode number"
+msgstr "エピソード番号を強制的に指定"
+
+msgctxt "#30502"
+msgid "Show channel name in"
+msgstr "チャンネル名を表示する場所："

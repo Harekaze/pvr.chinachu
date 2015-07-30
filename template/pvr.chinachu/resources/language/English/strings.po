@@ -1,0 +1,92 @@
+# XBMC Media Center language file
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC-Addons\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2015-02-23 08:11+0000\n"
+"PO-Revision-Date: 2015-02-23 17:15+0900\n"
+"Last-Translator: Yuki MIZUNO <mizuyuu0904@gmail.com>\n"
+"Language-Team: LANGUAGE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#Plugin settings strings
+
+msgctxt "#30200"
+msgid "General"
+msgstr ""
+
+msgctxt "#30201"
+msgid "Chinachu WUI URL"
+msgstr ""
+
+#empty strings from id 30202 to 30299
+
+msgctxt "#30300"
+msgid "Streaming"
+msgstr ""
+
+msgctxt "#30301"
+msgid "Encode video"
+msgstr ""
+
+msgctxt "#30302"
+msgid "Encode audio"
+msgstr ""
+
+#empty strings from id 30303 to 30309
+
+msgctxt "#30310"
+msgid "Video encode options"
+msgstr ""
+
+#empty strings from id 30311 to 30319
+
+msgctxt "#30320"
+msgid "Audio encode options"
+msgstr ""
+
+#empty strings from id 30321 to 30330
+
+msgctxt "#30331"
+msgid "Codec"
+msgstr ""
+
+msgctxt "#30332"
+msgid "Bitrate(kbps)"
+msgstr ""
+
+msgctxt "#30333"
+msgid "Size"
+msgstr ""
+
+#empty strings from id 30334 to 30399
+
+msgctxt "#30400"
+msgid "Thumbnail"
+msgstr ""
+
+msgctxt "#30401"
+msgid "Show thumbnail"
+msgstr ""
+
+msgctxt "#30402"
+msgid "Clear thumbnail cache"
+msgstr ""
+
+#empty strings from id 30403 to 30499
+
+msgctxt "#30500"
+msgid "Movie Information"
+msgstr ""
+
+msgctxt "#30501"
+msgid "Force set episode number"
+msgstr ""
+
+msgctxt "#30502"
+msgid "Show channel name in"
+msgstr ""

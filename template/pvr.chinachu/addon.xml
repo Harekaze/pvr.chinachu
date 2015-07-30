@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="pvr.chinachu"
+		name="Chinachu PVR client"
+		version="0.0.1"
+		provider-name="mzyy94">
+	<requires>
+		<c-pluff version="0.1"/>
+		<import addon="xbmc.pvr" version="1.9.6"/>
+	</requires>
+	<extension point="xbmc.pvrclient"
+		library_linux="PVRChinachu.pvr"
+		library_osx="PVRChinachu.pvr"
+		/>
+	<extension point="xbmc.addon.metadata">
+		<platform>linux osx</platform>
+		<license>GPL v3.0</license>
+		<summary>Chinachu PVR client</summary>
+		<source>https://github.com/mzyy94/pvr.chinachu/</source>
+		<website>https://github.com/mzyy94/pvr.chinachu/wiki</website>
+		<forum>https://github.com/mzyy94/pvr.chinachu/issues</forum>
+		<language>en ja</language>
+		<disclaimer></disclaimer>
+	</extension>
+</addon>
