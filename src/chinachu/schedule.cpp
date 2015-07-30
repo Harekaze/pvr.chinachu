@@ -46,6 +46,14 @@ namespace chinachu {
 		id += (sid % 10);
 		return id;
 	}
+
+
+	bool Schedule::refreshIfNeeded() {
+		if (schedule.empty()) return refresh();
+		return true;
+	}
+
+
 	bool Schedule::refresh() {
 		picojson::value v;
 		std::string response;
@@ -84,7 +92,7 @@ namespace chinachu {
 			ch.channel.iSubChannelNumber = std::stoi(json::get<std::string>(o["sid"]));
 			ch.channel.strChannelName = json::get<std::string>(o["name"]);
 			char strStreamURL[2048];
-			snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH, (const char*)liveStreamingUrl.c_str(), json::get<std::string>(o["id"]).c_str(), json::get<std::string>(o["id"]).c_str());
+			snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + liveStreamingPath).c_str(), json::get<std::string>(o["id"]).c_str());
 			ch.channel.strStreamURL = strStreamURL;
 			
 			picojson::array pa = o["programs"].get<picojson::array>();

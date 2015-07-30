@@ -55,7 +55,7 @@ namespace chinachu {
 	class Schedule {
 		private:
 		public:
-			std::string liveStreamingUrl;
+			std::string liveStreamingPath;
 			std::vector<CHANNEL_EPG> schedule;
 			Schedule()
 			{
@@ -64,6 +64,7 @@ namespace chinachu {
 			}
 			std::vector<EPG_PROGRAM> scheduleForChannel(PVR_CHANNEL ch);
 			bool refresh();
+			bool refreshIfNeeded();
 	};
 } // namespace chinachu
 
