@@ -76,7 +76,7 @@ const char* GetBackendName(void) {
 }
 
 const char* GetBackendVersion(void) {
-	return "0.0.1 WIP";
+	return "0.0.2 WIP";
 }
 
 const char* GetBackendHostname(void) {
