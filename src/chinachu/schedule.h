@@ -59,7 +59,6 @@ namespace chinachu {
 			std::vector<CHANNEL_EPG> schedule;
 			Schedule()
 			{
-				chinachu::initGenreType();
 				// refresh(); /* initial refresh */
 			}
 			std::vector<EPG_PROGRAM> scheduleForChannel(PVR_CHANNEL ch);

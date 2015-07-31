@@ -25,18 +25,28 @@
 #include <string>
 
 namespace chinachu {
-	static std::map<std::string, int> genre;
+	static std::map<std::string, int> iGenreType;
+	static std::map<std::string, int> iGenreSubType;
 
 	inline void initGenreType() {
-		genre["anime"] =       0x01;
-		genre["information"] = 0x02;
-		genre["news"] =        0x03;
-		genre["sports"] =      0x04;
-		genre["variety"] =     0x05;
-		genre["drama"] =       0x06;
-		genre["music"] =       0x07;
-		genre["cinema"] =      0x08;
-		genre["etc"] =         0x09;
+		iGenreType["anime"] =          0x50;
+		iGenreSubType["anime"] =       0x05;
+		iGenreType["information"] =    0x20;
+		iGenreSubType["information"] = 0x02;
+		iGenreType["news"] =           0x20;
+		iGenreSubType["news"] =        0x01;
+		iGenreType["sports"] =         0x40;
+		iGenreSubType["sports"] =      0x00;
+		iGenreType["variety"] =        0x30;
+		iGenreSubType["variety"] =     0x02;
+		iGenreType["drama"] =          0x10;
+		iGenreSubType["drama"] =       0x00;
+		iGenreType["music"] =          0x60;
+		iGenreSubType["music"] =       0x00;
+		iGenreType["cinema"] =         0x70;
+		iGenreSubType["cinema"] =      0x06;
+		iGenreType["etc"] =            0x00;
+		iGenreSubType["etc"] =         0x00;
 	}
 
 } // namespace chinachu
