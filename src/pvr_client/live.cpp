@@ -38,7 +38,7 @@ PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time
 	if (g_schedule.refreshIfNeeded()) {
 
 		for (unsigned int i = 0, lim = g_schedule.schedule.size(); i < lim; i++) {
-			if (g_schedule.schedule[i].channel.iChannelNumber != channel.iChannelNumber) {
+			if (g_schedule.schedule[i].channel.iUniqueId != channel.iUniqueId) {
 				continue;
 			}
 
