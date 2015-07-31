@@ -35,6 +35,7 @@ namespace chinachu {
 		std::string strPlot;
 		std::string strChannelName;
 		std::string strStreamURL;
+		std::string strThumbnailPath;
 		time_t recordingTime;
 		int iDuration;
 		int iGenreType;
@@ -44,6 +45,7 @@ namespace chinachu {
 		private:
 		public:
 			std::string recordedStreamingPath;
+			std::string recordedThumbnailPath;
 			std::vector<RECORDING> programs;
 			Recorded()
 			{

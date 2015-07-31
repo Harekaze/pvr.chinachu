@@ -19,10 +19,9 @@
 		<setting id="audio_bitrate" type="slider" label="30332" range="32,32,192" default="192" option="int" enable="eq(-7,true)" />
 	</category>
 
-	<!-- Not yet implemented -->
 	<!-- Thumbnail -->
 	<category label="30400">
-		<setting id="show_thumbnail" type="bool" label="30401" default="false" enable="false" />
+		<setting id="show_thumbnail" type="bool" label="30401" default="true" />
 	</category>
 
 	<!-- Not implemented -->

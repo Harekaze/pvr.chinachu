@@ -43,6 +43,7 @@ namespace chinachu {
 			return false;
 		}
 
+		bool showThumbnail = !recordedThumbnailPath.empty();
 		programs.clear();
 
 		picojson::array pa = v.get<picojson::array>();
@@ -59,9 +60,15 @@ namespace chinachu {
 			rec.iDuration = json::get<double, int>(p["seconds"]);
 			rec.iGenreType = chinachu::iGenreType[json::get<std::string>(p["category"])];
 			rec.iGenreSubType = chinachu::iGenreSubType[json::get<std::string>(p["category"])];
-			char strStreamURL[2048];
-			snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedStreamingPath).c_str(), json::get<std::string>(p["id"]).c_str());
-			rec.strStreamURL = strStreamURL;
+			char urlBuffer[PVR_ADDON_URL_STRING_LENGTH];
+			snprintf(urlBuffer, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedStreamingPath).c_str(), json::get<std::string>(p["id"]).c_str());
+			rec.strStreamURL = urlBuffer;
+			if (showThumbnail) {
+				snprintf(urlBuffer, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedThumbnailPath).c_str(), json::get<std::string>(p["id"]).c_str());
+				rec.strThumbnailPath = urlBuffer;
+			} else {
+				rec.strThumbnailPath = "";
+			}
 			
 			programs.push_back(rec);
 		}
