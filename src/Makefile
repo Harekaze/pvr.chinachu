@@ -6,6 +6,7 @@ ADDONNAME = PVRChinachu.pvr
 LIBNAME = libpvrchinachu.dylib
 OBJS = ./chinachu/api.o \
 ./chinachu/schedule.o \
+./chinachu/recorded.o \
 ./pvr_client/channel.o \
 ./pvr_client/demux.o \
 ./pvr_client/information.o \

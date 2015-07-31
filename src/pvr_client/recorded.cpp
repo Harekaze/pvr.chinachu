@@ -23,19 +23,62 @@
 #include "xbmc/libKODI_guilib.h"
 #include "xbmc/libXBMC_addon.h"
 #include "xbmc/libXBMC_pvr.h"
-
-extern ADDON::CHelper_libXBMC_addon *XBMC;
-extern CHelper_libXBMC_pvr *PVR;
+#include "chinachu/chinachu.h"
 
 using namespace ADDON;
 
+extern CHelper_libXBMC_addon *XBMC;
+extern CHelper_libXBMC_pvr *PVR;
+extern chinachu::Recorded g_recorded;
+
 extern "C" {
 
-/* not implemented */
+int GetRecordingsAmount(bool deleted) {
+	g_recorded.refreshIfNeeded();
+	return g_recorded.programs.size();
+}
+PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
+	if (g_recorded.refreshIfNeeded()) {
 
+		for (unsigned int i = 0, lim = g_recorded.programs.size(); i < lim; i++) {
+			chinachu::RECORDING rec = g_recorded.programs[i];
+
+			PVR_RECORDING pvr_rec;
+			memset(&pvr_rec, 0, sizeof(PVR_RECORDING));
+
+			strncpy(pvr_rec.strRecordingId, rec.strRecordingId.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
+			strncpy(pvr_rec.strTitle, rec.strTitle.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
+			strncpy(pvr_rec.strPlotOutline, rec.strPlotOutline.c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
+			strncpy(pvr_rec.strPlot, rec.strPlot.c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
+			strncpy(pvr_rec.strChannelName, rec.strChannelName.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
+			pvr_rec.recordingTime = rec.recordingTime;
+			pvr_rec.iDuration = rec.iDuration;
+			pvr_rec.iGenreType = rec.iGenreType;
+			pvr_rec.iGenreSubType = rec.iGenreSubType;
+			strncpy(pvr_rec.strStreamURL, rec.strStreamURL.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
+			// strncpy(pvr_rec.strDirectory, "Directory", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
+			// strncpy(pvr_rec.strIconPath, "IconPath", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
+			// strncpy(pvr_rec.strThumbnailPath, "ThumbnailPath", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
+			// strncpy(pvr_rec.strFanartPath, "FanartPath", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
+			// pvr_rec.iPriority = 100; /* not implemented */
+			// pvr_rec.iLifetime = 0; /* not implemented */
+			// pvr_rec.iGenreSubType = 0; /* not implemented */
+			// pvr_rec.iPlayCount = 0; /* not implemented */
+			// pvr_rec.iLastPlayedPosition = 0; /* not implemented */
+			// pvr_rec.iEpgEventId = 1; /* not implemented */
+
+			PVR->TransferRecordingEntry(handle, &pvr_rec);
+
+		}
+
+		return PVR_ERROR_NO_ERROR;
+	}
+
+	return PVR_ERROR_SERVER_ERROR;
+}
+
+/* not implemented */
 PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) { return PVR_ERROR_NOT_IMPLEMENTED; }
-int GetRecordingsAmount(bool deleted) { return -1; }
-PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteRecording(const PVR_RECORDING &recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteAllRecordingsFromTrash(void) { return PVR_ERROR_NOT_IMPLEMENTED; }

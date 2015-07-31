@@ -29,6 +29,7 @@
 using namespace ADDON;
 
 chinachu::Schedule g_schedule;
+chinachu::Recorded g_recorded;
 CHelper_libXBMC_addon *XBMC = NULL;
 CHelper_libXBMC_pvr *PVR = NULL;
 
@@ -67,9 +68,8 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 		}
 		chinachu::api::baseURL += "api/";
 	}
-	chinachu::initGenreType();
-	std::string liveStreamingPath = "channel/%s/watch.m2ts?ext=m2ts&c%%3Av=copy&c%%3Aa=copy";
-	g_schedule.liveStreamingPath = liveStreamingPath;
+	g_schedule.liveStreamingPath = "channel/%s/watch.m2ts?ext=m2ts&c%%3Av=copy&c%%3Aa=copy";
+	g_recorded.recordedStreamingPath = "recorded/%s/watch.m2ts?ext=m2ts&c%%3Av=copy&c%%3Aa=copy";
 
 	currentStatus = ADDON_STATUS_OK;
 

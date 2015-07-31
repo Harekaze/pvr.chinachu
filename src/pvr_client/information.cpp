@@ -51,7 +51,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities) {
 	pCapabilities->bSupportsEPG                = true;
 	pCapabilities->bSupportsTV                 = true;
 	pCapabilities->bSupportsRadio              = false;
-	pCapabilities->bSupportsRecordings         = false;
+	pCapabilities->bSupportsRecordings         = true;
 	pCapabilities->bSupportsRecordingsUndelete = false;
 	pCapabilities->bSupportsTimers             = false;
 	pCapabilities->bSupportsChannelGroups      = false;
