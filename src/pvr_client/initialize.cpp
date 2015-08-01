@@ -20,6 +20,7 @@
  *
  */
 #include <iostream>
+#include <cstdio>
 #include "xbmc/xbmc_pvr_dll.h"
 #include "xbmc/libKODI_guilib.h"
 #include "xbmc/libXBMC_addon.h"

@@ -83,13 +83,13 @@ namespace chinachu {
 				chType = 0x03;
 			}
 
-			ch.channel.iUniqueId = std::stoi(json::get<std::string>(o["sid"])) * 10 + chType;
+			ch.channel.iUniqueId = std::atoi((json::get<std::string>(o["sid"])).c_str()) * 10 + chType;
 
 			while (channel.find_first_of("0123456789") != 0) {
 				channel.erase(channel.begin());
 			}
-			ch.channel.iChannelNumber = std::stoi(channel);
-			ch.channel.iSubChannelNumber = std::stoi(json::get<std::string>(o["sid"]));
+			ch.channel.iChannelNumber = std::atoi(channel.c_str());
+			ch.channel.iSubChannelNumber = std::atoi((json::get<std::string>(o["sid"])).c_str());
 			ch.channel.strChannelName = json::get<std::string>(o["name"]);
 			char strStreamURL[2048];
 			snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + liveStreamingPath).c_str(), json::get<std::string>(o["id"]).c_str());
