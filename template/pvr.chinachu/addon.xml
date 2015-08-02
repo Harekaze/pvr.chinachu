@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="pvr.chinachu"
 		name="Chinachu PVR client"
-		version="0.0.3"
+		version="VERSION"
 		provider-name="mzyy94">
 	<requires>
 		<c-pluff version="0.1"/>

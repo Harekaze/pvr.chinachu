@@ -72,11 +72,14 @@ const char* GetConnectionString(void) {
 }
 
 const char* GetBackendName(void) {
-	return "Chinachu PVR Add-on";
+	return "Chinachu";
 }
 
+#ifndef VERSION
+#define VERSION "unknown"
+#endif
 const char* GetBackendVersion(void) {
-	return "0.0.3";
+	return VERSION;
 }
 
 const char* GetBackendHostname(void) {
