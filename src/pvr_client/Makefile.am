@@ -27,7 +27,7 @@ EXTRA_DIST = \
 	include
 
 $(ADDONNAME): libpvrchinachu.la
-	cp -f .libs/libpvrchinachu.dylib $(ADDONNAME)
+	cp -f .libs/libpvrchinachu.$(LIBEXT) $(ADDONNAME)
 
 $(LIB): $(ADDONNAME)
 	cp -f $(ADDONNAME) $(LIB)

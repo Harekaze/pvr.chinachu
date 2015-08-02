@@ -10,6 +10,14 @@ LT_INIT
 ADDONNAME=PVRChinachu.pvr
 AC_SUBST(ADDONNAME)
 
+LIBEXT=so
+case $host in
+	*-apple-*)
+		LIBEXT=dylib
+		;;
+esac
+AC_SUBST(LIBEXT)
+
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
