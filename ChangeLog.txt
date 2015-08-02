@@ -1,3 +1,9 @@
+v0.0.3
+- Support Kodi on Android
+- Show recorded TV show's thumbnail
+- Deletion of recorded TV shows is available
+- Enable colored TV guide with Kodisystem's genre type
+
 v0.0.2
 - Support recorded TV shows
 - Improve category type definition

@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([pvrchinachu], [0.0.2], [Yuki Mizuno])
+AC_INIT([pvrchinachu], [0.0.3], [Yuki Mizuno])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([foreign])
 LT_INIT
