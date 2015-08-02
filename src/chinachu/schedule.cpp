@@ -21,6 +21,9 @@
  */
 #include "schedule.h"
 #include "api.h"
+#include "xbmc/libXBMC_addon.h"
+
+extern ADDON::CHelper_libXBMC_addon *XBMC;
 
 namespace chinachu {
 	unsigned int uniqueId(time_t time, unsigned int type, unsigned int ch, unsigned int sid) {
@@ -61,7 +64,7 @@ namespace chinachu {
 		chinachu::api::getSchedule(response);
 		std::string err = picojson::parse(v, response);
 		if (!err.empty()) {
-			std::cerr << err << std::endl; // TODO: use XBMC->Log
+			XBMC->Log(ADDON::LOG_ERROR, "failed to parse JSON string: %s", err.c_str());
 			return false;
 		}
 

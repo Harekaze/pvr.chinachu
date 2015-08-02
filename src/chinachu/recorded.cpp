@@ -21,6 +21,9 @@
  */
 #include "api.h"
 #include "recorded.h"
+#include "xbmc/libXBMC_addon.h"
+
+extern ADDON::CHelper_libXBMC_addon *XBMC;
 
 
 namespace chinachu {
@@ -39,7 +42,7 @@ namespace chinachu {
 		chinachu::api::getRecorded(response);
 		std::string err = picojson::parse(v, response);
 		if (!err.empty()) {
-			std::cerr << err << std::endl; // TODO: use XBMC->Log
+			XBMC->Log(ADDON::LOG_ERROR, "failed to parse JSON string: %s", err.c_str());
 			return false;
 		}
 
