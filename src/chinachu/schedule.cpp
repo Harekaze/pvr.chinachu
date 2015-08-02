@@ -102,17 +102,16 @@ namespace chinachu {
 			for (unsigned int j = 0, p_size = pa.size(); j < p_size; j++) {
 				picojson::object &p = pa[j].get<picojson::object>();
 				struct EPG_PROGRAM epg;
-				memset(&epg, 0, sizeof(struct EPG_PROGRAM));
 
 				epg.startTime = json::get<double, time_t>(p["start"]) / 1000;
 				epg.endTime = json::get<double, time_t>(p["end"]) / 1000;
 				epg.iUniqueBroadcastId = uniqueId(epg.startTime, chType, ch.channel.iChannelNumber, ch.channel.iUniqueId);
-				epg.strTitle = json::get<std::string>(p["title"]).data();
+				epg.strTitle = json::get<std::string>(p["title"]);
 				epg.iChannelNumber = ch.channel.iChannelNumber;
-				epg.strPlotOutline = json::get<std::string>(p["subTitle"]).c_str();
-				epg.strPlot = json::get<std::string>(p["detail"]).c_str();
-				epg.strOriginalTitle = json::get<std::string>(p["fullTitle"]).c_str();
-				epg.strGenreDescription = json::get<std::string>(p["category"]).c_str();
+				epg.strPlotOutline = json::get<std::string>(p["subTitle"]);
+				epg.strPlot = json::get<std::string>(p["detail"]);
+				epg.strOriginalTitle = json::get<std::string>(p["fullTitle"]);
+				epg.strGenreDescription = json::get<std::string>(p["category"]);
 				epg.iEpisodeNumber = json::get<double, int>(o["episode"]);
 
 				ch.epgs.push_back(epg);
