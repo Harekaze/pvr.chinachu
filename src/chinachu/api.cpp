@@ -30,7 +30,7 @@ namespace chinachu {
 	namespace api {
 		std::string baseURL = "";
 
-		int request(std::string apiPath, std::string &response) {
+		int requestGET(std::string apiPath, std::string &response) {
 			std::string url = baseURL + apiPath;
 			if (void* handle = XBMC->OpenFile(url.c_str(), 0)) {
 				const unsigned int buffer_size = 4096;
@@ -47,16 +47,50 @@ namespace chinachu {
 			return response.length();
 		}
 
+		int requestDELETE(std::string apiPath) {
+			std::string url = baseURL + apiPath;
+			/*
+			 * WARNING: Bad know-how
+			 *
+			 * With current version of KODI/XBMC addon,
+			 * the 'DELETE' method over http or https is
+			 * not functional. An alternative procedure
+			 * to request 'DELETE' over http or https is
+			 * using 'WebDAV' protocol. So, the protocol
+			 * name will be substituted for 'dav'/'davs'
+			 * as necessary.
+			 */
+			url.replace(0, 4, "dav");
+
+			if (XBMC->DeleteFile(url.c_str())) {
+				return 0;
+			} else {
+				return -1;
+			}
+		}
+
 		// GET /schedule.json
 		int getSchedule(std::string &response) {
 			const std::string apiPath = "schedule.json";
-			return request(apiPath, response);
+			return requestGET(apiPath, response);
 		}
 
 		// GET /recorded.json
 		int getRecorded(std::string &response) {
 			const std::string apiPath = "recorded.json";
-			return request(apiPath, response);
+			return requestGET(apiPath, response);
+		}
+
+		// DELETE /recorded/:id/file.m2ts
+		int deleteRecordedFile(std::string id) {
+			const std::string apiPath = "recorded/" + id + "/file.m2ts";
+			return requestDELETE(apiPath);
+		}
+
+		// DELETE /recorded/:id.json
+		int deleteRecordedInfo(std::string id) {
+			const std::string apiPath = "recorded/" + id + ".json";
+			return requestDELETE(apiPath);
 		}
 
 	} // namespace api

@@ -77,9 +77,16 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 	return PVR_ERROR_SERVER_ERROR;
 }
 
+PVR_ERROR DeleteRecording(const PVR_RECORDING &recording) {
+	if (chinachu::api::deleteRecordedFile(recording.strRecordingId) != -1) {
+		if (chinachu::api::deleteRecordedInfo(recording.strRecordingId) != -1) {
+			return PVR_ERROR_NO_ERROR;
+		}
+	}
+	return PVR_ERROR_SERVER_ERROR;
+}
 /* not implemented */
 PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR DeleteRecording(const PVR_RECORDING &recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteAllRecordingsFromTrash(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR RenameRecording(const PVR_RECORDING &recording) { return PVR_ERROR_NOT_IMPLEMENTED; }

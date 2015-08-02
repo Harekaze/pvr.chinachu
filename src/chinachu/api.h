@@ -37,6 +37,12 @@ namespace chinachu {
 		// GET /recorded.json
 		int getRecorded(std::string &response);
 
+		// DELETE /recorded/:id/file.m2ts
+		int deleteRecordedFile(std::string id);
+
+		// DELETE /recorded/:id
+		int deleteRecordedInfo(std::string id);
+
 	} // namespace api
 } // namespace chinachu
 
