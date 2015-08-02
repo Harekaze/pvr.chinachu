@@ -23,9 +23,4 @@
 	<category label="30400">
 		<setting id="show_thumbnail" type="bool" label="30401" default="true" />
 	</category>
-
-	<!-- Live TV -->
-	<category label="30500">
-		<setting id="genre_type" type="bool" label="30501" default="false" />
-	</category>
 </settings>

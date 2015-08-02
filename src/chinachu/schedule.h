@@ -31,17 +31,14 @@
 namespace chinachu {
 	struct EPG_PROGRAM {
 		unsigned int iUniqueBroadcastId;
-		std::string strTitle;
-		unsigned int iChannelNumber;
+		unsigned int iEpisodeNumber;
 		time_t startTime;
 		time_t endTime;
+		std::string strTitle;
 		std::string strPlotOutline;
 		std::string strPlot;
 		std::string strOriginalTitle;
 		std::string strGenreDescription;
-		int iGenreType;
-		int iGenreSubType;
-		int iEpisodeNumber;
 	};
 	struct CHANNEL_INFO {
 		unsigned int iUniqueId;
@@ -58,7 +55,6 @@ namespace chinachu {
 		private:
 		public:
 			std::string liveStreamingPath;
-			bool useOriginalGenreType;
 			std::vector<CHANNEL_EPG> schedule;
 			Schedule()
 			{

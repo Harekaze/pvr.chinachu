@@ -78,7 +78,3 @@ msgstr ""
 msgctxt "#30500"
 msgid "TV Guide"
 msgstr ""
-
-msgctxt "#30501"
-msgid "Show original genre name instead of system's"
-msgstr ""

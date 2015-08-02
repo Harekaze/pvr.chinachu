@@ -64,7 +64,3 @@ msgstr "サムネイルを表示する"
 msgctxt "#30500"
 msgid "TV Guide"
 msgstr "番組表"
-
-msgctxt "#30501"
-msgid "Show original genre name instead of system's"
-msgstr "システム標準ではなく、オリジナルのジャンル名を表示する"

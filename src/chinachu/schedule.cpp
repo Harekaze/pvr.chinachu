@@ -61,8 +61,6 @@ namespace chinachu {
 		picojson::value v;
 		std::string response;
 
-		chinachu::initGenreType();
-
 		chinachu::api::getSchedule(response);
 		std::string err = picojson::parse(v, response);
 		if (!err.empty()) {
@@ -109,12 +107,9 @@ namespace chinachu {
 				epg.endTime = json::get<double>(p["end"]) / 1000;
 				epg.iUniqueBroadcastId = uniqueId(epg.startTime, chType, ch.channel.iChannelNumber, ch.channel.iUniqueId);
 				epg.strTitle = json::get<std::string>(p["title"]);
-				epg.iChannelNumber = ch.channel.iChannelNumber;
 				epg.strPlotOutline = json::get<std::string>(p["subTitle"]);
 				epg.strPlot = json::get<std::string>(p["detail"]);
 				epg.strOriginalTitle = json::get<std::string>(p["fullTitle"]);
-				epg.iGenreType = useOriginalGenreType ? EPG_GENRE_USE_STRING : chinachu::iGenreType[json::get<std::string>(p["category"])];
-				epg.iGenreSubType = chinachu::iGenreSubType[json::get<std::string>(p["category"])];
 				epg.strGenreDescription = json::get<std::string>(p["category"]);
 				epg.iEpisodeNumber = json::get<double>(o["episode"]);
 

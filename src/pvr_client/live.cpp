@@ -37,6 +37,8 @@ extern "C" {
 PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd) {
 	if (g_schedule.refreshIfNeeded()) {
 
+		chinachu::initGenreType();
+
 		for (unsigned int i = 0, lim = g_schedule.schedule.size(); i < lim; i++) {
 			if (g_schedule.schedule[i].channel.iUniqueId != channel.iUniqueId) {
 				continue;
@@ -52,13 +54,14 @@ PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time
 
 				tag.iUniqueBroadcastId = epg.iUniqueBroadcastId;
 				tag.strTitle = epg.strTitle.c_str();
-				tag.iChannelNumber = epg.iChannelNumber;
+				tag.iChannelNumber =  g_schedule.schedule[i].channel.iChannelNumber;
 				tag.startTime = epg.startTime;
 				tag.endTime = epg.endTime;
 				tag.strPlotOutline = epg.strPlotOutline.c_str();
 				tag.strPlot = epg.strPlot.c_str();
-				tag.iGenreType = epg.iGenreType;
-				tag.iGenreSubType = epg.iGenreSubType;
+				tag.iGenreType = chinachu::iGenreType[epg.strGenreDescription];
+				tag.iGenreSubType = chinachu::iGenreSubType[epg.strGenreDescription];
+				tag.iEpisodeNumber = epg.iEpisodeNumber;
 				tag.strGenreDescription = epg.strGenreDescription.c_str();
 
 				PVR->TransferEpgEntry(handle, &tag);
