@@ -8,14 +8,19 @@ AM_INIT_AUTOMAKE([foreign])
 LT_INIT
 
 ADDONNAME=PVRChinachu.pvr
-AC_SUBST(ADDONNAME)
-
 LIBEXT=so
+
 case $host in
 	*-apple-*)
 		LIBEXT=dylib
 		;;
+	*-androideabi)
+		ADDONNAME=libpvr.chinachu.so
+		AC_SUBST(AM_CPPFLAGS_EXT, "-DANDROID")
+		;;
 esac
+
+AC_SUBST(ADDONNAME)
 AC_SUBST(LIBEXT)
 
 # Checks for programs.
@@ -36,7 +41,6 @@ AC_TYPE_SSIZE_T
 AC_TYPE_UINT8_T
 
 # Checks for library functions.
-AC_FUNC_MALLOC
 AC_FUNC_STRTOD
 AC_CHECK_FUNCS([localeconv memset modf select strdup])
 

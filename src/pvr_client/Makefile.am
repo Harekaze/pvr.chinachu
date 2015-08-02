@@ -20,6 +20,7 @@ libpvrchinachu_la_LDFLAGS = \
 	-avoid-version
 
 AM_CPPFLAGS = \
+	$(AM_CPPFLAGS_EXT) \
 	-I. \
 	-I$(top_srcdir)/include -I$(top_srcdir)/src
 
