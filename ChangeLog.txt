@@ -1,0 +1,6 @@
+v0.0.2
+- Support recorded TV shows
+- Improve category type definition
+
+v0.0.1
+- Support Live TV watching
