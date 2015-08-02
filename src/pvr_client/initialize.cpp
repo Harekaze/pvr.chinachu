@@ -71,8 +71,9 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 	}
 	g_schedule.liveStreamingPath = "channel/%s/watch.m2ts?ext=m2ts&c%%3Av=copy&c%%3Aa=copy";
 	g_recorded.recordedStreamingPath = "recorded/%s/watch.m2ts?ext=m2ts&c%%3Av=copy&c%%3Aa=copy";
-	bool showThumbnail = false;
-	if (XBMC->GetSetting("show_thumbnail", &showThumbnail) && showThumbnail) {
+
+	int boolValue = 0;
+	if (XBMC->GetSetting("show_thumbnail", &boolValue) && boolValue) {
 		g_recorded.recordedThumbnailPath = "recorded/%s/preview.png";
 	} else {
 		g_recorded.recordedThumbnailPath = "";
