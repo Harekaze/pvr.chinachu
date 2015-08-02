@@ -59,8 +59,8 @@ namespace chinachu {
 			rec.strPlotOutline = json::get<std::string>(p["subTitle"]);
 			rec.strPlot = json::get<std::string>(p["detail"]);
 			rec.strChannelName = json::get<std::string>(json::get<picojson::object>(p["channel"])["name"]);
-			rec.recordingTime = json::get<double, time_t>(p["start"]) / 1000;
-			rec.iDuration = json::get<double, int>(p["seconds"]);
+			rec.recordingTime = json::get<double>(p["start"]) / 1000;
+			rec.iDuration = json::get<double>(p["seconds"]);
 			rec.iGenreType = chinachu::iGenreType[json::get<std::string>(p["category"])];
 			rec.iGenreSubType = chinachu::iGenreSubType[json::get<std::string>(p["category"])];
 			char urlBuffer[PVR_ADDON_URL_STRING_LENGTH];
