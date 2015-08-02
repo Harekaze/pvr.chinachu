@@ -79,6 +79,9 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 		g_recorded.recordedThumbnailPath = "";
 	}
 
+	XBMC->GetSetting("genre_type", &boolValue);
+	g_schedule.useOriginalGenreType = boolValue;
+
 	currentStatus = ADDON_STATUS_OK;
 
 	return currentStatus;

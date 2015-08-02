@@ -19,15 +19,13 @@
 		<setting id="audio_bitrate" type="slider" label="30332" range="32,32,192" default="192" option="int" enable="eq(-7,true)" />
 	</category>
 
-	<!-- Thumbnail -->
+	<!-- Recordings -->
 	<category label="30400">
 		<setting id="show_thumbnail" type="bool" label="30401" default="true" />
 	</category>
 
-	<!-- Not implemented -->
-	<!-- Movie Information -->
+	<!-- Live TV -->
 	<category label="30500">
-		<setting id="force_set_episode" type="bool" label="30501" default="false" enable="false" />
-		<setting id="channel_field" type="labelenum" label="30502" lvalues="572|20339|20417" enable="false" />
+		<setting id="genre_type" type="bool" label="30501" default="false" />
 	</category>
 </settings>

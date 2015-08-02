@@ -39,6 +39,8 @@ namespace chinachu {
 		std::string strPlot;
 		std::string strOriginalTitle;
 		std::string strGenreDescription;
+		int iGenreType;
+		int iGenreSubType;
 		int iEpisodeNumber;
 	};
 	struct CHANNEL_INFO {
@@ -56,6 +58,7 @@ namespace chinachu {
 		private:
 		public:
 			std::string liveStreamingPath;
+			bool useOriginalGenreType;
 			std::vector<CHANNEL_EPG> schedule;
 			Schedule()
 			{
