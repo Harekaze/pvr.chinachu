@@ -69,8 +69,8 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 		}
 		chinachu::api::baseURL += "api/";
 	}
-	g_schedule.liveStreamingPath = "channel/%s/watch.m2ts?ext=m2ts&c%%3Av=copy&c%%3Aa=copy";
-	g_recorded.recordedStreamingPath = "recorded/%s/watch.m2ts?ext=m2ts&c%%3Av=copy&c%%3Aa=copy";
+	g_schedule.liveStreamingPath = "channel/%s/watch.m2ts?ext=m2ts";
+	g_recorded.recordedStreamingPath = "recorded/%s/watch.m2ts?ext=m2ts";
 
 	int boolValue = 0;
 	if (XBMC->GetSetting("show_thumbnail", &boolValue) && boolValue) {
@@ -78,6 +78,58 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 	} else {
 		g_recorded.recordedThumbnailPath = "";
 	}
+
+	std::string transcodeParams = "";
+
+	if (XBMC->GetSetting("video_encode", &boolValue) && boolValue) {
+		XBMC->Log(LOG_NOTICE, "Video transcoding enabled.");
+
+		unsigned int option;
+		XBMC->GetSetting("video_codec", &option);
+		if (option == 0) {
+			transcodeParams += "&c:v=libx264";
+		} else if (option == 1) {
+			transcodeParams += "&c:v=mpeg2video";
+		}
+
+		const unsigned int buf_len = 256;
+		char buffer[buf_len];
+
+		XBMC->GetSetting("video_bitrate", &option);
+		snprintf(buffer, buf_len - 1, "&b:v=%dk", option);
+		transcodeParams += buffer;
+		XBMC->GetSetting("video_size", &option);
+		snprintf(buffer, buf_len - 1, "&size=%dx%d", option, option * 9 / 16);
+		transcodeParams += buffer;
+	} else {
+		transcodeParams += "&c:v=copy";
+	}
+
+	if (XBMC->GetSetting("audio_encode", &boolValue) && boolValue) {
+		XBMC->Log(LOG_NOTICE, "Audio transcoding enabled.");
+
+		unsigned int option;
+		XBMC->GetSetting("audio_codec", &option);
+		if (option == 0) {
+			transcodeParams += "&c:a=libfdk_aac";
+		} else if (option == 1) {
+			transcodeParams += "&c:a=libvorbis";
+		}
+
+		const unsigned int buf_len = 256;
+		char buffer[buf_len];
+
+		XBMC->GetSetting("audio_bitrate", &option);
+		snprintf(buffer, buf_len - 1, "&b:a=%dk", option);
+		transcodeParams += buffer;
+	} else {
+		transcodeParams += "&c:a=copy";
+	}
+
+	XBMC->Log(LOG_NOTICE, "Transcoding parameter: %s", transcodeParams.c_str());
+
+	g_schedule.liveStreamingPath += transcodeParams;
+	g_recorded.recordedStreamingPath += transcodeParams;
 
 	currentStatus = ADDON_STATUS_OK;
 

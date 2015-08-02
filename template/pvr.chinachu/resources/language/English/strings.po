@@ -63,7 +63,27 @@ msgctxt "#30333"
 msgid "Size"
 msgstr ""
 
-#empty strings from id 30334 to 30399
+#empty strings from id 30334 to 30340
+
+msgctxt "#30341"
+msgid "H.264"
+msgstr ""
+
+msgctxt "#30342"
+msgid "MPEG-2"
+msgstr ""
+
+#empty strings from id 30343 to 30350
+
+msgctxt "#30351"
+msgid "AAC"
+msgstr ""
+
+msgctxt "#30352"
+msgid "Vorbis"
+msgstr ""
+
+#empty strings from id 30353 to 30399
 
 msgctxt "#30400"
 msgid "Recordings"

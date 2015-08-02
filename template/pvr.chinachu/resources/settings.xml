@@ -5,17 +5,16 @@
 		<setting id="server_url" type="text" label="30201" default="" />
 	</category>
 
-	<!-- Not yet implemented -->
 	<!-- Streaming -->
 	<category label="30300">
-		<setting id="video_encode" type="bool" label="30301" default="false" enable="false" />
-		<setting id="audio_encode" type="bool" label="30302" default="false" enable="false" />
+		<setting id="video_encode" type="bool" label="30301" default="false" />
+		<setting id="audio_encode" type="bool" label="30302" default="false" />
 		<setting label="30310" type="lsep"/>
-		<setting id="video_codec" type="labelenum" label="30331" values="H.264|MPEG-2" default="H.264" enable="eq(-3,true)" />
+		<setting id="video_codec" type="enum" label="30331" lvalues="30341|30342" default="0" enable="eq(-3,true)" />
 		<setting id="video_bitrate" type="slider" label="30332" range="256,256,3072" default="3072" option="int" enable="eq(-4,true)" />
 		<setting id="video_size" type="labelenum" label="30333" values="320x180|640x360|960x540|1024x576|1280x720|1920x1080" default="1280x720" enable="eq(-5,true)" />
 		<setting label="30320" type="lsep"/>
-		<setting id="audio_codec" type="labelenum" label="30331" values="AAC|Vorbis" default="AAC" enable="eq(-6,true)" />
+		<setting id="audio_codec" type="enum" label="30331" lvalues="30351|30352" default="0" enable="eq(-6,true)" />
 		<setting id="audio_bitrate" type="slider" label="30332" range="32,32,192" default="192" option="int" enable="eq(-7,true)" />
 	</category>
 
