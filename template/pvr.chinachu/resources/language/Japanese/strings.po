@@ -26,19 +26,19 @@ msgid "Streaming"
 msgstr "ストリーミング"
 
 msgctxt "#30301"
-msgid "Encode video"
+msgid "Transcode video"
 msgstr "映像エンコード"
 
 msgctxt "#30302"
-msgid "Encode audio"
+msgid "Transcode audio"
 msgstr "音声エンコード"
 
 msgctxt "#30310"
-msgid "Video encode options"
+msgid "Video transcode options"
 msgstr "映像エンコードオプション"
 
 msgctxt "#30320"
-msgid "Audio encode options"
+msgid "Audio transcode options"
 msgstr "音声エンコードオプション"
 
 msgctxt "#30331"

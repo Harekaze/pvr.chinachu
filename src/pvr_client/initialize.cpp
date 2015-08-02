@@ -81,7 +81,7 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 
 	std::string transcodeParams = "";
 
-	if (XBMC->GetSetting("video_encode", &boolValue) && boolValue) {
+	if (XBMC->GetSetting("video_transcode", &boolValue) && boolValue) {
 		XBMC->Log(LOG_NOTICE, "Video transcoding enabled.");
 
 		unsigned int option;
@@ -105,7 +105,7 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 		transcodeParams += "&c:v=copy";
 	}
 
-	if (XBMC->GetSetting("audio_encode", &boolValue) && boolValue) {
+	if (XBMC->GetSetting("audio_transcode", &boolValue) && boolValue) {
 		XBMC->Log(LOG_NOTICE, "Audio transcoding enabled.");
 
 		unsigned int option;
