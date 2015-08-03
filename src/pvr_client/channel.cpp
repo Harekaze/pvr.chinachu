@@ -73,10 +73,53 @@ int GetCurrentClientChannel(void) {
 	return currentChannel.iUniqueId;
 }
 
+int GetChannelGroupsAmount(void) {
+	g_schedule.refreshIfNeeded();
+	return g_schedule.groupNames.size();
+}
+
+PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio) {
+	g_schedule.refreshIfNeeded();
+
+	for (int i = 0; i < g_schedule.groupNames.size(); i++) {
+		chinachu::CHANNEL_INFO &channel = g_schedule.schedule[i].channel;
+
+		PVR_CHANNEL_GROUP chGroup;
+		// memset(&chGroup, 0, sizeof(PVR_CHANNEL_GROUP));
+
+		strncpy(chGroup.strGroupName, g_schedule.groupNames[i].c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
+		chGroup.bIsRadio = false;
+		// chGroup.iPosition = 0; /* not implemented */
+
+		PVR->TransferChannelGroup(handle, &chGroup);
+	}
+
+	return PVR_ERROR_NO_ERROR;
+}
+
+PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group) {
+	g_schedule.refreshIfNeeded();
+
+	for (int i = 0; i < g_schedule.schedule.size(); i++) {
+		chinachu::CHANNEL_INFO &channel = g_schedule.schedule[i].channel;
+
+		if (channel.strChannelType != group.strGroupName)
+			continue;
+
+		PVR_CHANNEL_GROUP_MEMBER chMem;
+		// memset(&chMem, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
+
+		chMem.iChannelUniqueId = channel.iUniqueId;
+		chMem.iChannelNumber = channel.iChannelNumber;
+		strncpy(chMem.strGroupName, group.strGroupName, PVR_ADDON_NAME_STRING_LENGTH - 1);
+
+		PVR->TransferChannelGroupMember(handle, &chMem);
+	}
+
+	return PVR_ERROR_NO_ERROR;
+}
+
 /* not implemented */
-int GetChannelGroupsAmount(void) { return -1; }
-PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR OpenDialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR RenameChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }

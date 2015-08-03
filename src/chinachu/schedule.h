@@ -44,6 +44,7 @@ namespace chinachu {
 		unsigned int iUniqueId;
 		unsigned int iChannelNumber;
 		unsigned int iSubChannelNumber;
+		std::string strChannelType;
 		std::string strChannelName;
 		std::string strStreamURL;
 	};
@@ -56,6 +57,7 @@ namespace chinachu {
 		public:
 			std::string liveStreamingPath;
 			std::vector<CHANNEL_EPG> schedule;
+			std::vector<std::string> groupNames;
 			Schedule()
 			{
 				// refresh(); /* initial refresh */

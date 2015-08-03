@@ -69,23 +69,32 @@ namespace chinachu {
 		}
 
 		schedule.clear();
+		groupNames.clear();
 
 		picojson::array ca = v.get<picojson::array>();
 		for (unsigned int i = 0, c_size = ca.size(); i < c_size; i++) {
 			picojson::object &o = ca[i].get<picojson::object>();
 			struct CHANNEL_EPG ch;
-			std::string channel = json::get<std::string>(o["channel"]);
+
+			ch.channel.strChannelType = json::get<std::string>(o["type"]);
+
+			// Check whether the channel type is already listed up in groupNames vector.
+			if (find(groupNames.begin(), groupNames.end(), ch.channel.strChannelType) == groupNames.end()) {
+				// If not, add it.
+				groupNames.push_back(ch.channel.strChannelType);
+			}
 
 			// Channel type: GR, BS, CS, other
 			unsigned int chType = 0;
-			if (json::get<std::string>(o["type"]) == "GR") {
+			if (ch.channel.strChannelType == "GR") {
 				chType = 0x01;
-			} else if (json::get<std::string>(o["type"]) == "BS") {
+			} else if (ch.channel.strChannelType == "BS") {
 				chType = 0x02;
-			} else if (json::get<std::string>(o["type"]) == "CS") {
+			} else if (ch.channel.strChannelType == "CS") {
 				chType = 0x03;
 			}
 
+			std::string channel = json::get<std::string>(o["channel"]);
 			ch.channel.iUniqueId = std::atoi((json::get<std::string>(o["sid"])).c_str()) * 10 + chType;
 
 			while (channel.find_first_of("0123456789") != 0) {
