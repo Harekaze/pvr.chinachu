@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: XBMC-Addons\n"
 "Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
 "POT-Creation-Date: 2015-02-23 08:11+0000\n"
-"PO-Revision-Date: 2015-08-02 17:00+0900\n"
+"PO-Revision-Date: 2015-08-04 20:35+0900\n"
 "Last-Translator: Yuki MIZUNO <mizuyuu0904@gmail.com>\n"
 "Language-Team: LANGUAGE\n"
 "MIME-Version: 1.0\n"
@@ -93,7 +93,11 @@ msgctxt "#30401"
 msgid "Show thumbnail"
 msgstr ""
 
-#empty strings from id 30402 to 30499
+msgctxt "#30402"
+msgid "Thumbnail position in seconds"
+msgstr ""
+
+#empty strings from id 30403 to 30499
 
 msgctxt "#30500"
 msgid "TV Guide"
