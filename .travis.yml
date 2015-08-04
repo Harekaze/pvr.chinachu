@@ -8,5 +8,5 @@ before_install:
   #NOTE: gnulib is required for ac macro AC_CHECK_HEADER_STDBOOL
 before_script:
 - libtoolize --copy --force --automake
-- autoreconf -i
+- autoreconf -i -I/usr/share/gnulib/m4
 
