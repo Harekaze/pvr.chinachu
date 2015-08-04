@@ -69,7 +69,13 @@ namespace chinachu {
 			resv.iClientChannelUid = std::atoi((json::get<std::string>((json::get<picojson::object>(p["channel"])["sid"]))).c_str()) * 10 + chType;
 			resv.strTitle = json::get<std::string>(p["fullTitle"]);
 			resv.strSummary = json::get<std::string>(p["detail"]);
-			resv.state = json::get<bool>(p["isConflict"]) ? PVR_TIMER_STATE_CONFLICT_NOK : PVR_TIMER_STATE_SCHEDULED;
+			if (json::get<bool>(p["isConflict"])) {
+				resv.state =  PVR_TIMER_STATE_CONFLICT_NOK;
+			} else if (json::get<bool>(p["isSkip"])) {
+				resv.state =  PVR_TIMER_STATE_CANCELLED;
+			} else {
+				resv.state =  PVR_TIMER_STATE_SCHEDULED;
+			}
 			resv.startTime = json::get<double>(p["start"]) / 1000;
 			resv.endTime = json::get<double>(p["end"]) / 1000;
 			resv.iGenreType = chinachu::iGenreType[json::get<std::string>(p["category"])];
