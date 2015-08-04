@@ -23,17 +23,59 @@
 #include "xbmc/libKODI_guilib.h"
 #include "xbmc/libXBMC_addon.h"
 #include "xbmc/libXBMC_pvr.h"
+#include "chinachu/chinachu.h"
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
+chinachu::Reserve g_reserve;
 
 using namespace ADDON;
 
 extern "C" {
 
+int GetTimersAmount(void) {
+	g_reserve.refreshIfNeeded();
+	return g_reserve.reserves.size();
+}
+
+PVR_ERROR GetTimers(ADDON_HANDLE handle) {
+	if (g_reserve.refreshIfNeeded()) {
+
+		for (unsigned int i = 0, lim = g_reserve.reserves.size(); i < lim; i++) {
+			chinachu::RESERVE_ITEM resv = g_reserve.reserves[i];
+
+			PVR_TIMER timer;
+			memset(&timer, 0, sizeof(PVR_TIMER));
+
+			timer.iClientIndex = i;
+			timer.startTime = resv.startTime;
+			timer.endTime = resv.endTime;
+			timer.state = resv.state;
+			strncpy(timer.strTitle, resv.strTitle.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
+			strncpy(timer.strSummary, resv.strSummary.c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
+			timer.iGenreType = resv.iGenreType;
+			timer.iGenreSubType = resv.iGenreSubType;
+			timer.iClientChannelUid = resv.iClientChannelUid;
+			timer.bIsRepeating = false;
+			// strncpy(timer.strDirectory, "Directory", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
+			// timer.iPriority = 100; /* not implemented */
+			// timer.iLifetime = 0; /* not implemented */
+			// timer.firstDay = 0; /* not implemented */
+			// timer.iWeekdays = 0; /* not implemented */
+			// timer.iEpgUid = 0; /* not implemented */
+			// timer.iMarginStart = 0; /* not implemented */
+			// timer.iMarginEnd = 0; /* not implemented */
+
+			PVR->TransferTimerEntry(handle, &timer);
+		}
+
+		return PVR_ERROR_NO_ERROR;
+	}
+
+	return PVR_ERROR_SERVER_ERROR;
+}
+
 /* not implemented */
-int GetTimersAmount(void) { return -1; }
-PVR_ERROR GetTimers(ADDON_HANDLE handle) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR AddTimer(const PVR_TIMER &timer) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR UpdateTimer(const PVR_TIMER &timer) { return PVR_ERROR_NOT_IMPLEMENTED; }

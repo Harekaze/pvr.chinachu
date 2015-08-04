@@ -19,34 +19,37 @@
  * along with pvr.chinachu.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef CHINACHU_API_H
-#define CHINACHU_API_H
-
+#ifndef CHINACHU_RESERVES_H
+#define CHINACHU_RESERVES_H
 #include <iostream>
-#include "xbmc/xbmc_addon_dll.h"
+
+#include "picojson_ex.h"
+#include "chinachu/genre.h"
+#include "xbmc/xbmc_pvr_types.h"
 
 namespace chinachu {
-	namespace api {
-		extern std::string baseURL;
-
-		int request(std::string apiPath, std::string &response);
-
-		// GET /schedule.json
-		int getSchedule(std::string &response);
-
-		// GET /recorded.json
-		int getRecorded(std::string &response);
-
-		// GET /reserves.json
-		int getReserves(std::string &response);
-
-		// DELETE /recorded/:id/file.m2ts
-		int deleteRecordedFile(std::string id);
-
-		// DELETE /recorded/:id
-		int deleteRecordedInfo(std::string id);
-
-	} // namespace api
+	struct RESERVE_ITEM {
+		std::string strTitle;
+		std::string strSummary;
+		int iClientChannelUid;
+		time_t startTime;
+		time_t endTime;
+		PVR_TIMER_STATE state;
+		bool bIsRepeating;
+		int iGenreType;
+		int iGenreSubType;
+	};
+	class Reserve {
+		private:
+		public:
+			std::vector<RESERVE_ITEM> reserves;
+			Reserve()
+			{
+				// refresh(); /* initial refresh */
+			}
+			bool refreshIfNeeded();
+			bool refresh();
+	};
 } // namespace chinachu
 
 #endif /* end of include guard */

@@ -53,7 +53,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities) {
 	pCapabilities->bSupportsRadio              = false;
 	pCapabilities->bSupportsRecordings         = true;
 	pCapabilities->bSupportsRecordingsUndelete = false;
-	pCapabilities->bSupportsTimers             = false;
+	pCapabilities->bSupportsTimers             = true;
 	pCapabilities->bSupportsChannelGroups      = true;
 	pCapabilities->bSupportsChannelScan        = false;
 	pCapabilities->bSupportsChannelSettings    = false;

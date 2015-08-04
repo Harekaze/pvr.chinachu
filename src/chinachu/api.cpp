@@ -81,6 +81,12 @@ namespace chinachu {
 			return requestGET(apiPath, response);
 		}
 
+		// GET /reserves.json
+		int getReserves(std::string &response) {
+			const std::string apiPath = "reserves.json";
+			return requestGET(apiPath, response);
+		}
+
 		// DELETE /recorded/:id/file.m2ts
 		int deleteRecordedFile(std::string id) {
 			const std::string apiPath = "recorded/" + id + "/file.m2ts";

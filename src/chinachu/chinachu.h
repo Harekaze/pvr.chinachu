@@ -24,6 +24,7 @@
 
 #include "schedule.h"
 #include "recorded.h"
+#include "reserves.h"
 #include "api.h"
 
 #endif /* end of include guard */
