@@ -1,15 +1,19 @@
 language: cpp
+os:
+  - linux
+  - osx
 compiler:
-- clang
-- gcc
+  - clang
+  - gcc
 before_install:
-- sudo apt-get update -qq
-- sudo apt-get install -qq zip gnulib
+  - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install libtool ; fi
+  - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update -qq && sudo apt-get install -qq zip gnulib ; fi
   #NOTE: gnulib is required for ac macro AC_CHECK_HEADER_STDBOOL
 before_script:
-- libtoolize --copy --force --automake
-- autoreconf -i -I/usr/share/gnulib/m4
+  - LIBTOOLIZE=$(which glibtoolize || which libtoolize)
+  - $LIBTOOLIZE --copy --force --automake
+  - autoreconf -i -I/usr/share/gnulib/m4
 script:
-- ./configure
-- make
+  - ./configure
+  - make
 
