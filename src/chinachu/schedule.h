@@ -54,7 +54,9 @@ namespace chinachu {
 	};
 	class Schedule {
 		private:
+			time_t lastUpdated;
 		public:
+			time_t nextUpdateTime;
 			std::string liveStreamingPath;
 			std::vector<CHANNEL_EPG> schedule;
 			std::vector<std::string> groupNames;

@@ -27,6 +27,7 @@
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
+extern chinachu::Recorded g_recorded;
 chinachu::Reserve g_reserve;
 
 using namespace ADDON;
@@ -67,6 +68,16 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 			// timer.iMarginEnd = 0; /* not implemented */
 
 			PVR->TransferTimerEntry(handle, &timer);
+		}
+
+		if (g_reserve.reserves.size() > 0) {
+			time_t now;
+			time(&now);
+			chinachu::RESERVE_ITEM resv = g_reserve.reserves[0];
+			if (resv.endTime > now) {
+				g_reserve.nextUpdateTime = resv.endTime + 30;
+				g_recorded.nextUpdateTime = resv.endTime + 30;
+			}
 		}
 
 		return PVR_ERROR_NO_ERROR;

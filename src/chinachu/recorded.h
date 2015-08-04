@@ -43,7 +43,9 @@ namespace chinachu {
 	};
 	class Recorded {
 		private:
+			time_t lastUpdated;
 		public:
+			time_t nextUpdateTime;
 			std::string recordedStreamingPath;
 			std::string recordedThumbnailPath;
 			std::vector<RECORDING> programs;

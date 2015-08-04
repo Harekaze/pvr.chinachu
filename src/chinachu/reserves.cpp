@@ -28,7 +28,11 @@ extern ADDON::CHelper_libXBMC_addon *XBMC;
 
 namespace chinachu {
 	bool Reserve::refreshIfNeeded() {
-		if (reserves.empty()) return refresh();
+		time_t now;
+		time(&now);
+		const time_t refreshInterval = 15*60;
+		if (reserves.empty() || (now - lastUpdated) > refreshInterval || now > nextUpdateTime)
+			return refresh();
 		return true;
 	}
 
@@ -84,6 +88,9 @@ namespace chinachu {
 			
 			reserves.push_back(resv);
 		}
+
+		nextUpdateTime = std::numeric_limits<time_t>::max();
+		time(&lastUpdated);
 		return true;
 	}
 }

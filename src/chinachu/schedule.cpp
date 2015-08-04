@@ -52,7 +52,11 @@ namespace chinachu {
 
 
 	bool Schedule::refreshIfNeeded() {
-		if (schedule.empty()) return refresh();
+		time_t now;
+		time(&now);
+		const time_t refreshInterval = 60*60;
+		if (schedule.empty() || (now - lastUpdated) > refreshInterval || now > nextUpdateTime)
+			return refresh();
 		return true;
 	}
 
@@ -128,6 +132,8 @@ namespace chinachu {
 			schedule.push_back(ch);
 		}
 
+		nextUpdateTime = std::numeric_limits<time_t>::max();
+		time(&lastUpdated);
 		return true;
 	}
 

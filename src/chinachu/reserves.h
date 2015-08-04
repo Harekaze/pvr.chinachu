@@ -42,7 +42,9 @@ namespace chinachu {
 	};
 	class Reserve {
 		private:
+			time_t lastUpdated;
 		public:
+			time_t nextUpdateTime;
 			std::vector<RESERVE_ITEM> reserves;
 			Reserve()
 			{
