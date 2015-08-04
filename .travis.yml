@@ -9,4 +9,7 @@ before_install:
 before_script:
 - libtoolize --copy --force --automake
 - autoreconf -i -I/usr/share/gnulib/m4
+script:
+- ./configure
+- make
 
