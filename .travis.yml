@@ -4,7 +4,8 @@ compiler:
 - gcc
 before_install:
 - sudo apt-get update -qq
-- sudo apt-get install -qq zip
+- sudo apt-get install -qq zip gnulib
+  #NOTE: gnulib is required for ac macro AC_CHECK_HEADER_STDBOOL
 before_script:
 - libtoolize --copy --force --automake
 - autoreconf -i
