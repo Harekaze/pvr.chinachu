@@ -43,8 +43,14 @@ namespace chinachu {
 		// DELETE /recorded/:id/file.m2ts
 		int deleteRecordedFile(std::string id);
 
-		// DELETE /recorded/:id
+		// DELETE /recorded/:id.json
 		int deleteRecordedInfo(std::string id);
+
+		// PUT /reserves/:id/skip.json
+		int putReservesSkip(std::string id);
+
+		// PUT /reserves/:id/unskip.json
+		int putReservesUnskip(std::string id);
 
 	} // namespace api
 } // namespace chinachu

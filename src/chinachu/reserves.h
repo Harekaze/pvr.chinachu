@@ -31,6 +31,7 @@ namespace chinachu {
 	struct RESERVE_ITEM {
 		std::string strTitle;
 		std::string strSummary;
+		std::string strProgramId;
 		int iClientChannelUid;
 		time_t startTime;
 		time_t endTime;

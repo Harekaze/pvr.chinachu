@@ -75,9 +75,43 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 	return PVR_ERROR_SERVER_ERROR;
 }
 
+PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
+	chinachu::RESERVE_ITEM resv = g_reserve.reserves[timer.iClientIndex];
+
+	// Only reserving state changing is supported
+	if (timer.state != resv.state) {
+		// Check whether the only change is state field
+		if ((std::string)timer.strTitle == resv.strTitle &&
+				timer.startTime == resv.startTime &&
+				timer.endTime == resv.endTime &&
+				timer.iClientChannelUid == resv.iClientChannelUid) {
+			// then, change the state
+
+			switch (timer.state) {
+				case PVR_TIMER_STATE_SCHEDULED:
+					chinachu::api::putReservesUnskip(resv.strProgramId);
+					XBMC->Log(LOG_NOTICE, "Unskip reserving: %s", resv.strProgramId.c_str());
+					g_reserve.reserves[timer.iClientIndex].state = timer.state;
+					break;
+				case PVR_TIMER_STATE_CANCELLED:
+					chinachu::api::putReservesSkip(resv.strProgramId);
+					XBMC->Log(LOG_NOTICE, "Skip reserving: %s", resv.strProgramId.c_str());
+					g_reserve.reserves[timer.iClientIndex].state = timer.state;
+					break;
+					break;
+				default:
+					return PVR_ERROR_NOT_IMPLEMENTED;
+			}
+
+			return PVR_ERROR_NO_ERROR;
+		}
+	}
+
+	return PVR_ERROR_NOT_IMPLEMENTED;
+}
+
 /* not implemented */
 PVR_ERROR AddTimer(const PVR_TIMER &timer) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR UpdateTimer(const PVR_TIMER &timer) { return PVR_ERROR_NOT_IMPLEMENTED; }
 
 }

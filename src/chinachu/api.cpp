@@ -69,6 +69,19 @@ namespace chinachu {
 			}
 		}
 
+		int requestPUT(std::string apiPath) {
+			std::string url = baseURL + apiPath;
+			if (void* handle = XBMC->OpenFileForWrite(url.c_str(), 0)) {
+				const unsigned int buffer_size = 17;
+				char buffer[] = "{\"_method\":\"PUT\"}";
+				XBMC->WriteFile(handle, buffer, buffer_size);
+				XBMC->CloseFile(handle);
+				return 0;
+			} else {
+				return -1;
+			}
+		}
+
 		// GET /schedule.json
 		int getSchedule(std::string &response) {
 			const std::string apiPath = "schedule.json";
@@ -97,6 +110,18 @@ namespace chinachu {
 		int deleteRecordedInfo(std::string id) {
 			const std::string apiPath = "recorded/" + id + ".json";
 			return requestDELETE(apiPath);
+		}
+
+		// PUT /reserves/:id/skip.json
+		int putReservesSkip(std::string id) {
+			const std::string apiPath = "reserves/" + id + "/skip.json";
+			return requestPUT(apiPath);
+		}
+
+		// PUT /reserves/:id/unskip.json
+		int putReservesUnskip(std::string id) {
+			const std::string apiPath = "reserves/" + id + "/unskip.json";
+			return requestPUT(apiPath);
 		}
 
 	} // namespace api
