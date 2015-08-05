@@ -30,9 +30,16 @@ namespace chinachu {
 	bool Reserve::refreshIfNeeded() {
 		time_t now;
 		time(&now);
-		const time_t refreshInterval = 15*60;
+		const time_t refreshInterval = 10*60;
 		if (reserves.empty() || (now - lastUpdated) > refreshInterval || now > nextUpdateTime)
 			return refresh();
+
+		for (std::vector<RESERVE_ITEM>::iterator it = reserves.begin(); it != reserves.end(); it++) {
+			if (it->endTime < now) {
+				reserves.erase(it);
+			}
+		}
+
 		return true;
 	}
 
@@ -52,10 +59,17 @@ namespace chinachu {
 
 		reserves.clear();
 
+		time_t now;
+		time(&now);
+
 		picojson::array pa = v.get<picojson::array>();
 		for (unsigned int i = 0, p_size = pa.size(); i < p_size; i++) {
 
 			picojson::object &p = pa[i].get<picojson::object>();
+			// Skip past tv program
+			if ((json::get<double>(p["end"]) / 1000) < now) {
+				continue;
+			}
 			struct RESERVE_ITEM resv;
 
 			std::string strChannelType = json::get<std::string>((json::get<picojson::object>(p["channel"])["type"]));
