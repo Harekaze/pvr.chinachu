@@ -68,7 +68,7 @@ namespace chinachu {
 		chinachu::api::getSchedule(response);
 		std::string err = picojson::parse(v, response);
 		if (!err.empty()) {
-			XBMC->Log(ADDON::LOG_ERROR, "failed to parse JSON string: %s", err.c_str());
+			XBMC->Log(ADDON::LOG_ERROR, "[schedule.json] Failed to parse JSON string: %s", err.c_str());
 			return false;
 		}
 
@@ -134,6 +134,9 @@ namespace chinachu {
 
 		nextUpdateTime = std::numeric_limits<time_t>::max();
 		time(&lastUpdated);
+
+		XBMC->Log(ADDON::LOG_NOTICE, "Updated schedule: channel ammount = %d", schedule.size());
+
 		return true;
 	}
 

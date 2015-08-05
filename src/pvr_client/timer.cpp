@@ -123,6 +123,7 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 					break;
 					break;
 				default:
+					XBMC->Log(LOG_ERROR, "Unknown state change: %s", resv.strProgramId.c_str());
 					return PVR_ERROR_NOT_IMPLEMENTED;
 			}
 
@@ -130,6 +131,7 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 		}
 	}
 
+	XBMC->Log(LOG_ERROR, "Only state change is supported: %s", resv.strProgramId.c_str());
 	return PVR_ERROR_NOT_IMPLEMENTED;
 }
 

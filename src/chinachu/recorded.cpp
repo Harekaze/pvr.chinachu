@@ -46,7 +46,7 @@ namespace chinachu {
 		chinachu::api::getRecorded(response);
 		std::string err = picojson::parse(v, response);
 		if (!err.empty()) {
-			XBMC->Log(ADDON::LOG_ERROR, "failed to parse JSON string: %s", err.c_str());
+			XBMC->Log(ADDON::LOG_ERROR, "[recorded.json] Failed to parse JSON string: %s", err.c_str());
 			return false;
 		}
 
@@ -82,6 +82,9 @@ namespace chinachu {
 
 		nextUpdateTime = std::numeric_limits<time_t>::max();
 		time(&lastUpdated);
+
+		XBMC->Log(ADDON::LOG_NOTICE, "Updated recorded program: ammount = %d", programs.size());
+
 		return true;
 	}
 }
