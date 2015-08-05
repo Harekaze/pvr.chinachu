@@ -15,7 +15,7 @@ case $host in
 		LIBEXT=dylib
 		;;
 	arm*-*-linux-gnu*)
-		AC_SUBST(ARCH_DEFINES, "-D_ARMEL")
+		AC_SUBST(AM_CPPFLAGS_EXT, "-D_ARMEL")
 		;;
 	*-androideabi)
 		ADDONNAME=libpvr.chinachu.so
