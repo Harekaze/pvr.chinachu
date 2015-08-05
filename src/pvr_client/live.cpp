@@ -37,7 +37,9 @@ extern "C" {
 PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd) {
 	if (g_schedule.refreshIfNeeded()) {
 
-		chinachu::initGenreType();
+		std::map<std::string, int> iGenreType;
+		std::map<std::string, int> iGenreSubType;
+		chinachu::initGenreType(iGenreType, iGenreSubType);
 
 		for (unsigned int i = 0, lim = g_schedule.schedule.size(); i < lim; i++) {
 			if (g_schedule.schedule[i].channel.iUniqueId != channel.iUniqueId) {
@@ -59,8 +61,8 @@ PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time
 				tag.endTime = epg.endTime;
 				tag.strPlotOutline = epg.strPlotOutline.c_str();
 				tag.strPlot = epg.strPlot.c_str();
-				tag.iGenreType = chinachu::iGenreType[epg.strGenreDescription];
-				tag.iGenreSubType = chinachu::iGenreSubType[epg.strGenreDescription];
+				tag.iGenreType = iGenreType[epg.strGenreDescription];
+				tag.iGenreSubType = iGenreSubType[epg.strGenreDescription];
 				tag.iEpisodeNumber = epg.iEpisodeNumber;
 				tag.strGenreDescription = epg.strGenreDescription.c_str();
 

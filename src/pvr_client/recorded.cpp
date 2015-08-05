@@ -40,6 +40,10 @@ int GetRecordingsAmount(bool deleted) {
 PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 	if (g_recorded.refreshIfNeeded()) {
 
+		std::map<std::string, int> iGenreType;
+		std::map<std::string, int> iGenreSubType;
+		chinachu::initGenreType(iGenreType, iGenreSubType);
+
 		for (unsigned int i = 0, lim = g_recorded.programs.size(); i < lim; i++) {
 			chinachu::RECORDING rec = g_recorded.programs[i];
 
@@ -53,8 +57,8 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 			strncpy(pvr_rec.strChannelName, rec.strChannelName.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 			pvr_rec.recordingTime = rec.recordingTime;
 			pvr_rec.iDuration = rec.iDuration;
-			pvr_rec.iGenreType = rec.iGenreType;
-			pvr_rec.iGenreSubType = rec.iGenreSubType;
+			pvr_rec.iGenreType = iGenreType[rec.strGenreDescription];
+			pvr_rec.iGenreSubType = iGenreSubType[rec.strGenreDescription];
 			strncpy(pvr_rec.strStreamURL, rec.strStreamURL.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strThumbnailPath, rec.strThumbnailPath.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 			// strncpy(pvr_rec.strDirectory, "Directory", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */

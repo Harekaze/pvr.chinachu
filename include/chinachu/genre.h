@@ -25,10 +25,8 @@
 #include <string>
 
 namespace chinachu {
-	static std::map<std::string, int> iGenreType;
-	static std::map<std::string, int> iGenreSubType;
+	inline void initGenreType(std::map<std::string, int> &iGenreType, std::map<std::string, int> &iGenreSubType) {
 
-	inline void initGenreType() {
 		iGenreType["anime"] =          0x50;
 		iGenreSubType["anime"] =       0x05;
 		iGenreType["information"] =    0x20;

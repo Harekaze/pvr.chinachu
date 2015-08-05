@@ -38,8 +38,7 @@ namespace chinachu {
 		std::string strThumbnailPath;
 		time_t recordingTime;
 		int iDuration;
-		int iGenreType;
-		int iGenreSubType;
+		std::string strGenreDescription;
 	};
 	class Recorded {
 		private:

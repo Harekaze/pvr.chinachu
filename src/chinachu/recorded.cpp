@@ -41,8 +41,6 @@ namespace chinachu {
 		picojson::value v;
 		std::string response;
 
-		chinachu::initGenreType();
-
 		chinachu::api::getRecorded(response);
 		std::string err = picojson::parse(v, response);
 		if (!err.empty()) {
@@ -65,8 +63,7 @@ namespace chinachu {
 			rec.strChannelName = json::get<std::string>(json::get<picojson::object>(p["channel"])["name"]);
 			rec.recordingTime = json::get<double>(p["start"]) / 1000;
 			rec.iDuration = json::get<double>(p["seconds"]);
-			rec.iGenreType = chinachu::iGenreType[json::get<std::string>(p["category"])];
-			rec.iGenreSubType = chinachu::iGenreSubType[json::get<std::string>(p["category"])];
+			rec.strGenreDescription = json::get<std::string>(p["category"]);
 			char urlBuffer[PVR_ADDON_URL_STRING_LENGTH];
 			snprintf(urlBuffer, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedStreamingPath).c_str(), json::get<std::string>(p["id"]).c_str());
 			rec.strStreamURL = urlBuffer;

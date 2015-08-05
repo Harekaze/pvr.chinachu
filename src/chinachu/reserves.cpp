@@ -48,7 +48,9 @@ namespace chinachu {
 		picojson::value v;
 		std::string response;
 
-		chinachu::initGenreType();
+		std::map<std::string, int> iGenreType;
+		std::map<std::string, int> iGenreSubType;
+		chinachu::initGenreType(iGenreType, iGenreSubType);
 
 		chinachu::api::getReserves(response);
 		std::string err = picojson::parse(v, response);
@@ -97,8 +99,8 @@ namespace chinachu {
 			}
 			resv.startTime = json::get<double>(p["start"]) / 1000;
 			resv.endTime = json::get<double>(p["end"]) / 1000;
-			resv.iGenreType = chinachu::iGenreType[json::get<std::string>(p["category"])];
-			resv.iGenreSubType = chinachu::iGenreSubType[json::get<std::string>(p["category"])];
+			resv.iGenreType = iGenreType[json::get<std::string>(p["category"])];
+			resv.iGenreSubType = iGenreSubType[json::get<std::string>(p["category"])];
 			resv.bIsRepeating = !json::get<bool>(p["isManualReserved"]);
 			
 			reserves.push_back(resv);
