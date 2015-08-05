@@ -10,9 +10,7 @@ before_install:
   - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update -qq && sudo apt-get install -qq zip gnulib ; fi
   #NOTE: gnulib is required for ac macro AC_CHECK_HEADER_STDBOOL
 before_script:
-  - LIBTOOLIZE=$(which glibtoolize || which libtoolize)
-  - $LIBTOOLIZE --copy --force --automake
-  - autoreconf -i -I/usr/share/gnulib/m4
+  - AUTORECONF_FLAGS=-I/usr/share/gnulib/m4 ./bootstrap
 script:
   - ./configure
   - make

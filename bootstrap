@@ -1,0 +1,28 @@
+
+echo -n "Checking for libtoolize... "
+LIBTOOLIZE=$(which glibtoolize || which libtoolize)
+if [ ! $? -eq 0 ]; then
+	echo "not found."
+	exit 1
+fi
+echo $LIBTOOLIZE
+
+echo -n "Checking for autoreconf... "
+AUTORECONF=$(which autoreconf)
+if [ ! $? -eq 0 ]; then
+	echo "not found."
+	exit 1
+fi
+echo $AUTORECONF
+
+echo
+
+echo "Running libtoolize..."
+$LIBTOOLIZE --copy --force --automake || ( echo "**FAILED**" ; exit 1 )
+
+echo "Running autoreconf..."
+$AUTORECONF -i $AUTORECONF_FLAGS || ( echo "**FAILED**" ; exit 1 )
+
+echo
+
+echo "Now, please run ./configure"
