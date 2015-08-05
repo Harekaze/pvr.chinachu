@@ -42,6 +42,8 @@ int GetTimersAmount(void) {
 PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 	if (g_reserve.refreshIfNeeded()) {
 
+		time_t now;
+		time(&now);
 		for (unsigned int i = 0, lim = g_reserve.reserves.size(); i < lim; i++) {
 			chinachu::RESERVE_ITEM resv = g_reserve.reserves[i];
 
@@ -51,13 +53,23 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 			timer.iClientIndex = i;
 			timer.startTime = resv.startTime;
 			timer.endTime = resv.endTime;
-			timer.state = resv.state;
+			if (resv.state == PVR_TIMER_STATE_SCHEDULED) {
+				if (now < resv.startTime) {
+					timer.state = PVR_TIMER_STATE_SCHEDULED;
+				} else if (resv.startTime < now && now < resv.endTime) {
+					timer.state = PVR_TIMER_STATE_RECORDING;
+				} else {
+					timer.state = PVR_TIMER_STATE_COMPLETED;
+				}
+			} else {
+				timer.state = resv.state;
+			}
 			strncpy(timer.strTitle, resv.strTitle.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 			strncpy(timer.strSummary, resv.strSummary.c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
 			timer.iGenreType = resv.iGenreType;
 			timer.iGenreSubType = resv.iGenreSubType;
 			timer.iClientChannelUid = resv.iClientChannelUid;
-			timer.bIsRepeating = false;
+			timer.bIsRepeating = resv.bIsRepeating;
 			// strncpy(timer.strDirectory, "Directory", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
 			// timer.iPriority = 100; /* not implemented */
 			// timer.iLifetime = 0; /* not implemented */

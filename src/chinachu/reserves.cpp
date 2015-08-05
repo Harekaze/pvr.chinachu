@@ -85,6 +85,7 @@ namespace chinachu {
 			resv.endTime = json::get<double>(p["end"]) / 1000;
 			resv.iGenreType = chinachu::iGenreType[json::get<std::string>(p["category"])];
 			resv.iGenreSubType = chinachu::iGenreSubType[json::get<std::string>(p["category"])];
+			resv.bIsRepeating = !json::get<bool>(p["isManualReserved"]);
 			
 			reserves.push_back(resv);
 		}
