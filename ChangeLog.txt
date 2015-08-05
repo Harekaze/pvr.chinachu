@@ -1,3 +1,10 @@
+v1.0.0
+- Support Kodi on ARM Linux
+- Show reserving timer
+- Enable audio/video transcoding option
+- Update thumbnail option
+- Bug fix
+
 v0.0.3
 - Support Kodi on Android
 - Show recorded TV show's thumbnail
