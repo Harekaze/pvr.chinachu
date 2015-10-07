@@ -5,9 +5,7 @@ Chinachu PVR addon for Kodi
 # Supported environment
 
 ## Backend
-Chinachu tree [bcf46cddc1](https://github.com/mzyy94/Chinachu/tree/bcf46cddc1645d547994c4429c418f6dbd58881a)
-
-> For better performance: [mzyy94/Chinachu:tuner_priority](https://github.com/mzyy94/Chinachu/tree/tuner_priority)
+Chinachu tree [22d49b7f35](https://github.com/mzyy94/Chinachu/tree/22d49b7f356179121780771dc53f486f667c84b9)
 
 ## Frontend
 - Kodi **15.x** Isengard
