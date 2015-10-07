@@ -82,16 +82,6 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 			PVR->TransferTimerEntry(handle, &timer);
 		}
 
-		if (g_reserve.reserves.size() > 0) {
-			time_t now;
-			time(&now);
-			chinachu::RESERVE_ITEM resv = g_reserve.reserves[0];
-			if (resv.endTime > now) {
-				g_reserve.nextUpdateTime = resv.endTime + 30;
-				g_recorded.nextUpdateTime = resv.endTime + 30;
-			}
-		}
-
 		return PVR_ERROR_NO_ERROR;
 	}
 

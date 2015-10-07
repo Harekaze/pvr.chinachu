@@ -27,10 +27,11 @@ extern ADDON::CHelper_libXBMC_addon *XBMC;
 
 
 namespace chinachu {
+	time_t Recorded::nextUpdateTime = 0;
 	bool Recorded::refreshIfNeeded() {
 		time_t now;
 		time(&now);
-		const time_t refreshInterval = 10*60;
+		const time_t refreshInterval = 10*60; // every 10 minutes
 		if (programs.empty() || (now - lastUpdated) > refreshInterval || now > nextUpdateTime)
 			return refresh();
 		return true;
@@ -77,8 +78,10 @@ namespace chinachu {
 			programs.push_back(rec);
 		}
 
-		nextUpdateTime = std::numeric_limits<time_t>::max();
 		time(&lastUpdated);
+		if (nextUpdateTime <= lastUpdated) {
+			nextUpdateTime = std::numeric_limits<time_t>::max();
+		}
 
 		XBMC->Log(ADDON::LOG_NOTICE, "Updated recorded program: ammount = %d", programs.size());
 

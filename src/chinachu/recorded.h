@@ -44,7 +44,7 @@ namespace chinachu {
 		private:
 			time_t lastUpdated;
 		public:
-			time_t nextUpdateTime;
+			static time_t nextUpdateTime;
 			std::string recordedStreamingPath;
 			std::string recordedThumbnailPath;
 			std::vector<RECORDING> programs;
