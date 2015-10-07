@@ -151,7 +151,34 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 	return PVR_ERROR_FAILED;
 }
 
-/* not implemented */
-PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
+	if (!timer.bIsRepeating) { // manual reserved
+		for (std::vector<chinachu::CHANNEL_EPG>::iterator channel = g_schedule.schedule.begin(); channel != g_schedule.schedule.end(); channel++) {
+			if ((*channel).channel.iUniqueId == timer.iClientChannelUid) {
+				for (std::vector<chinachu::EPG_PROGRAM>::iterator program = (*channel).epgs.begin(); program != (*channel).epgs.end(); program++) {
+					if ((*program).startTime == timer.startTime && (*program).endTime == timer.endTime) {
+						if (chinachu::api::deleteReserves((*program).strUniqueBroadcastId) != -1) {
+							XBMC->Log(LOG_NOTICE, "Delete manual reserved program: %s", (*program).strUniqueBroadcastId.c_str());
+							time_t now;
+							time(&now);
+							g_reserve.nextUpdateTime = now; // refresh reserved programs immediately.
+							return PVR_ERROR_NO_ERROR;
+						} else {
+							XBMC->Log(LOG_ERROR, "Failed to delete reserved program: %s", (*program).strUniqueBroadcastId.c_str());
+							return PVR_ERROR_SERVER_ERROR;
+						}
+					}
+				}
+				break;
+			}
+		}
+
+		XBMC->Log(LOG_ERROR, "Failed to delete reserved program: nothing matched");
+		return PVR_ERROR_FAILED;
+	} else {
+		XBMC->Log(LOG_ERROR, "Only manual reserved program deletion is supported");
+		return PVR_ERROR_NOT_IMPLEMENTED;
+	}
+}
 
 }
