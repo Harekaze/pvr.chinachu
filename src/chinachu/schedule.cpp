@@ -119,6 +119,7 @@ namespace chinachu {
 				epg.startTime = json::get<double>(p["start"]) / 1000;
 				epg.endTime = json::get<double>(p["end"]) / 1000;
 				epg.iUniqueBroadcastId = uniqueId(epg.startTime, chType, ch.channel.iChannelNumber, ch.channel.iUniqueId);
+				epg.strUniqueBroadcastId = json::get<std::string>(p["id"]);
 				epg.strTitle = json::get<std::string>(p["title"]);
 				epg.strPlotOutline = json::get<std::string>(p["subTitle"]);
 				epg.strPlot = json::get<std::string>(p["detail"]);

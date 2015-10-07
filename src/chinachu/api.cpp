@@ -124,5 +124,11 @@ namespace chinachu {
 			return requestPUT(apiPath);
 		}
 
+		// PUT /program/:id.json
+		int putProgram(std::string id) {
+			const std::string apiPath = "program/" + id + ".json";
+			return requestPUT(apiPath);
+		}
+
 	} // namespace api
 } // namespace chinachu

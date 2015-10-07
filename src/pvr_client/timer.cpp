@@ -28,6 +28,7 @@
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
 extern chinachu::Recorded g_recorded;
+extern chinachu::Schedule g_schedule;
 chinachu::Reserve g_reserve;
 
 using namespace ADDON;
@@ -125,8 +126,32 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 	return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
+PVR_ERROR AddTimer(const PVR_TIMER &timer) {
+	for (std::vector<chinachu::CHANNEL_EPG>::iterator channel = g_schedule.schedule.begin(); channel != g_schedule.schedule.end(); channel++) {
+		if ((*channel).channel.iUniqueId == timer.iClientChannelUid) {
+			for (std::vector<chinachu::EPG_PROGRAM>::iterator program = (*channel).epgs.begin(); program != (*channel).epgs.end(); program++) {
+				if ((*program).startTime == timer.startTime && (*program).endTime == timer.endTime) {
+					if (chinachu::api::putProgram((*program).strUniqueBroadcastId) != -1) {
+						XBMC->Log(LOG_NOTICE, "Reserved new program: %s", (*program).strUniqueBroadcastId.c_str());
+						time_t now;
+						time(&now);
+						g_reserve.nextUpdateTime = now + 10; // refresh reserved programs after 10 sec.
+						return PVR_ERROR_NO_ERROR;
+					} else {
+						XBMC->Log(LOG_ERROR, "Failed to reserve new program: %s", (*program).strUniqueBroadcastId.c_str());
+						return PVR_ERROR_SERVER_ERROR;
+					}
+				}
+			}
+			break;
+		}
+	}
+
+	XBMC->Log(LOG_ERROR, "Failed to reserve new program: nothing matched");
+	return PVR_ERROR_FAILED;
+}
+
 /* not implemented */
-PVR_ERROR AddTimer(const PVR_TIMER &timer) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) { return PVR_ERROR_NOT_IMPLEMENTED; }
 
 }

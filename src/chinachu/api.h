@@ -52,6 +52,9 @@ namespace chinachu {
 		// PUT /reserves/:id/unskip.json
 		int putReservesUnskip(std::string id);
 
+		// PUT /program/:id.json
+		int putProgram(std::string id);
+
 	} // namespace api
 } // namespace chinachu
 
