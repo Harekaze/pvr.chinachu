@@ -1,14 +1,14 @@
 # Chinachu client for Kodi/XBMC
 Chinachu PVR addon for Kodi
-[![Build status: master](https://travis-ci.org/mzyy94/pvr.chinachu.svg?branch=master)](https://travis-ci.org/mzyy94/pvr.chinachu/)
+[![Build status: master](https://travis-ci.org/mzyy94/pvr.chinachu.svg?branch=2.0.0-dev)](https://travis-ci.org/mzyy94/pvr.chinachu/)
 
 # Supported environment
 
 ## Backend
-Chinachu tree [22d49b7f35](https://github.com/mzyy94/Chinachu/tree/22d49b7f356179121780771dc53f486f667c84b9)
+Chinachu devel-beta **NOT TESTED**
 
 ## Frontend
-- Kodi **15.x** Isengard
+- Kodi **16.x** Jarvis
   + for OS X 64bit
   + for Android ARM
   + for Linux amd64/i386/armv7
