@@ -10,7 +10,7 @@ Chinachu tree [bcf46cddc1](https://github.com/mzyy94/Chinachu/tree/bcf46cddc1645
 > For better performance: [mzyy94/Chinachu:tuner_priority](https://github.com/mzyy94/Chinachu/tree/tuner_priority)
 
 ## Frontend
-- Kodi **15.0** Isengard
+- Kodi **15.x** Isengard
   + for OS X 64bit
   + for Android ARM
   + for Linux amd64/i386/armv7
