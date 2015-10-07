@@ -95,8 +95,26 @@ PVR_ERROR DeleteRecording(const PVR_RECORDING &recording) {
 	}
 	return PVR_ERROR_SERVER_ERROR;
 }
+
+PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) {
+	picojson::value v;
+	std::string response;
+
+	chinachu::api::getStorage(response);
+	std::string err = picojson::parse(v, response);
+	if (!err.empty()) {
+		XBMC->Log(ADDON::LOG_ERROR, "[storage.json] Failed to parse JSON string: %s", err.c_str());
+		return PVR_ERROR_FAILED;
+	}
+
+	picojson::object &o = v.get<picojson::object>();
+	*iTotal = (o["size"].get<double>() / 1024);
+	*iUsed = (o["used"].get<double>() / 1024);
+
+	return PVR_ERROR_NO_ERROR;
+}
+
 /* not implemented */
-PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteAllRecordingsFromTrash(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR RenameRecording(const PVR_RECORDING &recording) { return PVR_ERROR_NOT_IMPLEMENTED; }

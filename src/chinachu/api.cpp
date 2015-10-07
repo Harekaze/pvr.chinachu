@@ -136,5 +136,11 @@ namespace chinachu {
 			return requestDELETE(apiPath);
 		}
 
+		// GET /storage.json
+		int getStorage(std::string &response) {
+			const std::string apiPath = "storage.json";
+			return requestGET(apiPath, response);
+		}
+
 	} // namespace api
 } // namespace chinachu

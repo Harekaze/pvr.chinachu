@@ -58,6 +58,9 @@ namespace chinachu {
 		// DELETE /reserves/:id.json
 		int deleteReserves(std::string id);
 
+		// GET /storage.json
+		int getStorage(std::string &response);
+
 	} // namespace api
 } // namespace chinachu
 
