@@ -2,6 +2,8 @@
 Chinachu PVR addon for Kodi
 [![Build status: master](https://travis-ci.org/mzyy94/pvr.chinachu.svg?branch=2.0.0-dev)](https://travis-ci.org/mzyy94/pvr.chinachu/)
 
+![icon](/template/pvr.chinachu/icon.png)
+
 # Supported environment
 
 ## Backend
