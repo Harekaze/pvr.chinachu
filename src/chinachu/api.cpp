@@ -124,5 +124,23 @@ namespace chinachu {
 			return requestPUT(apiPath);
 		}
 
+		// PUT /program/:id.json
+		int putProgram(std::string id) {
+			const std::string apiPath = "program/" + id + ".json";
+			return requestPUT(apiPath);
+		}
+
+		// DELETE /reserves/:id.json
+		int deleteReserves(std::string id) {
+			const std::string apiPath = "reserves/" + id + ".json";
+			return requestDELETE(apiPath);
+		}
+
+		// GET /storage.json
+		int getStorage(std::string &response) {
+			const std::string apiPath = "storage.json";
+			return requestGET(apiPath, response);
+		}
+
 	} // namespace api
 } // namespace chinachu

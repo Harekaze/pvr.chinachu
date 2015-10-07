@@ -4,7 +4,7 @@ Chinachu PVR addon for Kodi
 
 ![icon](/template/pvr.chinachu/icon.png)
 
-# Supported environment
+## Supported environment
 
 ## Backend
 Chinachu devel-beta **NOT TESTED**
@@ -15,13 +15,13 @@ Chinachu devel-beta **NOT TESTED**
   + for Android ARM
   + for Linux amd64/i386/armv7
   
-# Latest release
+## Latest release
 
 [pvr.chinachu/releases](https://github.com/mzyy94/pvr.chinachu/releases)
 
-# Building from source
+## Building from source
 
-## Linux / OS X
+### Linux / OS X
 ```sh
 $ ./bootstrap
 $ ./configure
@@ -31,7 +31,7 @@ $ ls pvr.chinachu.*.zip
 > TIPS: If a warning about AC_CHECK_HEADER_STDBOOL has occurred, install gnulib and execute bootstrap with
 > AUTORECONF_FLAGS option with gnulib's m4 directory (e.g. `AUTORECONF_FLAGS=-I/usr/share/gnulib/m4 ./bootstrap`)
 
-## Android ARM
+### Android ARM
 *Android NDK is required.*
 
 ```sh
@@ -41,7 +41,7 @@ $ make
 $ ls pvr.chinachu.*.zip
 ```
 
-# Installing
+## Installing
 
 1. Build or download the appropriate version for your platform. 
 2. Launch Kodi.
@@ -51,14 +51,14 @@ $ ls pvr.chinachu.*.zip
 > NOTE: In some cases, Kodi for android installs addons into non-executable device. As a result, you need to do something more.
 > See [wiki/android-installation](https://github.com/mzyy94/pvr.chinachu/wiki/android-installation).
 
-# Configuration
+## Configuration
 
 See [wiki/configuration](https://github.com/mzyy94/pvr.chinachu/wiki/configuration)
 
-# Contribution
+## Contribution
 
 See [wiki/contribution](https://github.com/mzyy94/pvr.chinachu/wiki/contribution)
 
-# License
+## License
 
 GPLv3

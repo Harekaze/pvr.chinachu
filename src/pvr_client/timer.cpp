@@ -28,6 +28,7 @@
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
 extern chinachu::Recorded g_recorded;
+extern chinachu::Schedule g_schedule;
 chinachu::Reserve g_reserve;
 
 using namespace ADDON;
@@ -97,45 +98,99 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 }
 
 PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
-	chinachu::RESERVE_ITEM resv = g_reserve.reserves[timer.iClientIndex];
+	for (std::vector<chinachu::RESERVE_ITEM>::iterator itr = g_reserve.reserves.begin(); itr != g_reserve.reserves.end(); itr++) {
+		if ((*itr).strTitle == (std::string)timer.strTitle && (*itr).iClientChannelUid == timer.iClientChannelUid &&
+				(*itr).startTime == timer.startTime && (*itr).endTime == timer.endTime) {
 
-	// Only reserving state changing is supported
-	if (timer.state != resv.state) {
-		// Check whether the only change is state field
-		if ((std::string)timer.strTitle == resv.strTitle &&
-				timer.startTime == resv.startTime &&
-				timer.endTime == resv.endTime &&
-				timer.iClientChannelUid == resv.iClientChannelUid) {
-			// then, change the state
+			chinachu::RESERVE_ITEM resv = *itr;
 
-			switch (timer.state) {
-				case PVR_TIMER_STATE_SCHEDULED:
-					chinachu::api::putReservesUnskip(resv.strProgramId);
-					XBMC->Log(LOG_NOTICE, "Unskip reserving: %s", resv.strProgramId.c_str());
-					g_reserve.reserves[timer.iClientIndex].state = timer.state;
-					break;
-				case PVR_TIMER_STATE_CANCELLED:
-					chinachu::api::putReservesSkip(resv.strProgramId);
-					XBMC->Log(LOG_NOTICE, "Skip reserving: %s", resv.strProgramId.c_str());
-					g_reserve.reserves[timer.iClientIndex].state = timer.state;
-					break;
-					break;
-				default:
-					XBMC->Log(LOG_ERROR, "Unknown state change: %s", resv.strProgramId.c_str());
-					return PVR_ERROR_NOT_IMPLEMENTED;
+			// Only reserving state changing is supported
+			if (timer.state != resv.state) {
+				switch (timer.state) {
+					case PVR_TIMER_STATE_SCHEDULED:
+						chinachu::api::putReservesUnskip(resv.strProgramId);
+						XBMC->Log(LOG_NOTICE, "Unskip reserving: %s", resv.strProgramId.c_str());
+						g_reserve.reserves[timer.iClientIndex].state = timer.state;
+						break;
+					case PVR_TIMER_STATE_CANCELLED:
+						chinachu::api::putReservesSkip(resv.strProgramId);
+						XBMC->Log(LOG_NOTICE, "Skip reserving: %s", resv.strProgramId.c_str());
+						g_reserve.reserves[timer.iClientIndex].state = timer.state;
+						break;
+						break;
+					default:
+						XBMC->Log(LOG_ERROR, "Unknown state change: %s", resv.strProgramId.c_str());
+						return PVR_ERROR_NOT_IMPLEMENTED;
+				}
+
+				return PVR_ERROR_NO_ERROR;
 			}
 
-			return PVR_ERROR_NO_ERROR;
+			XBMC->Log(LOG_ERROR, "Only state change is supported: %s", resv.strProgramId.c_str());
+			return PVR_ERROR_NOT_IMPLEMENTED;
 		}
 	}
 
-	XBMC->Log(LOG_ERROR, "Only state change is supported: %s", resv.strProgramId.c_str());
+	XBMC->Log(LOG_ERROR, "Only state change is supported");
 	return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
+PVR_ERROR AddTimer(const PVR_TIMER &timer) {
+	for (std::vector<chinachu::CHANNEL_EPG>::iterator channel = g_schedule.schedule.begin(); channel != g_schedule.schedule.end(); channel++) {
+		if ((*channel).channel.iUniqueId == timer.iClientChannelUid) {
+			for (std::vector<chinachu::EPG_PROGRAM>::iterator program = (*channel).epgs.begin(); program != (*channel).epgs.end(); program++) {
+				if ((*program).startTime == timer.startTime && (*program).endTime == timer.endTime) {
+					if (chinachu::api::putProgram((*program).strUniqueBroadcastId) != -1) {
+						XBMC->Log(LOG_NOTICE, "Reserved new program: %s", (*program).strUniqueBroadcastId.c_str());
+						time_t now;
+						time(&now);
+						g_reserve.nextUpdateTime = now + 10; // refresh reserved programs after 10 sec.
+						return PVR_ERROR_NO_ERROR;
+					} else {
+						XBMC->Log(LOG_ERROR, "Failed to reserve new program: %s", (*program).strUniqueBroadcastId.c_str());
+						return PVR_ERROR_SERVER_ERROR;
+					}
+				}
+			}
+			break;
+		}
+	}
+
+	XBMC->Log(LOG_ERROR, "Failed to reserve new program: nothing matched");
+	return PVR_ERROR_FAILED;
+}
+
+PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
+	if (true /* !timer.bIsRepeating */ /*< TODO: change to newest api's method >*/) { // manual reserved
+		for (std::vector<chinachu::CHANNEL_EPG>::iterator channel = g_schedule.schedule.begin(); channel != g_schedule.schedule.end(); channel++) {
+			if ((*channel).channel.iUniqueId == timer.iClientChannelUid) {
+				for (std::vector<chinachu::EPG_PROGRAM>::iterator program = (*channel).epgs.begin(); program != (*channel).epgs.end(); program++) {
+					if ((*program).startTime == timer.startTime && (*program).endTime == timer.endTime) {
+						if (chinachu::api::deleteReserves((*program).strUniqueBroadcastId) != -1) {
+							XBMC->Log(LOG_NOTICE, "Delete manual reserved program: %s", (*program).strUniqueBroadcastId.c_str());
+							time_t now;
+							time(&now);
+							g_reserve.nextUpdateTime = now; // refresh reserved programs immediately.
+							return PVR_ERROR_NO_ERROR;
+						} else {
+							XBMC->Log(LOG_ERROR, "Failed to delete reserved program: %s", (*program).strUniqueBroadcastId.c_str());
+							return PVR_ERROR_SERVER_ERROR;
+						}
+					}
+				}
+				break;
+			}
+		}
+
+		XBMC->Log(LOG_ERROR, "Failed to delete reserved program: nothing matched");
+		return PVR_ERROR_FAILED;
+	} else {
+		XBMC->Log(LOG_ERROR, "Only manual reserved program deletion is supported");
+		return PVR_ERROR_NOT_IMPLEMENTED;
+	}
+}
+
 /* not implemented */
-PVR_ERROR AddTimer(const PVR_TIMER &timer) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *typesCount) { return PVR_ERROR_NOT_IMPLEMENTED; }
 bool IsTimeshifting() { return false; }
 

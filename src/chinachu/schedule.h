@@ -34,6 +34,7 @@ namespace chinachu {
 		unsigned int iEpisodeNumber;
 		time_t startTime;
 		time_t endTime;
+		std::string strUniqueBroadcastId;
 		std::string strTitle;
 		std::string strPlotOutline;
 		std::string strPlot;
