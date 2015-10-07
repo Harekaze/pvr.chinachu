@@ -90,39 +90,40 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 }
 
 PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
-	chinachu::RESERVE_ITEM resv = g_reserve.reserves[timer.iClientIndex];
+	for (std::vector<chinachu::RESERVE_ITEM>::iterator itr = g_reserve.reserves.begin(); itr != g_reserve.reserves.end(); itr++) {
+		if ((*itr).strTitle == (std::string)timer.strTitle && (*itr).iClientChannelUid == timer.iClientChannelUid &&
+				(*itr).startTime == timer.startTime && (*itr).endTime == timer.endTime) {
 
-	// Only reserving state changing is supported
-	if (timer.state != resv.state) {
-		// Check whether the only change is state field
-		if ((std::string)timer.strTitle == resv.strTitle &&
-				timer.startTime == resv.startTime &&
-				timer.endTime == resv.endTime &&
-				timer.iClientChannelUid == resv.iClientChannelUid) {
-			// then, change the state
+			chinachu::RESERVE_ITEM resv = *itr;
 
-			switch (timer.state) {
-				case PVR_TIMER_STATE_SCHEDULED:
-					chinachu::api::putReservesUnskip(resv.strProgramId);
-					XBMC->Log(LOG_NOTICE, "Unskip reserving: %s", resv.strProgramId.c_str());
-					g_reserve.reserves[timer.iClientIndex].state = timer.state;
-					break;
-				case PVR_TIMER_STATE_CANCELLED:
-					chinachu::api::putReservesSkip(resv.strProgramId);
-					XBMC->Log(LOG_NOTICE, "Skip reserving: %s", resv.strProgramId.c_str());
-					g_reserve.reserves[timer.iClientIndex].state = timer.state;
-					break;
-					break;
-				default:
-					XBMC->Log(LOG_ERROR, "Unknown state change: %s", resv.strProgramId.c_str());
-					return PVR_ERROR_NOT_IMPLEMENTED;
+			// Only reserving state changing is supported
+			if (timer.state != resv.state) {
+				switch (timer.state) {
+					case PVR_TIMER_STATE_SCHEDULED:
+						chinachu::api::putReservesUnskip(resv.strProgramId);
+						XBMC->Log(LOG_NOTICE, "Unskip reserving: %s", resv.strProgramId.c_str());
+						g_reserve.reserves[timer.iClientIndex].state = timer.state;
+						break;
+					case PVR_TIMER_STATE_CANCELLED:
+						chinachu::api::putReservesSkip(resv.strProgramId);
+						XBMC->Log(LOG_NOTICE, "Skip reserving: %s", resv.strProgramId.c_str());
+						g_reserve.reserves[timer.iClientIndex].state = timer.state;
+						break;
+						break;
+					default:
+						XBMC->Log(LOG_ERROR, "Unknown state change: %s", resv.strProgramId.c_str());
+						return PVR_ERROR_NOT_IMPLEMENTED;
+				}
+
+				return PVR_ERROR_NO_ERROR;
 			}
 
-			return PVR_ERROR_NO_ERROR;
+			XBMC->Log(LOG_ERROR, "Only state change is supported: %s", resv.strProgramId.c_str());
+			return PVR_ERROR_NOT_IMPLEMENTED;
 		}
 	}
 
-	XBMC->Log(LOG_ERROR, "Only state change is supported: %s", resv.strProgramId.c_str());
+	XBMC->Log(LOG_ERROR, "Only state change is supported");
 	return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
