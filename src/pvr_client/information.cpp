@@ -59,7 +59,6 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities) {
 	pCapabilities->bSupportsChannelSettings    = false;
 	pCapabilities->bHandlesInputStream         = false;
 	pCapabilities->bHandlesDemuxing            = false;
-	pCapabilities->bSupportsRecordingFolders   = false;
 	pCapabilities->bSupportsRecordingPlayCount = false;
 	pCapabilities->bSupportsLastPlayedPosition = false;
 	pCapabilities->bSupportsRecordingEdl       = false;

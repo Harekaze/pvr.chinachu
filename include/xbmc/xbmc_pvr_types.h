@@ -65,24 +65,99 @@ struct DemuxPacket;
 #define PRAGMA_PACK 1
 #endif
 
-#define PVR_ADDON_NAME_STRING_LENGTH         1024
-#define PVR_ADDON_URL_STRING_LENGTH          1024
-#define PVR_ADDON_DESC_STRING_LENGTH         1024
-#define PVR_ADDON_INPUT_FORMAT_STRING_LENGTH 32
-#define PVR_ADDON_EDL_LENGTH                 32
+#define PVR_ADDON_NAME_STRING_LENGTH          1024
+#define PVR_ADDON_URL_STRING_LENGTH           1024
+#define PVR_ADDON_DESC_STRING_LENGTH          1024
+#define PVR_ADDON_INPUT_FORMAT_STRING_LENGTH  32
+#define PVR_ADDON_EDL_LENGTH                  32
+#define PVR_ADDON_TIMERTYPE_ARRAY_SIZE        32
+#define PVR_ADDON_TIMERTYPE_VALUES_ARRAY_SIZE 512
+#define PVR_ADDON_TIMERTYPE_VALUES_ARRAY_SIZE_SMALL 128
+#define PVR_ADDON_TIMERTYPE_STRING_LENGTH     64
 
 /* using the default avformat's MAX_STREAMS value to be safe */
 #define PVR_STREAM_MAX_STREAMS 20
 
 /* current PVR API version */
-#define XBMC_PVR_API_VERSION "1.9.6"
+#define XBMC_PVR_API_VERSION "4.1.0"
 
 /* min. PVR API version */
-#define XBMC_PVR_MIN_API_VERSION "1.9.6"
+#define XBMC_PVR_MIN_API_VERSION "4.1.0"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+  /*!
+   * @brief numeric PVR timer type definitions (PVR_TIMER.iTimerType values)
+   */
+  const unsigned int PVR_TIMER_TYPE_NONE = 0; /*!< @brief "Null" value for a numeric timer type. */
+
+  /*!
+   * @brief special PVR_TIMER.iClientIndex value to indicate that a timer has not (yet) a valid client index.
+   */
+  const unsigned int PVR_TIMER_NO_CLIENT_INDEX = 0; /*!< @brief timer has not (yet) a valid client index. */
+
+  /*!
+   * @brief special PVR_TIMER.iParentClientIndex value to indicate that a timer has no parent.
+   */
+  const unsigned int PVR_TIMER_NO_PARENT = PVR_TIMER_NO_CLIENT_INDEX; /*!< @brief timer has no parent; it was not scheduled by a repeating timer. */
+
+  /*!
+   * @brief special PVR_TIMER.iEpgUid value to indicate that a timer has no EPG event uid.
+   */
+  const unsigned int PVR_TIMER_NO_EPG_UID = 0; /*!< @brief timer has no EPG event uid. */
+
+  /*!
+   * @brief special PVR_TIMER.iClientChannelUid value to indicate "any channel". Useful for some repeating timer types.
+   */
+  const int PVR_TIMER_ANY_CHANNEL = -1; /*!< @brief denotes "any channel", not a specific one. */
+
+  /*!
+   * @brief PVR timer type attributes (PVR_TIMER_TYPE.iAttributes values)
+   */
+  const unsigned int PVR_TIMER_TYPE_ATTRIBUTE_NONE                    = 0x00000000;
+
+  const unsigned int PVR_TIMER_TYPE_IS_MANUAL                         = 0x00000001; /*!< @brief defines whether this is a type for manual (time-based) or epg-based timers */
+  const unsigned int PVR_TIMER_TYPE_IS_REPEATING                      = 0x00000002; /*!< @brief defines whether this is a type for repeating or one-shot timers */
+  const unsigned int PVR_TIMER_TYPE_IS_READONLY                       = 0x00000004; /*!< @brief timers of this type must not be edited by Kodi */
+  const unsigned int PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES             = 0x00000008; /*!< @brief timers of this type must not be created by Kodi. All other operations are allowed, though */
+
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE           = 0x00000010; /*!< @brief this type supports enabling/disabling of the timer (PVR_TIMER.state SCHEDULED|DISBALED) */
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_CHANNELS                 = 0x00000020; /*!< @brief this type supports channels (PVR_TIMER.iClientChannelUid) */
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_START_TIME               = 0x00000040; /*!< @brief this type supports a recording start time (PVR_TIMER.startTime) */
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_TITLE_EPG_MATCH          = 0x00000080; /*!< @brief this type supports matching epg episode title using PVR_TIMER.strEpgSearchString */
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_FULLTEXT_EPG_MATCH       = 0x00000100; /*!< @brief this type supports matching "more" epg data (not just episode title) using PVR_TIMER.strEpgSearchString. Setting FULLTEXT_EPG_MATCH implies TITLE_EPG_MATCH */
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_FIRST_DAY                = 0x00000200; /*!< @brief this type supports a first day the timer gets active (PVR_TIMER.firstday) */
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS                 = 0x00000400; /*!< @brief this type supports weekdays for defining the recording schedule (PVR_TIMER.iWeekdays) */
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_RECORD_ONLY_NEW_EPISODES = 0x00000800; /*!< @brief this type supports the "record only new episodes" feature (PVR_TIMER.iPreventDuplicateEpisodes) */
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_START_END_MARGIN         = 0x00001000; /*!< @brief this type supports pre and post record time (PVR_TIMER.iMarginStart, PVR_TIMER.iMarginEnd) */
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_PRIORITY                 = 0x00002000; /*!< @brief this type supports recording priority (PVR_TIMER.iPriority) */
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_LIFETIME                 = 0x00004000; /*!< @brief this type supports recording lifetime (PVR_TIMER.iLifetime) */
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS        = 0x00008000; /*!< @brief this type supports placing recordings in user defined folders (PVR_TIMER.strDirectory) */
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_RECORDING_GROUP          = 0x00010000; /*!< @brief this type supports a list of recording groups (PVR_TIMER.iRecordingGroup) */
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_END_TIME                 = 0x00020000; /*!< @brief this type supports a recording end time (PVR_TIMER.endTime) */
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_START_ANYTIME            = 0x00040000; /*!< @brief enables an 'Any Time' over-ride option for startTime (using PVR_TIMER.bStartAnyTime) */
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_END_ANYTIME              = 0x00080000; /*!< @brief enables a separate 'Any Time' over-ride for endTime (using PVR_TIMER.bEndAnyTime) */
+  const unsigned int PVR_TIMER_TYPE_SUPPORTS_MAX_RECORDINGS           = 0x00100000; /*!< @brief this type supports specifying a maximum recordings setting' (PVR_TIMER.iMaxRecordings) */
+  const unsigned int PVR_TIMER_TYPE_REQUIRES_EPG_TAG_ON_CREATE        = 0x00200000; /*!< @brief this type shold not appear on any create menus which don't provide an associated EPG tag */
+  const unsigned int PVR_TIMER_TYPE_FORBIDS_EPG_TAG_ON_CREATE         = 0x00400000; /*!< @brief this type should not appear on any create menus which provide an associated EPG tag */
+  const unsigned int PVR_TIMER_TYPE_REQUIRES_EPG_SERIES_ON_CREATE     = 0x00800000; /*!< @brief this type should not appear on any create menus unless associated with an EPG tag with 'series' attributes (EPG_TAG.iFlags & EPG_TAG_FLAG_IS_SERIES || EPG_TAG.iSeriesNumber > 0 || EPG_TAG.iEpisodeNumber > 0 || EPG_TAG.iEpisodePartNumber > 0). Implies PVR_TIMER_TYPE_REQUIRES_EPG_TAG_ON_CREATE */
+
+  /*!
+   * @brief PVR timer weekdays (PVR_TIMER.iWeekdays values)
+   */
+  const unsigned int PVR_WEEKDAY_NONE      = 0x00;
+  const unsigned int PVR_WEEKDAY_MONDAY    = 0x01;
+  const unsigned int PVR_WEEKDAY_TUESDAY   = 0x02;
+  const unsigned int PVR_WEEKDAY_WEDNESDAY = 0x04;
+  const unsigned int PVR_WEEKDAY_THURSDAY  = 0x08;
+  const unsigned int PVR_WEEKDAY_FRIDAY    = 0x10;
+  const unsigned int PVR_WEEKDAY_SATURDAY  = 0x20;
+  const unsigned int PVR_WEEKDAY_SUNDAY    = 0x40;
+  const unsigned int PVR_WEEKDAY_ALLDAYS   = PVR_WEEKDAY_MONDAY   | PVR_WEEKDAY_TUESDAY | PVR_WEEKDAY_WEDNESDAY |
+                                             PVR_WEEKDAY_THURSDAY | PVR_WEEKDAY_FRIDAY  | PVR_WEEKDAY_SATURDAY  |
+                                             PVR_WEEKDAY_SUNDAY;
 
   /*!
    * @brief PVR add-on error codes
@@ -106,7 +181,7 @@ extern "C" {
    */
   typedef enum
   {
-    PVR_TIMER_STATE_NEW          = 0, /*!< @brief a new, unsaved timer */
+    PVR_TIMER_STATE_NEW          = 0, /*!< @brief the timer was just created on the backend and is not yet active. This state must not be used for timers just created on the client side. */
     PVR_TIMER_STATE_SCHEDULED    = 1, /*!< @brief the timer is scheduled for recording */
     PVR_TIMER_STATE_RECORDING    = 2, /*!< @brief the timer is currently recordings */
     PVR_TIMER_STATE_COMPLETED    = 3, /*!< @brief the recording completed successfully */
@@ -114,7 +189,8 @@ extern "C" {
     PVR_TIMER_STATE_CANCELLED    = 5, /*!< @brief the timer was scheduled, but was canceled */
     PVR_TIMER_STATE_CONFLICT_OK  = 6, /*!< @brief the scheduled timer conflicts with another one, but will be recorded */
     PVR_TIMER_STATE_CONFLICT_NOK = 7, /*!< @brief the scheduled timer conflicts with another one and won't be recorded */
-    PVR_TIMER_STATE_ERROR        = 8  /*!< @brief the timer is scheduled, but can't be recorded for some reason */
+    PVR_TIMER_STATE_ERROR        = 8, /*!< @brief the timer is scheduled, but can't be recorded for some reason */
+    PVR_TIMER_STATE_DISABLED     = 9, /*!< @brief the timer was disabled by the user, can be enabled via setting the state to PVR_TIMER_STATE_SCHEDULED */
   } PVR_TIMER_STATE;
 
   /*!
@@ -158,7 +234,6 @@ extern "C" {
     bool bSupportsChannelSettings;      /*!< @brief true if this add-on supports the following functions: DeleteChannel, RenameChannel, MoveChannel, DialogChannelSettings and DialogAddChannel */
     bool bHandlesInputStream;           /*!< @brief true if this add-on provides an input stream. false if XBMC handles the stream. */
     bool bHandlesDemuxing;              /*!< @brief true if this add-on demultiplexes packets. */
-    bool bSupportsRecordingFolders;     /*!< @brief true if the backend supports timers / recordings in folders. */
     bool bSupportsRecordingPlayCount;   /*!< @brief true if the backend supports play count for recordings. */
     bool bSupportsLastPlayedPosition;   /*!< @brief true if the backend supports store/retrieve of last played position for recordings. */
     bool bSupportsRecordingEdl;         /*!< @brief true if the backend supports retrieving an edit decision list for recordings. */
@@ -255,34 +330,117 @@ extern "C" {
   } ATTRIBUTE_PACKED PVR_CHANNEL_GROUP_MEMBER;
 
   /*!
+   * @brief Representation of a timer's attribute integer value.
+   */
+  typedef struct PVR_TIMER_TYPE_ATTRIBUTE_INT_VALUE
+  {
+    int iValue;                                              /*!< @brief (required) an integer value for a certain timer attribute */
+    char strDescription[PVR_ADDON_TIMERTYPE_STRING_LENGTH];  /*!< @brief (optional) a localized string describing the value. If left blank, Kodi will
+                                                               generate a suitable representation (like the integer value as string) */
+  } ATTRIBUTE_PACKED PVR_TIMER_TYPE_ATTRIBUTE_INT_VALUE;
+
+  /*!
+   * @brief Representation of a timer type.
+   */
+  typedef struct PVR_TIMER_TYPE
+  {
+    unsigned int iId;                                       /*!< @brief (required) this type's identifier. Ids must be > PVR_TIMER_TYPE_NONE. */
+    unsigned int iAttributes;                               /*!< @brief (required) defines the attributes for this type (PVR_TIMER_TYPE_* constants). */
+    char strDescription[PVR_ADDON_TIMERTYPE_STRING_LENGTH]; /*!< @brief (optional) a short localized string describing the purpose of the type. (e.g.
+                                                              "Any time at this channel if title matches"). If left blank, Kodi will generate a
+                                                              description based on the attributes REPEATING and MANUAL. (e.g. "Repeating EPG-based." */
+    /* priority value definitions */
+    unsigned int iPrioritiesSize;                           /*!< @brief (required) Count of possible values for PVR_TMER.iPriority. 0 means priority
+                                                              is not supported by this timer type or no own value definition wanted, but to use Kodi defaults
+                                                              of 1..100. */
+    PVR_TIMER_TYPE_ATTRIBUTE_INT_VALUE
+      priorities[PVR_ADDON_TIMERTYPE_VALUES_ARRAY_SIZE];    /*!< @brief (optional) Array containing the possible values for PVR_TMER.iPriority. Must be
+                                                              filled if iPrioritiesSize > 0 */
+    int          iPrioritiesDefault;                        /*!< @brief (optional) The default value for PVR_TMER.iPriority. Must be filled if iPrioritiesSize > 0 */
+
+    /* lifetime value definitions */
+    unsigned int iLifetimesSize;                            /*!< @brief (required) Count of possible values for PVR_TMER.iLifetime. 0 means lifetime
+                                                              is not supported by this timer type or no own value definition wanted, but to use Kodi defaults
+                                                              of 1..365. */
+    PVR_TIMER_TYPE_ATTRIBUTE_INT_VALUE
+      lifetimes[PVR_ADDON_TIMERTYPE_VALUES_ARRAY_SIZE];     /*!< @brief (optional) Array containing the possible values for PVR_TMER.iLifetime. Must be
+                                                              filled if iLifetimesSize > 0 */
+    int          iLifetimesDefault;                         /*!< @brief (optional) The default value for PVR_TMER.iLifetime. Must be filled if iLifetimesSize > 0 */
+
+    /* prevent duplicate episodes value definitions */
+    unsigned int iPreventDuplicateEpisodesSize;             /*!< @brief (required) Count of possible values for PVR_TMER.iPreventDuplicateEpisodes. 0 means duplicate
+                                                              episodes prevention is not supported by this timer type or no own value definition wanted, but to use
+                                                              Kodi defaults. */
+    PVR_TIMER_TYPE_ATTRIBUTE_INT_VALUE
+      preventDuplicateEpisodes[PVR_ADDON_TIMERTYPE_VALUES_ARRAY_SIZE];
+                                                            /*!< @brief (optional) Array containing the possible values for PVR_TMER.iPreventDuplicateEpisodes.. Must
+                                                              be filled if iPreventDuplicateEpisodesSize > 0 */
+    unsigned int iPreventDuplicateEpisodesDefault;          /*!< @brief (optional) The default value for PVR_TMER.iPreventDuplicateEpisodesSize. Must be filled if iPreventDuplicateEpisodesSize > 0 */
+
+    /* recording folder list value definitions */
+    unsigned int iRecordingGroupSize;                       /*!< @brief (required) Count of possible values of PVR_TIMER.iRecordingGroup. 0 means folder lists are not supported by this timer type */
+    PVR_TIMER_TYPE_ATTRIBUTE_INT_VALUE
+      recordingGroup[PVR_ADDON_TIMERTYPE_VALUES_ARRAY_SIZE];
+                                                            /*!< @brief (optional) Array containing the possible values of PVR_TMER.iRecordingGroup. Must be filled if iRecordingGroupSize > 0 */
+    unsigned int iRecordingGroupDefault;                    /*!< @brief (optional) The default value for PVR_TIMER.iRecordingGroup. Must be filled in if PVR_TIMER.iRecordingGroupSize > 0 */
+
+    /* max recordings value definitions */
+    unsigned int iMaxRecordingsSize;                        /*!< @brief (required) Count of possible values of PVR_TIMER.iMaxRecordings. 0 means max recordings are not supported by this timer type */
+    PVR_TIMER_TYPE_ATTRIBUTE_INT_VALUE
+      maxRecordings[PVR_ADDON_TIMERTYPE_VALUES_ARRAY_SIZE_SMALL];
+                                                            /*!< @brief (optional) Array containing the possible values of PVR_TMER.iMaxRecordings. */
+    int iMaxRecordingsDefault;                              /*!< @brief (optional) The default value for PVR_TIMER.iMaxRecordings. Must be filled in if PVR_TIMER.iMaxRecordingsSize > 0 */
+
+  } ATTRIBUTE_PACKED PVR_TIMER_TYPE;
+
+  /*!
    * @brief Representation of a timer event.
    */
   typedef struct PVR_TIMER {
-    unsigned int    iClientIndex;                              /*!< @brief (required) the index of this timer given by the client */
-    int             iClientChannelUid;                         /*!< @brief (required) unique identifier of the channel to record on */
-    time_t          startTime;                                 /*!< @brief (required) start time of the recording in UTC. instant timers that are sent to the add-on by xbmc will have this value set to 0 */
-    time_t          endTime;                                   /*!< @brief (required) end time of the recording in UTC */
+    unsigned int    iClientIndex;                              /*!< @brief (required) the index of this timer given by the client. PVR_TIMER_NO_CLIENT_INDEX indicates that the index was not yet set by the client, for example for new timers created by
+                                                                    Kodi and passed the first time to the client. A valid index must be greater than PVR_TIMER_NO_CLIENT_INDEX. */
+    unsigned int    iParentClientIndex;                        /*!< @brief (optional) for timers scheduled by a repeating timer, the index of the repeating timer that scheduled this timer (it's PVR_TIMER.iClientIndex value). Use PVR_TIMER_NO_PARENT
+                                                                    to indicate that this timer was no scheduled by a repeating timer. */
+    int             iClientChannelUid;                         /*!< @brief (optional) unique identifier of the channel to record on. PVR_TIMER_ANY_CHANNEL will denote "any channel", not a specifoc one. */
+    time_t          startTime;                                 /*!< @brief (optional) start time of the recording in UTC. Instant timers that are sent to the add-on by Kodi will have this value set to 0.*/
+    time_t          endTime;                                   /*!< @brief (optional) end time of the recording in UTC. */
+    bool            bStartAnyTime;                             /*!< @brief (optional) for EPG based (not Manual) timers indicates startTime does not apply. Default = false */
+    bool            bEndAnyTime;                               /*!< @brief (optional) for EPG based (not Manual) timers indicates endTime does not apply. Default = false */
     PVR_TIMER_STATE state;                                     /*!< @brief (required) the state of this timer */
-    char            strTitle[PVR_ADDON_NAME_STRING_LENGTH];    /*!< @brief (optional) title of this timer */
-    char            strDirectory[PVR_ADDON_URL_STRING_LENGTH]; /*!< @brief (optional) the directory where the recording will be stored in */
+    unsigned int    iTimerType;                                /*!< @brief (required) the type of this timer. It is private to the addon and can be freely defined by the addon. The value must be greater than PVR_TIMER_TYPE_NONE.
+                                                                    Kodi does not interpret this value (except for checking for PVR_TIMER_TYPE_NONE), but will pass the right id to the addon with every PVR_TIMER instance, thus the addon easily can determine
+                                                                    the timer type. */
+    char            strTitle[PVR_ADDON_NAME_STRING_LENGTH];    /*!< @brief (required) a title for this timer */
+    char            strEpgSearchString[PVR_ADDON_NAME_STRING_LENGTH]; /*!< @brief (optional) a string used to search epg data for repeating epg-based timers. Format is backend-dependent, for example regexp */
+    bool            bFullTextEpgSearch;                        /*!< @brief (optional) indicates, whether strEpgSearchString is to match against the epg episode title only or also against "other" epg data (backend-dependent) */
+    char            strDirectory[PVR_ADDON_URL_STRING_LENGTH]; /*!< @brief (optional) the (relative) directory where the recording will be stored in */
     char            strSummary[PVR_ADDON_DESC_STRING_LENGTH];  /*!< @brief (optional) the summary for this timer */
     int             iPriority;                                 /*!< @brief (optional) the priority of this timer */
-    int             iLifetime;                                 /*!< @brief (optional) lifetimer of this timer in days */
-    bool            bIsRepeating;                              /*!< @brief (optional) true if this is a recurring timer */
-    time_t          firstDay;                                  /*!< @brief (optional) the first day this recording is active in case of a repeating event */
-    int             iWeekdays;                                 /*!< @brief (optional) weekday mask */
-    int             iEpgUid;                                   /*!< @brief (optional) epg event id */
+    int             iLifetime;                                 /*!< @brief (optional) lifetime of recordings created by this timer. > 0 days after which recordings will be deleted by the backend, < 0 addon defined integer list reference, == 0 disabled */
+    int             iMaxRecordings;                            /*!< @brief (optional) maximum number of recordings this timer shall create. > 0 number of recordings, < 0 addon defined integer list reference, == 0 disabled */
+    unsigned int    iRecordingGroup;                           /*!< @brief (optional) integer ref to addon/backend defined list of recording groups*/
+    time_t          firstDay;                                  /*!< @brief (optional) the first day this timer is active, for repeating timers */
+    unsigned int    iWeekdays;                                 /*!< @brief (optional) week days, for repeating timers */
+    unsigned int    iPreventDuplicateEpisodes;                 /*!< @brief (optional) 1 if backend should only record new episodes in case of a repeating epg-based timer, 0 if all episodes shall be recorded (no duplicate detection). Actual algorithm for
+                                                                    duplicate detection is defined by the backend. Addons may define own values for different duplicate detection algorithms, thus this is not just a bool.*/
+    unsigned int    iEpgUid;                                   /*!< @brief (optional) epg event id. Use PVR_TIMER_NO_EPG_UID to state that there is no EPG event id available for this timer. Values greater than PVR_TIMER_NO_EPG_UID represent a valid epg event id. */
     unsigned int    iMarginStart;                              /*!< @brief (optional) if set, the backend starts the recording iMarginStart minutes before startTime. */
     unsigned int    iMarginEnd;                                /*!< @brief (optional) if set, the backend ends the recording iMarginEnd minutes after endTime. */
     int             iGenreType;                                /*!< @brief (optional) genre type */
     int             iGenreSubType;                             /*!< @brief (optional) genre sub type */
   } ATTRIBUTE_PACKED PVR_TIMER;
+
   /*!
    * @brief Representation of a recording.
    */
   typedef struct PVR_RECORDING {
     char   strRecordingId[PVR_ADDON_NAME_STRING_LENGTH];  /*!< @brief (required) unique id of the recording on the client. */
     char   strTitle[PVR_ADDON_NAME_STRING_LENGTH];        /*!< @brief (required) the title of this recording */
+    char   strEpisodeName[PVR_ADDON_NAME_STRING_LENGTH];  /*!< @brief (optional) episode name (also known as subtitle) */
+    int    iSeriesNumber;                                 /*!< @brief (optional) series number (usually called season). Set to "0" for specials/pilot. For 'invalid' see iEpisodeNumber or set to -1 */
+    int    iEpisodeNumber;                                /*!< @brief (optional) episode number within the "iSeriesNumber" season. For 'invalid' set to -1 or iSeriesNumber=iEpisodeNumber=0 to show both are invalid */
+    int    iYear;                                         /*!< @brief (optional) year of first release (use to identify a specific movie re-make) / first airing for TV shows. Set to '0' for invalid. */
+
     char   strStreamURL[PVR_ADDON_URL_STRING_LENGTH];     /*!< @brief (required) stream URL to access this recording */
     char   strDirectory[PVR_ADDON_URL_STRING_LENGTH];     /*!< @brief (optional) directory of this recording on the client */
     char   strPlotOutline[PVR_ADDON_DESC_STRING_LENGTH];  /*!< @brief (optional) plot outline */
@@ -373,6 +531,7 @@ extern "C" {
     PVR_ERROR    (__cdecl* SetRecordingLastPlayedPosition)(const PVR_RECORDING&, int);
     int          (__cdecl* GetRecordingLastPlayedPosition)(const PVR_RECORDING&);
     PVR_ERROR    (__cdecl* GetRecordingEdl)(const PVR_RECORDING&, PVR_EDL_ENTRY[], int*);
+    PVR_ERROR    (__cdecl* GetTimerTypes)(PVR_TIMER_TYPE[], int*);
     int          (__cdecl* GetTimersAmount)(void);
     PVR_ERROR    (__cdecl* GetTimers)(ADDON_HANDLE);
     PVR_ERROR    (__cdecl* AddTimer)(const PVR_TIMER&);
@@ -408,6 +567,7 @@ extern "C" {
     time_t       (__cdecl* GetBufferTimeStart)(void);
     time_t       (__cdecl* GetBufferTimeEnd)(void);
     const char*  (__cdecl* GetBackendHostname)(void);
+    bool         (__cdecl* IsTimeshifting)(void);
   } PVRClient;
 
 #ifdef __cplusplus

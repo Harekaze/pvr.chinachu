@@ -330,6 +330,15 @@ extern "C"
   */
   PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY edl[], int *size);
 
+  /*!
+  * Retrieve the timer types supported by the backend.
+  * @param types out: The function has to write the definition of the supported timer types into this array.
+  * @param typesCount in: The maximum size of the list, out: the actual size of the list. default: PVR_ADDON_TIMERTYPE_ARRAY_SIZE
+  * @return PVR_ERROR_NO_ERROR if the types were successfully written to the array.
+  * @remarks Required if bSupportsTimers is set to true. Return PVR_ERROR_NOT_IMPLEMENTED if this add-on won't provide this function.
+  */
+  PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *typesCount);
+
   //@}
   /** @name PVR timer methods
    *  @remarks Only used by XBMC is bSupportsTimers is set to true.
@@ -621,6 +630,12 @@ extern "C"
   const char* GetBackendHostname();
 
   /*!
+   *  Check if timeshift is active
+   *  @return true if timeshift is active
+   */
+  bool IsTimeshifting();
+
+  /*!
    * Called by XBMC to assign the function pointers of this add-on to pClient.
    * @param pClient The struct to assign the function pointers to.
    */
@@ -664,6 +679,7 @@ extern "C"
     pClient->GetRecordingLastPlayedPosition = GetRecordingLastPlayedPosition;
     pClient->GetRecordingEdl                = GetRecordingEdl;
 
+    pClient->GetTimerTypes                  = GetTimerTypes;
     pClient->GetTimersAmount                = GetTimersAmount;
     pClient->GetTimers                      = GetTimers;
     pClient->AddTimer                       = AddTimer;
@@ -704,6 +720,8 @@ extern "C"
     pClient->GetBufferTimeEnd               = GetBufferTimeEnd;
 
     pClient->GetBackendHostname             = GetBackendHostname;
+
+    pClient->IsTimeshifting                 = IsTimeshifting;
   };
 };
 

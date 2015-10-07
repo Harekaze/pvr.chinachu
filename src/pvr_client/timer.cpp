@@ -69,12 +69,20 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 			timer.iGenreType = resv.iGenreType;
 			timer.iGenreSubType = resv.iGenreSubType;
 			timer.iClientChannelUid = resv.iClientChannelUid;
-			timer.bIsRepeating = resv.bIsRepeating;
+			timer.iTimerType = PVR_TIMER_TYPE_NONE;
+			// timer.iParentClientIndex = 0; /* not implemented */
+			// timer.bStartAnyTime = false; /* not implemented */
+			// timer.bEndAnyTime = false; /* not implemented */
+			// strncpy(timer.strEpgSearchString, "SearchString", PVR_ADDON_NAME_STRING_LENGTH - 1); /* not implemented */
+			// timer.bFullTextEpgSearch = false; /* not implemented */
 			// strncpy(timer.strDirectory, "Directory", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
 			// timer.iPriority = 100; /* not implemented */
 			// timer.iLifetime = 0; /* not implemented */
+			// timer.iMaxRecordings = 0; /* not implemented */
+			// timer.iRecordingGroup = 0; /* not implemented */
 			// timer.firstDay = 0; /* not implemented */
 			// timer.iWeekdays = 0; /* not implemented */
+			// timer.iPreventDuplicateEpisodes = 0; /* not implemented */
 			// timer.iEpgUid = 0; /* not implemented */
 			// timer.iMarginStart = 0; /* not implemented */
 			// timer.iMarginEnd = 0; /* not implemented */
@@ -128,5 +136,7 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 /* not implemented */
 PVR_ERROR AddTimer(const PVR_TIMER &timer) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *typesCount) { return PVR_ERROR_NOT_IMPLEMENTED; }
+bool IsTimeshifting() { return false; }
 
 }
