@@ -84,6 +84,12 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 PVR_ERROR DeleteRecording(const PVR_RECORDING &recording) {
 	if (chinachu::api::deleteRecordedFile(recording.strRecordingId) != -1) {
 		if (chinachu::api::deleteRecordedInfo(recording.strRecordingId) != -1) {
+			for (std::vector<chinachu::RECORDING>::iterator itr = g_recorded.programs.begin(); itr != g_recorded.programs.end(); itr++) {
+				if ((*itr).strRecordingId == recording.strRecordingId) {
+					g_recorded.programs.erase(itr);
+					break;
+				}
+			}
 			return PVR_ERROR_NO_ERROR;
 		}
 	}
