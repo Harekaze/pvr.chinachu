@@ -115,11 +115,10 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 						XBMC->Log(LOG_NOTICE, "Unskip reserving: %s", resv.strProgramId.c_str());
 						g_reserve.reserves[timer.iClientIndex].state = timer.state;
 						break;
-					case PVR_TIMER_STATE_CANCELLED:
+					case PVR_TIMER_STATE_DISABLED:
 						chinachu::api::putReservesSkip(resv.strProgramId);
 						XBMC->Log(LOG_NOTICE, "Skip reserving: %s", resv.strProgramId.c_str());
 						g_reserve.reserves[timer.iClientIndex].state = timer.state;
-						break;
 						break;
 					default:
 						XBMC->Log(LOG_ERROR, "Unknown state change: %s", resv.strProgramId.c_str());

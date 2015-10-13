@@ -94,7 +94,7 @@ namespace chinachu {
 			if (json::get<bool>(p["isConflict"])) {
 				resv.state =  PVR_TIMER_STATE_CONFLICT_NOK;
 			} else if (json::get<bool>(p["isSkip"])) {
-				resv.state =  PVR_TIMER_STATE_CANCELLED;
+				resv.state =  PVR_TIMER_STATE_DISABLED;
 			} else {
 				resv.state =  PVR_TIMER_STATE_SCHEDULED;
 			}
