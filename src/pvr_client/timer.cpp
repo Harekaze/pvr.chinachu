@@ -25,6 +25,9 @@
 #include "xbmc/libXBMC_pvr.h"
 #include "chinachu/chinachu.h"
 
+#define TIMER_MANUAL_RESERVED 0x01
+#define TIMER_PATTERN_MATCHED 0x02
+
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
 extern chinachu::Recorded g_recorded;
@@ -70,7 +73,7 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 			timer.iGenreType = resv.iGenreType;
 			timer.iGenreSubType = resv.iGenreSubType;
 			timer.iClientChannelUid = resv.iClientChannelUid;
-			timer.iTimerType = PVR_TIMER_TYPE_NONE;
+			timer.iTimerType = resv.bIsManualReserved ? TIMER_MANUAL_RESERVED : TIMER_PATTERN_MATCHED;
 			// timer.iParentClientIndex = 0; /* not implemented */
 			// timer.bStartAnyTime = false; /* not implemented */
 			// timer.bEndAnyTime = false; /* not implemented */
@@ -161,7 +164,7 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 }
 
 PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
-	if (true /* !timer.bIsRepeating */ /*< TODO: change to newest api's method >*/) { // manual reserved
+	if (timer.iTimerType == TIMER_MANUAL_RESERVED) { // manual reserved
 		for (std::vector<chinachu::CHANNEL_EPG>::iterator channel = g_schedule.schedule.begin(); channel != g_schedule.schedule.end(); channel++) {
 			if ((*channel).channel.iUniqueId == timer.iClientChannelUid) {
 				for (std::vector<chinachu::EPG_PROGRAM>::iterator program = (*channel).epgs.begin(); program != (*channel).epgs.end(); program++) {
@@ -190,8 +193,55 @@ PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
 	}
 }
 
+PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *typesCount) {
+	const static PVR_TIMER_TYPE manualReserved = {
+		.iId = TIMER_MANUAL_RESERVED,
+		.iAttributes = PVR_TIMER_TYPE_IS_MANUAL | PVR_TIMER_TYPE_REQUIRES_EPG_TAG_ON_CREATE,
+		.strDescription = "Manual Reserved",
+		.iPrioritiesSize = 0,
+		.priorities = NULL,
+		.iPrioritiesDefault = 0,
+		.iLifetimesSize = 0,
+		.lifetimes = NULL,
+		.iPreventDuplicateEpisodesSize = 0,
+		.preventDuplicateEpisodes = NULL,
+		.iPreventDuplicateEpisodesDefault = 0,
+		.iRecordingGroupSize = 0,
+		.recordingGroup = NULL,
+		.iRecordingGroupDefault = 0,
+		.iMaxRecordingsSize = 0,
+		.maxRecordings = NULL,
+		.iMaxRecordingsDefault = 0
+	};
+
+	const static PVR_TIMER_TYPE patternMatched = {
+		.iId = TIMER_PATTERN_MATCHED,
+		.iAttributes = PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE,
+		.strDescription = "Pattern Matched",
+		.iPrioritiesSize = 0,
+		.priorities = NULL,
+		.iPrioritiesDefault = 0,
+		.iLifetimesSize = 0,
+		.lifetimes = NULL,
+		.iPreventDuplicateEpisodesSize = 0,
+		.preventDuplicateEpisodes = NULL,
+		.iPreventDuplicateEpisodesDefault = 0,
+		.iRecordingGroupSize = 0,
+		.recordingGroup = NULL,
+		.iRecordingGroupDefault = 0,
+		.iMaxRecordingsSize = 0,
+		.maxRecordings = NULL,
+		.iMaxRecordingsDefault = 0
+	};
+
+	types[0] = manualReserved;
+	types[1] = patternMatched;
+	*typesCount = 2;
+
+	return PVR_ERROR_NO_ERROR;
+}
+
 /* not implemented */
-PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *typesCount) { return PVR_ERROR_NOT_IMPLEMENTED; }
 bool IsTimeshifting() { return false; }
 
 }

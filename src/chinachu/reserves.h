@@ -36,7 +36,7 @@ namespace chinachu {
 		time_t startTime;
 		time_t endTime;
 		PVR_TIMER_STATE state;
-		bool bIsRepeating;
+		bool bIsManualReserved;
 		int iGenreType;
 		int iGenreSubType;
 	};
