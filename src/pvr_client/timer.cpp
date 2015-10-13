@@ -194,43 +194,45 @@ PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
 
 PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *typesCount) {
 	const static PVR_TIMER_TYPE manualReserved = {
-		.iId = TIMER_MANUAL_RESERVED,
-		.iAttributes = PVR_TIMER_TYPE_IS_MANUAL | PVR_TIMER_TYPE_REQUIRES_EPG_TAG_ON_CREATE,
-		.strDescription = "Manual Reserved",
-		.iPrioritiesSize = 0,
-		.priorities = NULL,
-		.iPrioritiesDefault = 0,
-		.iLifetimesSize = 0,
-		.lifetimes = NULL,
-		.iPreventDuplicateEpisodesSize = 0,
-		.preventDuplicateEpisodes = NULL,
-		.iPreventDuplicateEpisodesDefault = 0,
-		.iRecordingGroupSize = 0,
-		.recordingGroup = NULL,
-		.iRecordingGroupDefault = 0,
-		.iMaxRecordingsSize = 0,
-		.maxRecordings = NULL,
-		.iMaxRecordingsDefault = 0
+		TIMER_MANUAL_RESERVED, // iId
+		PVR_TIMER_TYPE_IS_MANUAL | PVR_TIMER_TYPE_REQUIRES_EPG_TAG_ON_CREATE, // iAttributes
+		"Manual Reserved", // strDescription
+		0, // iPrioritiesSize
+		{0, NULL}, // priorities
+		0, // iPrioritiesDefault
+		0, // iLifetimesSize
+		{0, NULL}, // lifetimes
+		0, // iLifetimesDefault
+		0, // iPreventDuplicateEpisodesSize
+		{0, NULL}, // preventDuplicateEpisodes
+		0, // iPreventDuplicateEpisodesDefault
+		0, // iRecordingGroupSize
+		{0, NULL}, // recordingGroup
+		0, // iRecordingGroupDefault
+		0, // iMaxRecordingsSize
+		{0, NULL}, // maxRecordings
+		0, // iMaxRecordingsDefault
 	};
 
 	const static PVR_TIMER_TYPE patternMatched = {
-		.iId = TIMER_PATTERN_MATCHED,
-		.iAttributes = PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE,
-		.strDescription = "Pattern Matched",
-		.iPrioritiesSize = 0,
-		.priorities = NULL,
-		.iPrioritiesDefault = 0,
-		.iLifetimesSize = 0,
-		.lifetimes = NULL,
-		.iPreventDuplicateEpisodesSize = 0,
-		.preventDuplicateEpisodes = NULL,
-		.iPreventDuplicateEpisodesDefault = 0,
-		.iRecordingGroupSize = 0,
-		.recordingGroup = NULL,
-		.iRecordingGroupDefault = 0,
-		.iMaxRecordingsSize = 0,
-		.maxRecordings = NULL,
-		.iMaxRecordingsDefault = 0
+		TIMER_PATTERN_MATCHED, // iId
+		PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE, // iAttributes
+		"Pattern Matched", // strDescription
+		0, // iPrioritiesSize
+		{0, NULL}, // priorities
+		0, // iPrioritiesDefault
+		0, // iLifetimesSize
+		{0, NULL}, // lifetimes
+		0, // iLifetimesDefault
+		0, // iPreventDuplicateEpisodesSize
+		{0, NULL}, // preventDuplicateEpisodes
+		0, // iPreventDuplicateEpisodesDefault
+		0, // iRecordingGroupSize
+		{0, NULL}, // recordingGroup
+		0, // iRecordingGroupDefault
+		0, // iMaxRecordingsSize
+		{0, NULL}, // maxRecordings
+		0, // iMaxRecordingsDefault
 	};
 
 	types[0] = manualReserved;
