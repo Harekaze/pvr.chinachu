@@ -101,8 +101,15 @@ namespace chinachu {
 			std::string channel = json::get<std::string>(o["channel"]);
 			ch.channel.iUniqueId = std::atoi((json::get<std::string>(o["sid"])).c_str()) * 10 + chType;
 
+			// Remove non-numerical charactor from channel number
 			while (channel.find_first_of("0123456789") != 0) {
 				channel.erase(channel.begin());
+				// If channel number contains only charactors,
+				if (channel.empty()) {
+					// use sid instead.
+					channel = json::get<std::string>(o["sid"]);
+					break;
+				}
 			}
 			ch.channel.iChannelNumber = std::atoi(channel.c_str());
 			ch.channel.iSubChannelNumber = std::atoi((json::get<std::string>(o["sid"])).c_str());
