@@ -80,7 +80,7 @@ namespace chinachu {
 			picojson::object &o = ca[i].get<picojson::object>();
 			struct CHANNEL_EPG ch;
 
-			ch.channel.strChannelType = json::get<std::string>(o["type"]);
+			ch.channel.strChannelType = o["type"].get<std::string>();
 
 			// Check whether the channel type is already listed up in groupNames vector.
 			if (find(groupNames.begin(), groupNames.end(), ch.channel.strChannelType) == groupNames.end()) {
@@ -98,8 +98,8 @@ namespace chinachu {
 				chType = 0x03;
 			}
 
-			std::string channel = json::get<std::string>(o["channel"]);
-			ch.channel.iUniqueId = std::atoi((json::get<std::string>(o["sid"])).c_str()) * 10 + chType;
+			std::string channel = o["channel"].get<std::string>();
+			ch.channel.iUniqueId = std::atoi((o["sid"].get<std::string>()).c_str()) * 10 + chType;
 
 			// Remove non-numerical charactor from channel number
 			while (channel.find_first_of("0123456789") != 0) {
@@ -107,15 +107,15 @@ namespace chinachu {
 				// If channel number contains only charactors,
 				if (channel.empty()) {
 					// use sid instead.
-					channel = json::get<std::string>(o["sid"]);
+					channel = o["sid"].get<std::string>();
 					break;
 				}
 			}
 			ch.channel.iChannelNumber = std::atoi(channel.c_str());
-			ch.channel.iSubChannelNumber = std::atoi((json::get<std::string>(o["sid"])).c_str());
-			ch.channel.strChannelName = json::get<std::string>(o["name"]);
+			ch.channel.iSubChannelNumber = std::atoi((o["sid"].get<std::string>()).c_str());
+			ch.channel.strChannelName = o["name"].get<std::string>();
 			char strStreamURL[2048];
-			snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + liveStreamingPath).c_str(), json::get<std::string>(o["id"]).c_str());
+			snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + liveStreamingPath).c_str(), o["id"].get<std::string>().c_str());
 			ch.channel.strStreamURL = strStreamURL;
 			
 			picojson::array pa = o["programs"].get<picojson::array>();
@@ -123,16 +123,16 @@ namespace chinachu {
 				picojson::object &p = pa[j].get<picojson::object>();
 				struct EPG_PROGRAM epg;
 
-				epg.startTime = json::get<double>(p["start"]) / 1000;
-				epg.endTime = json::get<double>(p["end"]) / 1000;
+				epg.startTime = p["start"].get<double>() / 1000;
+				epg.endTime = p["end"].get<double>() / 1000;
 				epg.iUniqueBroadcastId = uniqueId(epg.startTime, chType, ch.channel.iChannelNumber, ch.channel.iUniqueId);
-				epg.strUniqueBroadcastId = json::get<std::string>(p["id"]);
-				epg.strTitle = json::get<std::string>(p["title"]);
-				epg.strPlotOutline = json::get<std::string>(p["subTitle"]);
-				epg.strPlot = json::get<std::string>(p["detail"]);
-				epg.strOriginalTitle = json::get<std::string>(p["fullTitle"]);
-				epg.strGenreDescription = json::get<std::string>(p["category"]);
-				epg.iEpisodeNumber = json::get<double>(o["episode"]);
+				epg.strUniqueBroadcastId = p["id"].get<std::string>();
+				epg.strTitle = p["title"].get<std::string>();
+				epg.strPlotOutline = p["subTitle"].get<std::string>();
+				epg.strPlot = p["detail"].get<std::string>();
+				epg.strOriginalTitle = p["fullTitle"].get<std::string>();
+				epg.strGenreDescription = p["category"].get<std::string>();
+				epg.iEpisodeNumber = o["episode"].is<double>() ? o["episode"].get<double>() : 0;
 
 				ch.epgs.push_back(epg);
 			}
