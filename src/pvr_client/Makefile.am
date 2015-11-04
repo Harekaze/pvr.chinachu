@@ -9,7 +9,6 @@ libpvrchinachu_la_SOURCES = \
 	initialize.cpp \
 	live.cpp \
 	recorded.cpp \
-	settings.cpp \
 	stream.cpp \
 	timer.cpp
 
