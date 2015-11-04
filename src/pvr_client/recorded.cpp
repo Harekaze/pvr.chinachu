@@ -108,8 +108,8 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) {
 	}
 
 	picojson::object &o = v.get<picojson::object>();
-	*iTotal = (o["size"].get<double>() / 1024);
-	*iUsed = (o["used"].get<double>() / 1024);
+	*iTotal = (long long)(o["size"].get<double>() / 1024);
+	*iUsed = (long long)(o["used"].get<double>() / 1024);
 
 	return PVR_ERROR_NO_ERROR;
 }

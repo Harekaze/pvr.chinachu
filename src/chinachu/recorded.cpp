@@ -62,8 +62,8 @@ namespace chinachu {
 			rec.strPlotOutline = p["subTitle"].is<std::string>() ? p["subTitle"].get<std::string>() : "";
 			rec.strPlot = p["detail"].is<std::string>() ? p["detail"].get<std::string>() : "";
 			rec.strChannelName = (p["channel"].get<picojson::object>())["name"].get<std::string>();
-			rec.recordingTime = p["start"].get<double>() / 1000;
-			rec.iDuration = p["seconds"].get<double>();
+			rec.recordingTime = (time_t)(p["start"].get<double>() / 1000);
+			rec.iDuration = (int)(p["seconds"].get<double>());
 			rec.strGenreDescription = p["category"].get<std::string>();
 			char urlBuffer[PVR_ADDON_URL_STRING_LENGTH];
 			snprintf(urlBuffer, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedStreamingPath).c_str(), p["id"].get<std::string>().c_str());

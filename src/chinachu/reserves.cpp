@@ -98,8 +98,8 @@ namespace chinachu {
 			} else {
 				resv.state =  PVR_TIMER_STATE_SCHEDULED;
 			}
-			resv.startTime = p["start"].get<double>() / 1000;
-			resv.endTime = p["end"].get<double>() / 1000;
+			resv.startTime = (time_t)(p["start"].get<double>() / 1000);
+			resv.endTime = (time_t)(p["end"].get<double>() / 1000);
 			resv.iGenreType = iGenreType[p["category"].get<std::string>()];
 			resv.iGenreSubType = iGenreSubType[p["category"].get<std::string>()];
 			resv.bIsRepeating = !(p["isManualReserved"].is<bool>() && p["isManualReserved"].get<bool>());

@@ -123,8 +123,8 @@ namespace chinachu {
 				picojson::object &p = pa[j].get<picojson::object>();
 				struct EPG_PROGRAM epg;
 
-				epg.startTime = p["start"].get<double>() / 1000;
-				epg.endTime = p["end"].get<double>() / 1000;
+				epg.startTime = (time_t)(p["start"].get<double>() / 1000);
+				epg.endTime = (time_t)(p["end"].get<double>() / 1000);
 				epg.iUniqueBroadcastId = uniqueId(epg.startTime, chType, ch.channel.iChannelNumber, ch.channel.iUniqueId);
 				epg.strUniqueBroadcastId = p["id"].get<std::string>();
 				epg.strTitle = p["title"].get<std::string>();
@@ -132,7 +132,7 @@ namespace chinachu {
 				epg.strPlot = p["detail"].get<std::string>();
 				epg.strOriginalTitle = p["fullTitle"].get<std::string>();
 				epg.strGenreDescription = p["category"].get<std::string>();
-				epg.iEpisodeNumber = o["episode"].is<double>() ? o["episode"].get<double>() : 0;
+				epg.iEpisodeNumber = o["episode"].is<double>() ? (unsigned int)(o["episode"].get<double>()) : 0;
 
 				ch.epgs.push_back(epg);
 			}
