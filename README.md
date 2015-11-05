@@ -4,8 +4,6 @@ Chinachu PVR addon for Kodi
 
 ![icon](/template/pvr.chinachu/icon.png)
 
-![icon](/template/pvr.chinachu/icon.png)
-
 ## Supported environment
 
 ## Backend
