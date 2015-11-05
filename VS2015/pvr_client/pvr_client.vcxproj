@@ -53,7 +53,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>VERSION="$(Version)";NOMINMAX;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;__WINDOWS__;TARGET_WINDOWS;_WINDOWS;_MSVC;WIN32;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>$(DefineConstants);NOMINMAX;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;__WINDOWS__;TARGET_WINDOWS;_WINDOWS;_MSVC;WIN32;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\include;..\..\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -68,7 +68,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\include;..\..\src</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VERSION="$(Version)";NOMINMAX;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;__WINDOWS__;TARGET_WINDOWS;_WINDOWS;_MSVC;WIN32;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>$(DefineConstants);NOMINMAX;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;__WINDOWS__;TARGET_WINDOWS;_WINDOWS;_MSVC;WIN32;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
