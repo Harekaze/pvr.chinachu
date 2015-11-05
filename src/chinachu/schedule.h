@@ -23,7 +23,7 @@
 #define CHINACHU_SCHEDULE_H
 #include <iostream>
 
-#include "picojson_ex.h"
+#include "picojson/picojson.h"
 #include "chinachu/genre.h"
 #include "xbmc/xbmc_pvr_types.h"
 #include "xbmc/xbmc_epg_types.h"

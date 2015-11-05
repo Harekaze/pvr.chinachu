@@ -70,12 +70,12 @@ namespace chinachu {
 
 			picojson::object &p = pa[i].get<picojson::object>();
 			// Skip past tv program
-			if ((json::get<double>(p["end"]) / 1000) < now) {
+			if ((p["end"].get<double>() / 1000) < now) {
 				continue;
 			}
 			struct RESERVE_ITEM resv;
 
-			std::string strChannelType = json::get<std::string>((json::get<picojson::object>(p["channel"])["type"]));
+			std::string strChannelType = (p["channel"].get<picojson::object>())["type"].get<std::string>();
 
 			// Channel type: GR, BS, CS, other
 			unsigned int chType = 0;
@@ -87,23 +87,23 @@ namespace chinachu {
 				chType = 0x03;
 			}
 
-			resv.iClientChannelUid = std::atoi((json::get<std::string>((json::get<picojson::object>(p["channel"])["sid"]))).c_str()) * 10 + chType;
-			resv.strTitle = json::get<std::string>(p["fullTitle"]);
-			resv.strSummary = json::get<std::string>(p["detail"]);
-			resv.strProgramId = json::get<std::string>(p["id"]);
-			if (json::get<bool>(p["isConflict"])) {
+			resv.iClientChannelUid = std::atoi((p["channel"].get<picojson::object>())["sid"].get<std::string>().c_str()) * 10 + chType;
+			resv.strTitle = p["fullTitle"].get<std::string>();
+			resv.strSummary = p["detail"].get<std::string>();
+			resv.strProgramId = p["id"].get<std::string>();
+			if (p["isConflict"].is<bool>() && p["isConflict"].get<bool>()) {
 				resv.state =  PVR_TIMER_STATE_CONFLICT_NOK;
-			} else if (json::get<bool>(p["isSkip"])) {
+			} else if (p["isSkip"].is<bool>() && p["isSkip"].get<bool>()) {
 				resv.state =  PVR_TIMER_STATE_DISABLED;
 			} else {
 				resv.state =  PVR_TIMER_STATE_SCHEDULED;
 			}
-			resv.startTime = json::get<double>(p["start"]) / 1000;
-			resv.endTime = json::get<double>(p["end"]) / 1000;
-			resv.iGenreType = iGenreType[json::get<std::string>(p["category"])];
-			resv.iGenreSubType = iGenreSubType[json::get<std::string>(p["category"])];
-			resv.bIsManualReserved = json::get<bool>(p["isManualReserved"]);
-			
+			resv.startTime = (time_t)(p["start"].get<double>() / 1000);
+			resv.endTime = (time_t)(p["end"].get<double>() / 1000);
+			resv.iGenreType = iGenreType[p["category"].get<std::string>()];
+			resv.iGenreSubType = iGenreSubType[p["category"].get<std::string>()];
+			resv.bIsManualReserved = (p["isManualReserved"].is<bool>() && p["isManualReserved"].get<bool>());
+
 			reserves.push_back(resv);
 		}
 

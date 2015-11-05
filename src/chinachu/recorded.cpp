@@ -57,19 +57,19 @@ namespace chinachu {
 			picojson::object &p = pa[i].get<picojson::object>();
 			struct RECORDING rec;
 
-			rec.strRecordingId = json::get<std::string>(p["id"]);
-			rec.strTitle = json::get<std::string>(p["fullTitle"]);
-			rec.strPlotOutline = json::get<std::string>(p["subTitle"]);
-			rec.strPlot = json::get<std::string>(p["detail"]);
-			rec.strChannelName = json::get<std::string>(json::get<picojson::object>(p["channel"])["name"]);
-			rec.recordingTime = json::get<double>(p["start"]) / 1000;
-			rec.iDuration = json::get<double>(p["seconds"]);
-			rec.strGenreDescription = json::get<std::string>(p["category"]);
+			rec.strRecordingId = p["id"].is<std::string>() ? p["id"].get<std::string>() : "";
+			rec.strTitle = p["fullTitle"].is<std::string>() ? p["fullTitle"].get<std::string>() : "";
+			rec.strPlotOutline = p["subTitle"].is<std::string>() ? p["subTitle"].get<std::string>() : "";
+			rec.strPlot = p["detail"].is<std::string>() ? p["detail"].get<std::string>() : "";
+			rec.strChannelName = (p["channel"].get<picojson::object>())["name"].get<std::string>();
+			rec.recordingTime = (time_t)(p["start"].get<double>() / 1000);
+			rec.iDuration = (int)(p["seconds"].get<double>());
+			rec.strGenreDescription = p["category"].get<std::string>();
 			char urlBuffer[PVR_ADDON_URL_STRING_LENGTH];
-			snprintf(urlBuffer, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedStreamingPath).c_str(), json::get<std::string>(p["id"]).c_str());
+			snprintf(urlBuffer, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedStreamingPath).c_str(), p["id"].get<std::string>().c_str());
 			rec.strStreamURL = urlBuffer;
 			if (showThumbnail) {
-				snprintf(urlBuffer, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedThumbnailPath).c_str(), json::get<std::string>(p["id"]).c_str());
+				snprintf(urlBuffer, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedThumbnailPath).c_str(), p["id"].get<std::string>().c_str());
 				rec.strThumbnailPath = urlBuffer;
 			} else {
 				rec.strThumbnailPath = "";
