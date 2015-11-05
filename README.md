@@ -14,7 +14,8 @@ Chinachu tree [95232f0ef3](https://github.com/mzyy94/Chinachu/tree/95232f0ef3a9f
   + for OS X 64bit
   + for Android ARM
   + for Linux amd64/i386/armv7
-  
+  + for Windows
+
 ## Latest release
 
 [pvr.chinachu/releases](https://github.com/mzyy94/pvr.chinachu/releases)
@@ -40,6 +41,19 @@ $ ./configure --host=arm-linux-androideabi
 $ make
 $ ls pvr.chinachu.*.zip
 ```
+
+### Windows
+
+Requirements:
+- Visual Studio 2015
+- PowerShell v5
+
+```powershell
+> ./build.ps1
+> ls ./pvr.chinachu.*.zip
+```
+> TIPS: If a powershell warning about Execution Policies has occurred, run `Set-ExecutionPolocy Unrestricted`
+> with Administrator privileges. After building this project, run `Set-ExecutionPolocy RemoteSigned`, please.
 
 ## Installing
 
