@@ -1,5 +1,5 @@
 v1.1.0
-- Support Kod on Windows
+- Support Kodi on Windows
 - Manual program reserving addition/deletion is available
 - Show recording disk space information
 - Bug fix
