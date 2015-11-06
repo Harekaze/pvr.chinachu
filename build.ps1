@@ -5,5 +5,7 @@ Copy-Item .\ChangeLog.txt .\pvr.chinachu
 Copy-Item .\LICENSE .\pvr.chinachu
 Get-Content .\template\pvr.chinachu\addon.xml | % { $_ -replace "VERSOION","$version" } | Set-Content .\pvr.chinachu\addon.xml
 Copy-Item .\VS2015\Release\pvr.chinachu.dll .\pvr.chinachu
-Compress-Archive -Force -Path .\pvr.chinachu -DestinationPath .\pvr.chinachu.$version.zip
+Compress-Archive -Force -CompressionLevel NoCompression -Path .\pvr.chinachu -DestinationPath .\pvr.chinachu.$version.zip
 Remove-Item -Recurse  .\pvr.chinachu
+Write-Warning "PowerShell command 'Compress-Archive' creates broken zip file.
+Please unzip .\pvr.chinachu.$version.zip yourself, and re-zip it with other compression tool."
