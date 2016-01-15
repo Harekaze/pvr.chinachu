@@ -1,5 +1,5 @@
 /*
- *         Copylight (C) 2015 Yuki MIZUNO
+ *         Copyright (C) 2015-2016 Yuki MIZUNO
  *         https://github.com/mzyy94/pvr.chinachu/
  *
  *
