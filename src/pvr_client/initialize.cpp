@@ -142,6 +142,12 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 	g_recorded.recordedStreamingPath += transcodeParams;
 	g_recording.recordingStreamingPath += transcodeParams;
 
+	if (XBMC->GetSetting("try_playback", &boolValue) && boolValue) {
+		g_recording.bPlayback = true;
+		XBMC->Log(LOG_NOTICE, "Playback ongoing recording (Beta) enabled");
+	} else {
+		g_recording.bPlayback = false;
+	}
 	currentStatus = ADDON_STATUS_OK;
 
 	return currentStatus;

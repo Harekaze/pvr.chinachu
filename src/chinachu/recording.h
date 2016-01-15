@@ -32,6 +32,7 @@ namespace chinachu {
 		private:
 			time_t lastUpdated;
 		public:
+			bool bPlayback;
 			static time_t nextUpdateTime;
 			std::string recordingStreamingPath;
 			std::string recordingThumbnailPath;

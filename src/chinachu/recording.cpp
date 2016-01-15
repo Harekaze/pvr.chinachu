@@ -30,6 +30,9 @@ extern ADDON::CHelper_libXBMC_addon *XBMC;
 namespace chinachu {
 	time_t Recording::nextUpdateTime = 0;
 	bool Recording::refreshIfNeeded() {
+		if (!bPlayback) {
+			return true;
+		}
 		time_t now;
 		time(&now);
 		const time_t refreshInterval = 10*60; // every 10 minutes
