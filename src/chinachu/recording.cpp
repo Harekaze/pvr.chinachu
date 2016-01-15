@@ -33,7 +33,7 @@ namespace chinachu {
 		time_t now;
 		time(&now);
 		const time_t refreshInterval = 10*60; // every 10 minutes
-		if (programs.empty() || (now - lastUpdated) > refreshInterval || now > nextUpdateTime)
+		if ((now - lastUpdated) > refreshInterval || now > nextUpdateTime)
 			return refresh();
 		return true;
 	}
@@ -80,11 +80,16 @@ namespace chinachu {
 		}
 
 		time(&lastUpdated);
-		if (nextUpdateTime <= lastUpdated) {
-			nextUpdateTime = std::numeric_limits<time_t>::max();
+		if (!programs.empty()) {
+			nextUpdateTime = (*programs.begin()).recordingTime + (*programs.begin()).iDuration + 10;
 		}
+		if (nextUpdateTime <= lastUpdated) {
+			nextUpdateTime = lastUpdated + 10 * 60;
+		}
+		chinachu::Recorded::nextUpdateTime = nextUpdateTime;
 
 		XBMC->Log(ADDON::LOG_NOTICE, "Updated recording program: ammount = %d", programs.size());
+		XBMC->Log(ADDON::LOG_NOTICE, "Next recording program update at %s", asctime(localtime(&nextUpdateTime)));
 
 		return true;
 	}

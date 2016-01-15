@@ -22,6 +22,7 @@
 #include "api.h"
 #include "reserves.h"
 #include "recorded.h"
+#include "recording.h"
 #include "xbmc/libXBMC_addon.h"
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
@@ -109,14 +110,15 @@ namespace chinachu {
 
 		time(&lastUpdated);
 		if (!reserves.empty()) {
-			nextUpdateTime = (*reserves.begin()).endTime + 10;
+			nextUpdateTime = (*reserves.begin()).endTime + 60;
 		}
 		if (nextUpdateTime <= lastUpdated) {
-			nextUpdateTime = std::numeric_limits<time_t>::max();
+			nextUpdateTime = lastUpdated + 10 * 60;
 		}
-		chinachu::Recorded::nextUpdateTime = nextUpdateTime;
+		chinachu::Recording::nextUpdateTime = nextUpdateTime - 60;
 
 		XBMC->Log(ADDON::LOG_NOTICE, "Updated reserved program: ammount = %d", reserves.size());
+		XBMC->Log(ADDON::LOG_NOTICE, "Next reserved program update at %s", asctime(localtime(&nextUpdateTime)));
 
 		return true;
 	}

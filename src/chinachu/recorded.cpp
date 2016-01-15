@@ -80,10 +80,11 @@ namespace chinachu {
 
 		time(&lastUpdated);
 		if (nextUpdateTime <= lastUpdated) {
-			nextUpdateTime = std::numeric_limits<time_t>::max();
+			nextUpdateTime = lastUpdated + 10 * 60;
 		}
 
 		XBMC->Log(ADDON::LOG_NOTICE, "Updated recorded program: ammount = %d", programs.size());
+		XBMC->Log(ADDON::LOG_NOTICE, "Next recorded program update at %s", asctime(localtime(&nextUpdateTime)));
 
 		return true;
 	}
