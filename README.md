@@ -7,7 +7,7 @@ Chinachu PVR addon for Kodi
 ## Supported environment
 
 ### Backend
-Chinachu tree [95232f0ef3](https://github.com/mzyy94/Chinachu/tree/95232f0ef3a9f6709dac640c1b0dc56064861c85)
+Chinachu tree [5c39543657](https://github.com/kanreisa/Chinachu/tree/5c395436575f266810a40cc475c436bff884f792)
 
 ### Frontend
 - Kodi **15.x** Isengard
