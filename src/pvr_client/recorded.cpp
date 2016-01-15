@@ -99,6 +99,13 @@ PVR_ERROR DeleteRecording(const PVR_RECORDING &recording) {
 PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) {
 	picojson::value v;
 	std::string response;
+	const time_t refreshInterval = 10*60; // every 10 minutes
+	static time_t lastUpdated;
+	time_t now;
+
+	time(&now);
+	if (now - lastUpdated < refreshInterval)
+		return PVR_ERROR_NO_ERROR;
 
 	chinachu::api::getStorage(response);
 	std::string err = picojson::parse(v, response);
@@ -111,6 +118,7 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) {
 	*iTotal = (long long)(o["size"].get<double>() / 1024);
 	*iUsed = (long long)(o["used"].get<double>() / 1024);
 
+	lastUpdated = now;
 	return PVR_ERROR_NO_ERROR;
 }
 
