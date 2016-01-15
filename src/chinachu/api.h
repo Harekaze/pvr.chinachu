@@ -37,6 +37,9 @@ namespace chinachu {
 		// GET /recorded.json
 		int getRecorded(std::string &response);
 
+		// GET /recording.json
+		int getRecording(std::string &response);
+
 		// GET /reserves.json
 		int getReserves(std::string &response);
 
