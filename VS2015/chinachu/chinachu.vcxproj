@@ -76,6 +76,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\chinachu\api.cpp" />
     <ClCompile Include="..\..\src\chinachu\recorded.cpp" />
+    <ClCompile Include="..\..\src\chinachu\recording.cpp" />
     <ClCompile Include="..\..\src\chinachu\reserves.cpp" />
     <ClCompile Include="..\..\src\chinachu\schedule.cpp" />
   </ItemGroup>
@@ -84,6 +85,7 @@
     <ClInclude Include="..\..\src\chinachu\api.h" />
     <ClInclude Include="..\..\src\chinachu\chinachu.h" />
     <ClInclude Include="..\..\src\chinachu\recorded.h" />
+    <ClInclude Include="..\..\src\chinachu\recording.h" />
     <ClInclude Include="..\..\src\chinachu\reserves.h" />
     <ClInclude Include="..\..\src\chinachu\schedule.h" />
   </ItemGroup>

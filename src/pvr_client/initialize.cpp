@@ -1,5 +1,5 @@
 /*
- *         Copylight (C) 2015 Yuki MIZUNO
+ *         Copyright (C) 2015-2016 Yuki MIZUNO
  *         https://github.com/mzyy94/pvr.chinachu/
  *
  *
@@ -31,6 +31,7 @@ using namespace ADDON;
 
 chinachu::Schedule g_schedule;
 chinachu::Recorded g_recorded;
+chinachu::Recording g_recording;
 CHelper_libXBMC_addon *XBMC = NULL;
 CHelper_libXBMC_pvr *PVR = NULL;
 
@@ -71,6 +72,7 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 	}
 	g_schedule.liveStreamingPath = "channel/%s/watch.m2ts?ext=m2ts";
 	g_recorded.recordedStreamingPath = "recorded/%s/watch.m2ts?ext=m2ts";
+	g_recording.recordingStreamingPath = "recording/%s/watch.m2ts?ext=m2ts";
 
 	int boolValue = 0;
 	if (XBMC->GetSetting("show_thumbnail", &boolValue) && boolValue) {
@@ -81,6 +83,8 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 		snprintf(valueString, 4, "%d", intValue);
 		g_recorded.recordedThumbnailPath = "recorded/%s/preview.png?pos=";
 		g_recorded.recordedThumbnailPath += valueString;
+		g_recording.recordingThumbnailPath = "recording/%s/preview.png?pos=";
+		g_recording.recordingThumbnailPath += valueString;
 	} else {
 		g_recorded.recordedThumbnailPath = "";
 	}
@@ -136,7 +140,14 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 
 	g_schedule.liveStreamingPath += transcodeParams;
 	g_recorded.recordedStreamingPath += transcodeParams;
+	g_recording.recordingStreamingPath += transcodeParams;
 
+	if (XBMC->GetSetting("try_playback", &boolValue) && boolValue) {
+		g_recording.bPlayback = true;
+		XBMC->Log(LOG_NOTICE, "Playback ongoing recording (Beta) enabled");
+	} else {
+		g_recording.bPlayback = false;
+	}
 	currentStatus = ADDON_STATUS_OK;
 
 	return currentStatus;

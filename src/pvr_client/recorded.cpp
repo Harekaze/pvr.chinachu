@@ -1,5 +1,5 @@
 /*
- *         Copylight (C) 2015 Yuki MIZUNO
+ *         Copyright (C) 2015-2016 Yuki MIZUNO
  *         https://github.com/mzyy94/pvr.chinachu/
  *
  *
@@ -30,19 +30,52 @@ using namespace ADDON;
 extern CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
 extern chinachu::Recorded g_recorded;
+extern chinachu::Recording g_recording;
 
 extern "C" {
 
 int GetRecordingsAmount(bool deleted) {
 	g_recorded.refreshIfNeeded();
-	return g_recorded.programs.size();
+	g_recording.refreshIfNeeded();
+	return g_recorded.programs.size() + g_recording.programs.size();
 }
 PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
-	if (g_recorded.refreshIfNeeded()) {
+	if (g_recording.refreshIfNeeded() && g_recorded.refreshIfNeeded()) {
 
 		std::map<std::string, int> iGenreType;
 		std::map<std::string, int> iGenreSubType;
 		chinachu::initGenreType(iGenreType, iGenreSubType);
+
+		for (unsigned int i = 0, lim = g_recording.programs.size(); i < lim; i++) {
+			chinachu::RECORDING rec = g_recording.programs[i];
+
+			PVR_RECORDING pvr_rec;
+			memset(&pvr_rec, 0, sizeof(PVR_RECORDING));
+
+			strncpy(pvr_rec.strRecordingId, rec.strRecordingId.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
+			strncpy(pvr_rec.strTitle, rec.strTitle.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
+			strncpy(pvr_rec.strPlotOutline, rec.strPlotOutline.c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
+			strncpy(pvr_rec.strPlot, rec.strPlot.c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
+			strncpy(pvr_rec.strChannelName, rec.strChannelName.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
+			pvr_rec.recordingTime = rec.recordingTime;
+			pvr_rec.iDuration = rec.iDuration;
+			pvr_rec.iGenreType = iGenreType[rec.strGenreDescription];
+			pvr_rec.iGenreSubType = iGenreSubType[rec.strGenreDescription];
+			strncpy(pvr_rec.strStreamURL, rec.strStreamURL.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
+			strncpy(pvr_rec.strThumbnailPath, rec.strThumbnailPath.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
+			// strncpy(pvr_rec.strDirectory, "Directory", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
+			// strncpy(pvr_rec.strIconPath, "IconPath", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
+			// strncpy(pvr_rec.strFanartPath, "FanartPath", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
+			// pvr_rec.iPriority = 100; /* not implemented */
+			// pvr_rec.iLifetime = 0; /* not implemented */
+			// pvr_rec.iGenreSubType = 0; /* not implemented */
+			// pvr_rec.iPlayCount = 0; /* not implemented */
+			// pvr_rec.iLastPlayedPosition = 0; /* not implemented */
+			// pvr_rec.iEpgEventId = 1; /* not implemented */
+
+			PVR->TransferRecordingEntry(handle, &pvr_rec);
+
+		}
 
 		for (unsigned int i = 0, lim = g_recorded.programs.size(); i < lim; i++) {
 			chinachu::RECORDING rec = g_recorded.programs[i];
@@ -103,6 +136,17 @@ PVR_ERROR DeleteRecording(const PVR_RECORDING &recording) {
 PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) {
 	picojson::value v;
 	std::string response;
+	const time_t refreshInterval = 10*60; // every 10 minutes
+	static time_t lastUpdated;
+	time_t now;
+	static long long total, used;
+
+	time(&now);
+	if (now - lastUpdated < refreshInterval) {
+		*iTotal = total;
+		*iUsed = used;
+		return PVR_ERROR_NO_ERROR;
+	}
 
 	chinachu::api::getStorage(response);
 	std::string err = picojson::parse(v, response);
@@ -112,9 +156,12 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) {
 	}
 
 	picojson::object &o = v.get<picojson::object>();
-	*iTotal = (long long)(o["size"].get<double>() / 1024);
-	*iUsed = (long long)(o["used"].get<double>() / 1024);
+	total = (long long)(o["size"].get<double>() / 1024);
+	used = (long long)(o["used"].get<double>() / 1024);
+	*iTotal = total;
+	*iUsed = used;
 
+	lastUpdated = now;
 	return PVR_ERROR_NO_ERROR;
 }
 

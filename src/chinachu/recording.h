@@ -19,13 +19,31 @@
  * along with pvr.chinachu.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef CHINACHU_CHINACHU_H
-#define CHINACHU_CHINACHU_H
+#ifndef CHINACHU_RECORDING_H
+#define CHINACHU_RECORDING_H
+#include <iostream>
 
-#include "schedule.h"
-#include "recorded.h"
-#include "recording.h"
-#include "reserves.h"
-#include "api.h"
+#include "picojson/picojson.h"
+#include "chinachu/genre.h"
+#include "xbmc/xbmc_pvr_types.h"
+
+namespace chinachu {
+	class Recording {
+		private:
+			time_t lastUpdated;
+		public:
+			bool bPlayback;
+			static time_t nextUpdateTime;
+			std::string recordingStreamingPath;
+			std::string recordingThumbnailPath;
+			std::vector<RECORDING> programs;
+			Recording()
+			{
+				// refresh(); /* initial refresh */
+			}
+			bool refreshIfNeeded();
+			bool refresh();
+	};
+} // namespace chinachu
 
 #endif /* end of include guard */

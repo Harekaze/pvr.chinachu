@@ -1,5 +1,5 @@
 /*
- *         Copylight (C) 2015 Yuki MIZUNO
+ *         Copyright (C) 2015-2016 Yuki MIZUNO
  *         https://github.com/mzyy94/pvr.chinachu/
  *
  *
@@ -91,6 +91,12 @@ namespace chinachu {
 		// GET /recorded.json
 		int getRecorded(std::string &response) {
 			const std::string apiPath = "recorded.json";
+			return requestGET(apiPath, response);
+		}
+
+		// GET /recording.json
+		int getRecording(std::string &response) {
+			const std::string apiPath = "recording.json";
 			return requestGET(apiPath, response);
 		}
 

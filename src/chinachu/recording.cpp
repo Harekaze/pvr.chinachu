@@ -21,35 +21,39 @@
  */
 #include "api.h"
 #include "recorded.h"
+#include "recording.h"
 #include "xbmc/libXBMC_addon.h"
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 
 
 namespace chinachu {
-	time_t Recorded::nextUpdateTime = 0;
-	bool Recorded::refreshIfNeeded() {
+	time_t Recording::nextUpdateTime = 0;
+	bool Recording::refreshIfNeeded() {
+		if (!bPlayback) {
+			return true;
+		}
 		time_t now;
 		time(&now);
 		const time_t refreshInterval = 10*60; // every 10 minutes
-		if (programs.empty() || (now - lastUpdated) > refreshInterval || now > nextUpdateTime)
+		if ((now - lastUpdated) > refreshInterval || now > nextUpdateTime)
 			return refresh();
 		return true;
 	}
 
 
-	bool Recorded::refresh() {
+	bool Recording::refresh() {
 		picojson::value v;
 		std::string response;
 
-		chinachu::api::getRecorded(response);
+		chinachu::api::getRecording(response);
 		std::string err = picojson::parse(v, response);
 		if (!err.empty()) {
-			XBMC->Log(ADDON::LOG_ERROR, "[recorded.json] Failed to parse JSON string: %s", err.c_str());
+			XBMC->Log(ADDON::LOG_ERROR, "[recording.json] Failed to parse JSON string: %s", err.c_str());
 			return false;
 		}
 
-		bool showThumbnail = !recordedThumbnailPath.empty();
+		bool showThumbnail = !recordingThumbnailPath.empty();
 		programs.clear();
 
 		picojson::array pa = v.get<picojson::array>();
@@ -66,10 +70,10 @@ namespace chinachu {
 			rec.iDuration = (int)(p["seconds"].get<double>());
 			rec.strGenreDescription = p["category"].get<std::string>();
 			char urlBuffer[PVR_ADDON_URL_STRING_LENGTH];
-			snprintf(urlBuffer, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedStreamingPath).c_str(), p["id"].get<std::string>().c_str());
+			snprintf(urlBuffer, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordingStreamingPath).c_str(), p["id"].get<std::string>().c_str());
 			rec.strStreamURL = urlBuffer;
 			if (showThumbnail) {
-				snprintf(urlBuffer, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedThumbnailPath).c_str(), p["id"].get<std::string>().c_str());
+				snprintf(urlBuffer, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordingThumbnailPath).c_str(), p["id"].get<std::string>().c_str());
 				rec.strThumbnailPath = urlBuffer;
 			} else {
 				rec.strThumbnailPath = "";
@@ -79,12 +83,16 @@ namespace chinachu {
 		}
 
 		time(&lastUpdated);
+		if (!programs.empty()) {
+			nextUpdateTime = (*programs.begin()).recordingTime + (*programs.begin()).iDuration + 10;
+		}
 		if (nextUpdateTime <= lastUpdated) {
 			nextUpdateTime = lastUpdated + 10 * 60;
 		}
+		chinachu::Recorded::nextUpdateTime = nextUpdateTime;
 
-		XBMC->Log(ADDON::LOG_NOTICE, "Updated recorded program: ammount = %d", programs.size());
-		XBMC->Log(ADDON::LOG_NOTICE, "Next recorded program update at %s", asctime(localtime(&nextUpdateTime)));
+		XBMC->Log(ADDON::LOG_NOTICE, "Updated recording program: ammount = %d", programs.size());
+		XBMC->Log(ADDON::LOG_NOTICE, "Next recording program update at %s", asctime(localtime(&nextUpdateTime)));
 
 		return true;
 	}
