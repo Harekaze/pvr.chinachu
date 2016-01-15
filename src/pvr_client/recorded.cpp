@@ -102,10 +102,14 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) {
 	const time_t refreshInterval = 10*60; // every 10 minutes
 	static time_t lastUpdated;
 	time_t now;
+	static long long total, used;
 
 	time(&now);
-	if (now - lastUpdated < refreshInterval)
+	if (now - lastUpdated < refreshInterval) {
+		*iTotal = total;
+		*iUsed = used;
 		return PVR_ERROR_NO_ERROR;
+	}
 
 	chinachu::api::getStorage(response);
 	std::string err = picojson::parse(v, response);
@@ -115,8 +119,10 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) {
 	}
 
 	picojson::object &o = v.get<picojson::object>();
-	*iTotal = (long long)(o["size"].get<double>() / 1024);
-	*iUsed = (long long)(o["used"].get<double>() / 1024);
+	total = (long long)(o["size"].get<double>() / 1024);
+	used = (long long)(o["used"].get<double>() / 1024);
+	*iTotal = total;
+	*iUsed = used;
 
 	lastUpdated = now;
 	return PVR_ERROR_NO_ERROR;
