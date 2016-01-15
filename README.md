@@ -55,6 +55,9 @@ Requirements:
 > TIPS: If a powershell warning about Execution Policies has occurred, run `Set-ExecutionPolocy Unrestricted`
 > with Administrator privileges. After building this project, run `Set-ExecutionPolocy RemoteSigned`, please.
 
+> NOTE: PowerShell command 'Compress-Archive' creates broken zip file.
+> Please unzip created archive yourself, and re-zip it with other compression tool.
+
 ## Installing
 
 1. Build or download the appropriate version for your platform. 
