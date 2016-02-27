@@ -168,15 +168,26 @@ PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
 			if ((*channel).channel.iUniqueId == timer.iClientChannelUid) {
 				for (std::vector<chinachu::EPG_PROGRAM>::iterator program = (*channel).epgs.begin(); program != (*channel).epgs.end(); program++) {
 					if ((*program).startTime == timer.startTime && (*program).endTime == timer.endTime) {
-						if (chinachu::api::deleteReserves((*program).strUniqueBroadcastId) != -1) {
-							XBMC->Log(LOG_NOTICE, "Delete manual reserved program: %s", (*program).strUniqueBroadcastId.c_str());
-							time_t now;
-							time(&now);
-							g_reserve.nextUpdateTime = now; // refresh reserved programs immediately.
-							return PVR_ERROR_NO_ERROR;
+						time_t now;
+						time(&now);
+						if ((*program).startTime < now && now < (*program).endTime) { // Ongoing recording
+							if (chinachu::api::deleteRecordingProgram((*program).strUniqueBroadcastId) != -1) { // Cancel recording
+								XBMC->Log(LOG_NOTICE, "Cancel ongoing recording program: %s", (*program).strUniqueBroadcastId.c_str());
+								g_reserve.nextUpdateTime = now; // refresh reserved programs immediately.
+								return PVR_ERROR_NO_ERROR;
+							} else {
+								XBMC->Log(LOG_ERROR, "Failed to cancel recording program: %s", (*program).strUniqueBroadcastId.c_str());
+								return PVR_ERROR_SERVER_ERROR;
+							}
 						} else {
-							XBMC->Log(LOG_ERROR, "Failed to delete reserved program: %s", (*program).strUniqueBroadcastId.c_str());
-							return PVR_ERROR_SERVER_ERROR;
+							if (chinachu::api::deleteReserves((*program).strUniqueBroadcastId) != -1) {
+								XBMC->Log(LOG_NOTICE, "Delete manual reserved program: %s", (*program).strUniqueBroadcastId.c_str());
+								g_reserve.nextUpdateTime = now; // refresh reserved programs immediately.
+								return PVR_ERROR_NO_ERROR;
+							} else {
+								XBMC->Log(LOG_ERROR, "Failed to delete reserved program: %s", (*program).strUniqueBroadcastId.c_str());
+								return PVR_ERROR_SERVER_ERROR;
+							}
 						}
 					}
 				}

@@ -118,6 +118,12 @@ namespace chinachu {
 			return requestDELETE(apiPath);
 		}
 
+		// DELETE /recording/:id.json
+		int deleteRecordingProgram(std::string id) {
+			const std::string apiPath = "recording/" + id + ".json";
+			return requestDELETE(apiPath);
+		}
+
 		// PUT /reserves/:id/skip.json
 		int putReservesSkip(std::string id) {
 			const std::string apiPath = "reserves/" + id + "/skip.json";

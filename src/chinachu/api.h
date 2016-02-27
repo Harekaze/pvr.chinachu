@@ -49,6 +49,9 @@ namespace chinachu {
 		// DELETE /recorded/:id.json
 		int deleteRecordedInfo(std::string id);
 
+		// DELETE /recording/:id.json
+		int deleteRecordingProgram(std::string id);
+
 		// PUT /reserves/:id/skip.json
 		int putReservesSkip(std::string id);
 
