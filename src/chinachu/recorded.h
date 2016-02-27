@@ -31,11 +31,13 @@ namespace chinachu {
 	struct RECORDING {
 		std::string strRecordingId;
 		std::string strTitle;
+		std::string strEpisodeName;
 		std::string strPlotOutline;
 		std::string strPlot;
 		std::string strChannelName;
 		std::string strStreamURL;
 		std::string strThumbnailPath;
+		int iEpisodeNumber;
 		time_t recordingTime;
 		int iDuration;
 		unsigned int iEpgEventId;

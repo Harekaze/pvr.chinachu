@@ -60,9 +60,11 @@ namespace chinachu {
 
 			rec.strRecordingId = p["id"].is<std::string>() ? p["id"].get<std::string>() : "";
 			rec.strTitle = p["fullTitle"].is<std::string>() ? p["fullTitle"].get<std::string>() : "";
+			rec.strEpisodeName = p["subTitle"].is<std::string>() ? p["subTitle"].get<std::string>() : "";
 			rec.strPlotOutline = p["subTitle"].is<std::string>() ? p["subTitle"].get<std::string>() : "";
 			rec.strPlot = p["detail"].is<std::string>() ? p["detail"].get<std::string>() : "";
 			rec.strChannelName = (p["channel"].get<picojson::object>())["name"].get<std::string>();
+			rec.iEpisodeNumber = p["episode"].is<double>() ? (unsigned int)(p["episode"].get<double>()) : 0;
 			rec.recordingTime = (time_t)(p["start"].get<double>() / 1000);
 			rec.iDuration = (int)(p["seconds"].get<double>());
 			rec.strGenreDescription = p["category"].get<std::string>();

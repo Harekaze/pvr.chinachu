@@ -54,10 +54,12 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 
 			strncpy(pvr_rec.strRecordingId, rec.strRecordingId.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strTitle, rec.strTitle.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
+			strncpy(pvr_rec.strEpisodeName, rec.strEpisodeName.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strPlotOutline, rec.strPlotOutline.c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strPlot, rec.strPlot.c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strChannelName, rec.strChannelName.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 			pvr_rec.recordingTime = rec.recordingTime;
+			pvr_rec.iEpisodeNumber = rec.iEpisodeNumber;
 			pvr_rec.iDuration = rec.iDuration;
 			pvr_rec.iGenreType = iGenreType[rec.strGenreDescription];
 			pvr_rec.iGenreSubType = iGenreSubType[rec.strGenreDescription];
@@ -85,10 +87,12 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 
 			strncpy(pvr_rec.strRecordingId, rec.strRecordingId.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strTitle, rec.strTitle.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
+			strncpy(pvr_rec.strEpisodeName, rec.strEpisodeName.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strPlotOutline, rec.strPlotOutline.c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strPlot, rec.strPlot.c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strChannelName, rec.strChannelName.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 			pvr_rec.recordingTime = rec.recordingTime;
+			pvr_rec.iEpisodeNumber = rec.iEpisodeNumber;
 			pvr_rec.iDuration = rec.iDuration;
 			pvr_rec.iGenreType = iGenreType[rec.strGenreDescription];
 			pvr_rec.iGenreSubType = iGenreSubType[rec.strGenreDescription];
