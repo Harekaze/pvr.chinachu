@@ -1,3 +1,9 @@
+v2.0.0
+- New major version for Kodi Jarvis 16.x
+- Support canceling ongoing recording
+- Show episode information of recorded programs
+- Bug fix
+
 v1.2.0
 - Change disk storage availability update interval
 - Support playback ongoing recording (beta)
