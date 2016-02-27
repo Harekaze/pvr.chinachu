@@ -39,6 +39,7 @@ namespace chinachu {
 		bool bIsManualReserved;
 		int iGenreType;
 		int iGenreSubType;
+		int iEpgUid;
 	};
 	class Reserve {
 		private:

@@ -38,6 +38,7 @@ namespace chinachu {
 		std::string strThumbnailPath;
 		time_t recordingTime;
 		int iDuration;
+		unsigned int iEpgEventId;
 		std::string strGenreDescription;
 	};
 	class Recorded {

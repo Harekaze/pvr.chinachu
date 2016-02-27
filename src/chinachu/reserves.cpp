@@ -23,6 +23,7 @@
 #include "reserves.h"
 #include "recorded.h"
 #include "recording.h"
+#include "schedule.h"
 #include "xbmc/libXBMC_addon.h"
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
@@ -91,6 +92,7 @@ namespace chinachu {
 			resv.endTime = (time_t)(p["end"].get<double>() / 1000);
 			resv.iGenreType = iGenreType[p["category"].get<std::string>()];
 			resv.iGenreSubType = iGenreSubType[p["category"].get<std::string>()];
+			resv.iEpgUid = chinachu::generateUniqueId(resv.startTime, resv.iClientChannelUid);
 			resv.bIsManualReserved = (p["isManualReserved"].is<bool>() && p["isManualReserved"].get<bool>());
 
 			reserves.push_back(resv);

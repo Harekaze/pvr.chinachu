@@ -74,6 +74,7 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 			timer.iGenreSubType = resv.iGenreSubType;
 			timer.iClientChannelUid = resv.iClientChannelUid;
 			timer.iTimerType = resv.bIsManualReserved ? TIMER_MANUAL_RESERVED : TIMER_PATTERN_MATCHED;
+			timer.iEpgUid = resv.iEpgUid;
 			// timer.iParentClientIndex = 0; /* not implemented */
 			// timer.bStartAnyTime = false; /* not implemented */
 			// timer.bEndAnyTime = false; /* not implemented */
@@ -87,7 +88,6 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 			// timer.firstDay = 0; /* not implemented */
 			// timer.iWeekdays = 0; /* not implemented */
 			// timer.iPreventDuplicateEpisodes = 0; /* not implemented */
-			// timer.iEpgUid = 0; /* not implemented */
 			// timer.iMarginStart = 0; /* not implemented */
 			// timer.iMarginEnd = 0; /* not implemented */
 

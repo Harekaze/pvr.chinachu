@@ -61,6 +61,7 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 			pvr_rec.iDuration = rec.iDuration;
 			pvr_rec.iGenreType = iGenreType[rec.strGenreDescription];
 			pvr_rec.iGenreSubType = iGenreSubType[rec.strGenreDescription];
+			pvr_rec.iEpgEventId = rec.iEpgEventId;
 			strncpy(pvr_rec.strStreamURL, rec.strStreamURL.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strThumbnailPath, rec.strThumbnailPath.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 			// strncpy(pvr_rec.strDirectory, "Directory", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
@@ -71,7 +72,6 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 			// pvr_rec.iGenreSubType = 0; /* not implemented */
 			// pvr_rec.iPlayCount = 0; /* not implemented */
 			// pvr_rec.iLastPlayedPosition = 0; /* not implemented */
-			// pvr_rec.iEpgEventId = 1; /* not implemented */
 
 			PVR->TransferRecordingEntry(handle, &pvr_rec);
 
@@ -92,6 +92,7 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 			pvr_rec.iDuration = rec.iDuration;
 			pvr_rec.iGenreType = iGenreType[rec.strGenreDescription];
 			pvr_rec.iGenreSubType = iGenreSubType[rec.strGenreDescription];
+			pvr_rec.iEpgEventId = rec.iEpgEventId;
 			strncpy(pvr_rec.strStreamURL, rec.strStreamURL.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strThumbnailPath, rec.strThumbnailPath.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 			// strncpy(pvr_rec.strEpisodeName, "SubTitle", PVR_ADDON_NAME_STRING_LENGTH - 1); /* not implemented */
@@ -106,7 +107,6 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 			// pvr_rec.iGenreSubType = 0; /* not implemented */
 			// pvr_rec.iPlayCount = 0; /* not implemented */
 			// pvr_rec.iLastPlayedPosition = 0; /* not implemented */
-			// pvr_rec.iEpgEventId = 1; /* not implemented */
 
 			PVR->TransferRecordingEntry(handle, &pvr_rec);
 

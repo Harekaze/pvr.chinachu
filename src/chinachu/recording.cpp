@@ -22,6 +22,7 @@
 #include "api.h"
 #include "recorded.h"
 #include "recording.h"
+#include "schedule.h"
 #include "xbmc/libXBMC_addon.h"
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
@@ -69,6 +70,8 @@ namespace chinachu {
 			rec.recordingTime = (time_t)(p["start"].get<double>() / 1000);
 			rec.iDuration = (int)(p["seconds"].get<double>());
 			rec.strGenreDescription = p["category"].get<std::string>();
+			int sid = std::atoi((p["channel"].get<picojson::object>()["sid"].get<std::string>()).c_str());
+			rec.iEpgEventId = chinachu::generateUniqueId((time_t)(p["start"].get<double>() / 1000), sid);
 			char urlBuffer[PVR_ADDON_URL_STRING_LENGTH];
 			snprintf(urlBuffer, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordingStreamingPath).c_str(), p["id"].get<std::string>().c_str());
 			rec.strStreamURL = urlBuffer;
