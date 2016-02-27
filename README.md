@@ -1,8 +1,17 @@
 # Chinachu client for Kodi/XBMC
 Chinachu PVR addon for Kodi
-[![Build status: master](https://travis-ci.org/mzyy94/pvr.chinachu.svg?branch=master)](https://travis-ci.org/mzyy94/pvr.chinachu/)
+[![Build status: master](https://travis-ci.org/mzyy94/pvr.chinachu.svg?branch=Kodi-15.x)](https://travis-ci.org/mzyy94/pvr.chinachu/)
 
 ![icon](/template/pvr.chinachu/icon.png)
+
+## NOTICE
+
+**************************************************************************
+
+This branch is out-of-date with the master branch and in maintenance mode.
+Only critical bug-fixes or patches for security vulnerability will be provided.
+
+**************************************************************************
 
 ## Supported environment
 
