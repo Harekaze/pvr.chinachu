@@ -26,11 +26,11 @@
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 
 namespace chinachu {
-	unsigned int uniqueId(time_t time, unsigned int type, unsigned int ch, unsigned int sid) {
+	unsigned int generateUniqueId(time_t time, unsigned int sid) {
 		/*
 		 * Unique ID format
-		 * year:  day  : hour :  min : type:channel:sid(0)
-		 * [0-]:[0-365]:[0-23]:[0-59]:[0-3]:[0-999]:[0-9]
+		 * year:  day  : hour :  min : sid
+		 * [0-]:[0-365]:[0-23]:[0-59]:[0-999]:[0-99999]
 		 */
 		struct tm *t2 = localtime(&time);
 		unsigned int id = 0;
@@ -41,12 +41,8 @@ namespace chinachu {
 		id += t2->tm_hour;
 		id *= 60;
 		id += t2->tm_min;
-		id *= 4;
-		id += type;
-		id *= 1000;
-		id += ch;
-		id *= 10;
-		id += (sid % 10);
+		id *= 100000;
+		id += sid;
 		return id;
 	}
 
@@ -88,18 +84,8 @@ namespace chinachu {
 				groupNames.push_back(ch.channel.strChannelType);
 			}
 
-			// Channel type: GR, BS, CS, other
-			unsigned int chType = 0;
-			if (ch.channel.strChannelType == "GR") {
-				chType = 0x01;
-			} else if (ch.channel.strChannelType == "BS") {
-				chType = 0x02;
-			} else if (ch.channel.strChannelType == "CS") {
-				chType = 0x03;
-			}
-
 			std::string channel = o["channel"].get<std::string>();
-			ch.channel.iUniqueId = std::atoi((o["sid"].get<std::string>()).c_str()) * 10 + chType;
+			ch.channel.iUniqueId = std::atoi((o["sid"].get<std::string>()).c_str());
 
 			// Remove non-numerical charactor from channel number
 			while (channel.find_first_of("0123456789") != 0) {
@@ -125,7 +111,7 @@ namespace chinachu {
 
 				epg.startTime = (time_t)(p["start"].get<double>() / 1000);
 				epg.endTime = (time_t)(p["end"].get<double>() / 1000);
-				epg.iUniqueBroadcastId = uniqueId(epg.startTime, chType, ch.channel.iChannelNumber, ch.channel.iUniqueId);
+				epg.iUniqueBroadcastId = generateUniqueId(epg.startTime, ch.channel.iSubChannelNumber);
 				epg.strUniqueBroadcastId = p["id"].get<std::string>();
 				epg.strTitle = p["title"].get<std::string>();
 				epg.strPlotOutline = p["subTitle"].get<std::string>();

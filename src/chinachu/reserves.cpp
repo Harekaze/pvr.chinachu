@@ -76,19 +76,7 @@ namespace chinachu {
 			}
 			struct RESERVE_ITEM resv;
 
-			std::string strChannelType = (p["channel"].get<picojson::object>())["type"].get<std::string>();
-
-			// Channel type: GR, BS, CS, other
-			unsigned int chType = 0;
-			if (strChannelType == "GR") {
-				chType = 0x01;
-			} else if (strChannelType == "BS") {
-				chType = 0x02;
-			} else if (strChannelType == "CS") {
-				chType = 0x03;
-			}
-
-			resv.iClientChannelUid = std::atoi((p["channel"].get<picojson::object>())["sid"].get<std::string>().c_str()) * 10 + chType;
+			resv.iClientChannelUid = std::atoi((p["channel"].get<picojson::object>())["sid"].get<std::string>().c_str());
 			resv.strTitle = p["fullTitle"].get<std::string>();
 			resv.strSummary = p["detail"].get<std::string>();
 			resv.strProgramId = p["id"].get<std::string>();
