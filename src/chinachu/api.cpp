@@ -49,20 +49,11 @@ namespace chinachu {
 
 		int requestDELETE(std::string apiPath) {
 			std::string url = baseURL + apiPath;
-			/*
-			 * WARNING: Bad know-how
-			 *
-			 * With current version of KODI/XBMC addon,
-			 * the 'DELETE' method over http or https is
-			 * not functional. An alternative procedure
-			 * to request 'DELETE' over http or https is
-			 * using 'WebDAV' protocol. So, the protocol
-			 * name will be substituted for 'dav'/'davs'
-			 * as necessary.
-			 */
-			url.replace(0, 4, "dav");
-
-			if (XBMC->DeleteFile(url.c_str())) {
+			if (void* handle = XBMC->OpenFileForWrite(url.c_str(), 0)) {
+				const unsigned int buffer_size = 20;
+				char buffer[] = "{\"_method\":\"DELETE\"}";
+				XBMC->WriteFile(handle, buffer, buffer_size);
+				XBMC->CloseFile(handle);
 				return 0;
 			} else {
 				return -1;
