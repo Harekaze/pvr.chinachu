@@ -1,3 +1,6 @@
+v2.0.1
+- Fix Kodi.guilib dependency
+
 v2.0.0
 - New major version for Kodi Jarvis 16.x
 - Support canceling ongoing recording
