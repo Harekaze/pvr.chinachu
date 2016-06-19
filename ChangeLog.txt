@@ -1,3 +1,7 @@
+v2.0.2
+- Fix crash when chinachu provides no channel name
+- Fix crash when programs contain no category field
+
 v2.0.1
 - Fix Kodi.guilib dependency
 
