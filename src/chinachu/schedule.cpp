@@ -99,7 +99,8 @@ namespace chinachu {
 			}
 			ch.channel.iChannelNumber = std::atoi(channel.c_str());
 			ch.channel.iSubChannelNumber = std::atoi((o["sid"].get<std::string>()).c_str());
-			ch.channel.strChannelName = o["name"].get<std::string>();
+			// use channel id as name instead when name field isn't available.
+			ch.channel.strChannelName = o["name"].is<std::string>() ? o["name"].get<std::string>() : o["id"].get<std::string>();
 			char strStreamURL[2048];
 			snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + liveStreamingPath).c_str(), o["id"].get<std::string>().c_str());
 			ch.channel.strStreamURL = strStreamURL;
