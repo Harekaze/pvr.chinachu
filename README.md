@@ -1,6 +1,12 @@
 # Chinachu client for Kodi/XBMC
 Chinachu PVR addon for Kodi
-[![Build status: master](https://travis-ci.org/mzyy94/pvr.chinachu.svg?branch=master)](https://travis-ci.org/mzyy94/pvr.chinachu/)
+
+[![Build status: master](https://img.shields.io/travis/mzyy94/pvr.chinachu/master.svg?maxAge=259200&style=flat-square)](https://travis-ci.org/mzyy94/pvr.chinachu/)
+[![GitHub release](https://img.shields.io/github/release/mzyy94/pvr.chinachu.svg?maxAge=259200&style=flat-square)](https://github.com/mzyy94/pvr.chinachu/releases)
+[![GitHub release downloads](https://img.shields.io/github/downloads/mzyy94/pvr.chinachu/total.svg?style=flat-square)](https://github.com/mzyy94/pvr.chinachu/releases)
+[![GitHub issues](https://img.shields.io/github/issues/mzyy94/pvr.chinachu.svg?style=flat-square)](https://github.com/mzyy94/pvr.chinachu/issues)
+[![GitHub stars](https://img.shields.io/github/stars/mzyy94/pvr.chinachu.svg?style=flat-square)](https://github.com/mzyy94/pvr.chinachu/stargazers)
+[![GitHub license](https://img.shields.io/badge/license-GPLv3-orange.svg?style=flat-square)](https://raw.githubusercontent.com/mzyy94/pvr.chinachu/master/LICENSE)
 
 ![icon](/template/pvr.chinachu/icon.png)
 
@@ -60,7 +66,7 @@ Requirements:
 
 ## Installing
 
-1. Build or download the appropriate version for your platform. 
+1. Build or download the appropriate version for your platform.
 2. Launch Kodi.
 3. Navigate to System -> Add-ons -> Install from zip file
 4. Select the zip file which you get in first step.
