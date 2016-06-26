@@ -13,7 +13,7 @@ Chinachu PVR addon for Kodi
 ## Supported environment
 
 ## Backend
-Chinachu tree [03ce9a9a5e](https://github.com/kanreisa/Chinachu/tree/03ce9a9a5e5b4d2afca59d2b9946a7a70c2b6e4e)
+Chinachu tree [5981ebb0c9](https://github.com/kanreisa/Chinachu/tree/5981ebb0c9d01330da08f83dd828459614caf6d8)
 
 ## Frontend
 - Kodi **16.x** Jarvis
