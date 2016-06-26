@@ -66,9 +66,9 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 			pvr_rec.iEpgEventId = rec.iEpgEventId;
 			strncpy(pvr_rec.strStreamURL, rec.strStreamURL.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strThumbnailPath, rec.strThumbnailPath.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
+			strncpy(pvr_rec.strDirectory, rec.strDirectory.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 			// pvr_rec.iSeriesNumber = 0; /* not implemented */
 			// pvr_rec.iYear = 0; /* not implemented */
-			// strncpy(pvr_rec.strDirectory, "Directory", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
 			// strncpy(pvr_rec.strIconPath, "IconPath", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
 			// strncpy(pvr_rec.strFanartPath, "FanartPath", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
 			// pvr_rec.iPriority = 100; /* not implemented */
@@ -100,9 +100,9 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 			pvr_rec.iEpgEventId = rec.iEpgEventId;
 			strncpy(pvr_rec.strStreamURL, rec.strStreamURL.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strThumbnailPath, rec.strThumbnailPath.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
+			strncpy(pvr_rec.strDirectory, rec.strDirectory.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 			// pvr_rec.iSeriesNumber = 0; /* not implemented */
 			// pvr_rec.iYear = 0; /* not implemented */
-			// strncpy(pvr_rec.strDirectory, "Directory", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
 			// strncpy(pvr_rec.strIconPath, "IconPath", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
 			// strncpy(pvr_rec.strFanartPath, "FanartPath", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
 			// pvr_rec.iPriority = 100; /* not implemented */

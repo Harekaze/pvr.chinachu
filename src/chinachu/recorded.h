@@ -30,6 +30,7 @@
 namespace chinachu {
 	struct RECORDING {
 		std::string strRecordingId;
+		std::string strDirectory;
 		std::string strTitle;
 		std::string strEpisodeName;
 		std::string strPlotOutline;

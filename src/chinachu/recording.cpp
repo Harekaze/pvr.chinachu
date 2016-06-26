@@ -63,6 +63,7 @@ namespace chinachu {
 			struct RECORDING rec;
 
 			rec.strRecordingId = p["id"].is<std::string>() ? p["id"].get<std::string>() : "";
+			rec.strDirectory = p["title"].is<std::string>() ? p["title"].get<std::string>() : "";
 			rec.strTitle = p["fullTitle"].is<std::string>() ? p["fullTitle"].get<std::string>() : "";
 			rec.strEpisodeName = p["subTitle"].is<std::string>() ? p["subTitle"].get<std::string>() : "";
 			rec.strPlotOutline = p["subTitle"].is<std::string>() ? p["subTitle"].get<std::string>() : "";
@@ -83,7 +84,7 @@ namespace chinachu {
 			} else {
 				rec.strThumbnailPath = "";
 			}
-			
+
 			programs.push_back(rec);
 		}
 
