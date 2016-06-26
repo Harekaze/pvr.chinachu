@@ -44,3 +44,8 @@ install-sh
 ltmain.sh
 m4/
 missing
+
+*.pvr
+*.dll
+*.zip
+
