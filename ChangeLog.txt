@@ -1,3 +1,6 @@
+v2.1.0
+- Add recording item grouping option
+
 v2.0.2
 - Fix crash when chinachu provides no channel name
 - Fix crash when programs contain no category field
