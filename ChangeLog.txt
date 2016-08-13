@@ -1,3 +1,6 @@
+v3.1.0
+- Add recording item grouping force disable option
+
 v3.0.0
 - Change project name to 'Harekaze for Kodi'
 - Support Mirakurun live tv watching
