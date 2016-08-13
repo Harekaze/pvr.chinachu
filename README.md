@@ -14,6 +14,7 @@ Chinachu PVR addon for Kodi
 
 ## Backend
 Chinachu tree [7a43f80bd3](https://github.com/kanreisa/Chinachu/tree/7a43f80bd30a4eacf9c13c8a96a9dff67e3b3956)
+Mirakurun version 1.3.7
 
 ## Frontend
 - Kodi **16.x** Jarvis
