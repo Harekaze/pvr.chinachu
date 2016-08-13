@@ -44,7 +44,7 @@ $ ls pvr.chinachu.*.zip
 ```sh
 $ ./bootstrap
 $ ./configure --host=arm-linux-androideabi
-$ make
+$ make CPPFLAGS=-DPICOJSON_USE_LOCALE=0
 $ ls pvr.chinachu.*.zip
 ```
 
