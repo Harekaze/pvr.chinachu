@@ -48,6 +48,7 @@ namespace chinachu {
 		private:
 			time_t lastUpdated;
 		public:
+			bool bGrouping;
 			static time_t nextUpdateTime;
 			std::string recordedStreamingPath;
 			std::string recordedThumbnailPath;
