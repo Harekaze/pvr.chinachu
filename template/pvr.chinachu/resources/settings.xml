@@ -3,6 +3,7 @@
 	<!-- General -->
 	<category label="30200">
 		<setting id="server_url" type="text" label="30201" default="" />
+		<setting id="mirakurun_url" type="text" label="30202" default="" />
 	</category>
 
 	<!-- Streaming -->

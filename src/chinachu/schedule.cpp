@@ -102,9 +102,18 @@ namespace chinachu {
 			// use channel id as name instead when name field isn't available.
 			ch.channel.strChannelName = o["name"].is<std::string>() ? o["name"].get<std::string>() : o["id"].get<std::string>();
 			char strStreamURL[2048];
-			snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + liveStreamingPath).c_str(), o["id"].get<std::string>().c_str());
+			if (!chinachu::api::mirakurunURL.empty()) {
+				snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1,
+					(const char*)(chinachu::api::mirakurunURL + mirakurunLiveStreamingPath).c_str(),
+					o["type"].get<std::string>().c_str(),
+					o["channel"].get<std::string>().c_str());
+			} else {
+				snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1,
+					(const char*)(chinachu::api::baseURL + liveStreamingPath).c_str(),
+					o["id"].get<std::string>().c_str());
+			}
 			ch.channel.strStreamURL = strStreamURL;
-			
+
 			picojson::array pa = o["programs"].get<picojson::array>();
 			for (unsigned int j = 0, p_size = pa.size(); j < p_size; j++) {
 				picojson::object &p = pa[j].get<picojson::object>();

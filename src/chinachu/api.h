@@ -29,6 +29,9 @@ namespace chinachu {
 	namespace api {
 		extern std::string baseURL;
 
+		// Mirakurun live tv watching url
+		extern std::string mirakurunURL;
+
 		int request(std::string apiPath, std::string &response);
 
 		// GET /schedule.json

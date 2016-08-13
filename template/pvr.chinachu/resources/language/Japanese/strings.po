@@ -21,6 +21,10 @@ msgctxt "#30201"
 msgid "Chinachu WUI URL"
 msgstr "Chinachu WUIのURL"
 
+msgctxt "#30202"
+msgid "Mirakurun URL (optional)"
+msgstr "MirakurunのURL (あれば)"
+
 msgctxt "#30300"
 msgid "Streaming"
 msgstr "ストリーミング"

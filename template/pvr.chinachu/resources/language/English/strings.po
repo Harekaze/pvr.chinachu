@@ -23,7 +23,11 @@ msgctxt "#30201"
 msgid "Chinachu WUI URL"
 msgstr ""
 
-#empty strings from id 30202 to 30299
+msgctxt "#30202"
+msgid "Mirakurun URL (optional)"
+msgstr ""
+
+#empty strings from id 30203 to 30299
 
 msgctxt "#30300"
 msgid "Streaming"
