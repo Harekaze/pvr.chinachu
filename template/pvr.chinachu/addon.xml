@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="pvr.chinachu"
-		name="Chinachu PVR client"
+		name="Harekaze (Chinachu PVR client)"
 		version="VERSION"
-		provider-name="mzyy94">
+		provider-name="Harekaze project">
 	<requires>
 		<c-pluff version="0.1"/>
 		<import addon="xbmc.pvr" version="4.1.0"/>
@@ -18,9 +18,9 @@
 		<platform>linux osx android windx</platform>
 		<license>GPL v3.0</license>
 		<summary>Chinachu PVR client</summary>
-		<source>https://github.com/mzyy94/pvr.chinachu/</source>
-		<website>https://github.com/mzyy94/pvr.chinachu/wiki</website>
-		<forum>https://github.com/mzyy94/pvr.chinachu/issues</forum>
+		<source>https://github.com/Harekaze/pvr.chinachu/</source>
+		<website>https://github.com/Harekaze/pvr.chinachu/wiki</website>
+		<forum>https://github.com/Harekaze/pvr.chinachu/issues</forum>
 		<language>en ja</language>
 		<disclaimer></disclaimer>
 	</extension>

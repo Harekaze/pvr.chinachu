@@ -1,12 +1,12 @@
-# Chinachu client for Kodi/XBMC
+# Harekaze for Kodi/XBMC
 Chinachu PVR addon for Kodi
 
-[![Build status: master](https://img.shields.io/travis/mzyy94/pvr.chinachu/master.svg?maxAge=259200&style=flat-square)](https://travis-ci.org/mzyy94/pvr.chinachu/)
-[![GitHub release](https://img.shields.io/github/release/mzyy94/pvr.chinachu.svg?maxAge=259200&style=flat-square)](https://github.com/mzyy94/pvr.chinachu/releases)
-[![GitHub release downloads](https://img.shields.io/github/downloads/mzyy94/pvr.chinachu/total.svg?style=flat-square)](https://github.com/mzyy94/pvr.chinachu/releases)
-[![GitHub issues](https://img.shields.io/github/issues/mzyy94/pvr.chinachu.svg?style=flat-square)](https://github.com/mzyy94/pvr.chinachu/issues)
-[![GitHub stars](https://img.shields.io/github/stars/mzyy94/pvr.chinachu.svg?style=flat-square)](https://github.com/mzyy94/pvr.chinachu/stargazers)
-[![GitHub license](https://img.shields.io/badge/license-GPLv3-orange.svg?style=flat-square)](https://raw.githubusercontent.com/mzyy94/pvr.chinachu/master/LICENSE)
+[![Build status: master](https://img.shields.io/travis/Harekaze/pvr.chinachu/master.svg?maxAge=259200&style=flat-square)](https://travis-ci.org/Harekaze/pvr.chinachu/)
+[![GitHub release](https://img.shields.io/github/release/Harekaze/pvr.chinachu.svg?maxAge=259200&style=flat-square)](https://github.com/Harekaze/pvr.chinachu/releases)
+[![GitHub release downloads](https://img.shields.io/github/downloads/Harekaze/pvr.chinachu/total.svg?style=flat-square)](https://github.com/Harekaze/pvr.chinachu/releases)
+[![GitHub issues](https://img.shields.io/github/issues/Harekaze/pvr.chinachu.svg?style=flat-square)](https://github.com/Harekaze/pvr.chinachu/issues)
+[![GitHub stars](https://img.shields.io/github/stars/Harekaze/pvr.chinachu.svg?style=flat-square)](https://github.com/Harekaze/pvr.chinachu/stargazers)
+[![GitHub license](https://img.shields.io/badge/license-GPLv3-orange.svg?style=flat-square)](https://raw.githubusercontent.com/Harekaze/pvr.chinachu/master/LICENSE)
 
 ![icon](/template/pvr.chinachu/icon.png)
 
@@ -24,7 +24,7 @@ Chinachu tree [5981ebb0c9](https://github.com/kanreisa/Chinachu/tree/5981ebb0c9d
 
 ## Latest release
 
-[pvr.chinachu/releases](https://github.com/mzyy94/pvr.chinachu/releases)
+[pvr.chinachu/releases](https://github.com/Harekaze/pvr.chinachu/releases)
 
 ## Building from source
 
@@ -72,15 +72,15 @@ Requirements:
 4. Select the zip file which you get in first step.
 
 > NOTE: In some cases, Kodi for android installs addons into non-executable device. As a result, you need to do something more.
-> See [wiki/android-installation](https://github.com/mzyy94/pvr.chinachu/wiki/android-installation).
+> See [wiki/android-installation](https://github.com/Harekaze/pvr.chinachu/wiki/android-installation).
 
 ## Configuration
 
-See [wiki/configuration](https://github.com/mzyy94/pvr.chinachu/wiki/configuration)
+See [wiki/configuration](https://github.com/Harekaze/pvr.chinachu/wiki/configuration)
 
 ## Contribution
 
-See [wiki/contribution](https://github.com/mzyy94/pvr.chinachu/wiki/contribution)
+See [wiki/contribution](https://github.com/Harekaze/pvr.chinachu/wiki/contribution)
 
 ## License
 
