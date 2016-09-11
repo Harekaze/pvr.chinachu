@@ -106,7 +106,9 @@ namespace chinachu {
 				snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1,
 					(const char*)(chinachu::api::mirakurunURL + mirakurunLiveStreamingPath).c_str(),
 					o["type"].get<std::string>().c_str(),
-					o["channel"].get<std::string>().c_str());
+					o["channel"].get<std::string>().c_str(),
+					o["sid"].get<std::string>().c_str()
+				);
 			} else {
 				snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1,
 					(const char*)(chinachu::api::baseURL + liveStreamingPath).c_str(),
