@@ -21,7 +21,7 @@
  */
 #include "schedule.h"
 #include "api.h"
-#include "xbmc/libXBMC_addon.h"
+#include "kodi/libXBMC_addon.h"
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 

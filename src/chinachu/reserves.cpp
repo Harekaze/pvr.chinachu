@@ -24,7 +24,7 @@
 #include "recorded.h"
 #include "recording.h"
 #include "schedule.h"
-#include "xbmc/libXBMC_addon.h"
+#include "kodi/libXBMC_addon.h"
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 

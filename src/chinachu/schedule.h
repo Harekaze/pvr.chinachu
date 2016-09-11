@@ -25,8 +25,8 @@
 
 #include "picojson/picojson.h"
 #include "chinachu/genre.h"
-#include "xbmc/xbmc_pvr_types.h"
-#include "xbmc/xbmc_epg_types.h"
+#include "kodi/xbmc_pvr_types.h"
+#include "kodi/xbmc_epg_types.h"
 
 namespace chinachu {
 	struct EPG_PROGRAM {

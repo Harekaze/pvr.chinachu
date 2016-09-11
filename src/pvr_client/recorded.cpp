@@ -20,9 +20,9 @@
  *
  */
 #include <iostream>
-#include "xbmc/libKODI_guilib.h"
-#include "xbmc/libXBMC_addon.h"
-#include "xbmc/libXBMC_pvr.h"
+#include "kodi/libKODI_guilib.h"
+#include "kodi/libXBMC_addon.h"
+#include "kodi/libXBMC_pvr.h"
 #include "chinachu/chinachu.h"
 
 using namespace ADDON;

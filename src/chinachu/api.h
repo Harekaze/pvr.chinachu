@@ -23,7 +23,7 @@
 #define CHINACHU_API_H
 
 #include <iostream>
-#include "xbmc/xbmc_addon_dll.h"
+#include "kodi/xbmc_addon_dll.h"
 
 namespace chinachu {
 	namespace api {
