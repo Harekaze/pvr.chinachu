@@ -1,3 +1,6 @@
+v3.2.0
+- Support service ID for mirakurun live watching
+
 v3.1.0
 - Add recording item grouping force disable option
 
