@@ -1,7 +1,7 @@
 # Harekaze for Kodi/XBMC
 Chinachu PVR addon for Kodi
 
-[![Build status: master](https://img.shields.io/travis/Harekaze/pvr.chinachu/master.svg?maxAge=259200&style=flat-square)](https://travis-ci.org/Harekaze/pvr.chinachu/)
+[![Build status: devel-beta](https://img.shields.io/travis/Harekaze/pvr.chinachu/devel-beta.svg?maxAge=259200&style=flat-square)](https://travis-ci.org/Harekaze/pvr.chinachu/)
 [![GitHub release](https://img.shields.io/github/release/Harekaze/pvr.chinachu.svg?maxAge=259200&style=flat-square)](https://github.com/Harekaze/pvr.chinachu/releases)
 [![GitHub release downloads](https://img.shields.io/github/downloads/Harekaze/pvr.chinachu/total.svg?style=flat-square)](https://github.com/Harekaze/pvr.chinachu/releases)
 [![GitHub issues](https://img.shields.io/github/issues/Harekaze/pvr.chinachu.svg?style=flat-square)](https://github.com/Harekaze/pvr.chinachu/issues)
@@ -14,10 +14,10 @@ Chinachu PVR addon for Kodi
 
 ## Backend
 Chinachu tree [7a43f80bd3](https://github.com/kanreisa/Chinachu/tree/7a43f80bd30a4eacf9c13c8a96a9dff67e3b3956)
-Mirakurun version 1.3.7
+Mirakurun version 1.7.1
 
 ## Frontend
-- Kodi **16.x** Jarvis
+- Kodi **17.x** Krypton
   + for OS X 64bit
   + for Android ARM
   + for Linux amd64/i386/armv7
