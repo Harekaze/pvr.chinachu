@@ -204,5 +204,9 @@ void ADDON_FreeSettings(void) {}
 /* not implemented */
 void ADDON_Announce(const char *flag, const char *sender, const char *message, const void *data) {}
 PVR_ERROR CallMenuHook(const PVR_MENUHOOK& menuhook, const PVR_MENUHOOK_DATA &item) { return PVR_ERROR_NOT_IMPLEMENTED; }
+void OnSystemSleep() {}
+void OnSystemWake() {}
+void OnPowerSavingActivated() {}
+void OnPowerSavingDeactivated() {}
 
 }

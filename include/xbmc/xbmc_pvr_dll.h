@@ -1,6 +1,8 @@
+#pragma once
+
 /*
- *      Copyright (C) 2005-2013 Team XBMC
- *      http://xbmc.org
+ *      Copyright (C) 2005-2015 Team Kodi
+ *      http://kodi.tv
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -13,13 +15,10 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with XBMC; see the file COPYING.  If not, see
+ *  along with Kodi; see the file COPYING.  If not, see
  *  <http://www.gnu.org/licenses/>.
  *
  */
-
-#ifndef __XBMC_PVR_H__
-#define __XBMC_PVR_H__
 
 #include "xbmc_addon_dll.h"
 #include "xbmc_pvr_types.h"
@@ -53,16 +52,18 @@ extern "C"
   /*!
    * Get the XBMC_GUI_API_VERSION that was used to compile this add-on.
    * Used to check if this add-on is compatible with XBMC.
-   * @return The XBMC_GUI_API_VERSION that was used to compile this add-on.
+   * @return The XBMC_GUI_API_VERSION that was used to compile this add-on or empty string if this add-on does not depend on Kodi GUI API.
    * @remarks Valid implementation required.
+   * @note see libKODI_guilib.h about related parts
    */
   const char* GetGUIAPIVersion(void);
 
   /*!
    * Get the XBMC_GUI_MIN_API_VERSION that was used to compile this add-on.
    * Used to check if this add-on is compatible with XBMC.
-   * @return The XBMC_GUI_MIN_API_VERSION that was used to compile this add-on.
+   * @return The XBMC_GUI_MIN_API_VERSION that was used to compile this add-on or empty string if this add-on does not depend on Kodi GUI API.
    * @remarks Valid implementation required.
+   * @note see libKODI_guilib.h about related parts
    */
   const char* GetMininumGUIAPIVersion(void);
 
@@ -435,12 +436,6 @@ extern "C"
   long long LengthLiveStream(void);
 
   /*!
-   * @return The channel number on the backend of the live stream that's currently being read.
-   * @remarks Required if bHandlesInputStream or bHandlesDemuxing is set to true. Return -1 if this add-on won't provide this function.
-   */
-  int GetCurrentClientChannel(void);
-
-  /*!
    * Switch to another channel. Only to be called when a live stream has already been opened.
    * @param channel The channel to switch to.
    * @return True if the switch was successful, false otherwise.
@@ -636,6 +631,31 @@ extern "C"
   bool IsTimeshifting();
 
   /*!
+   *  Check for real-time streaming
+   *  @return true if current stream is real-time
+   */
+  bool IsRealTimeStream();
+
+  /*!
+   * Tell the client the time frame to use when notifying epg events back to Kodi. The client might push epg events asynchronously
+   * to Kodi using the callback function EpgEventStateChange. To be able to only push events that are actually of interest for Kodi,
+   * client needs to know about the epg time frame Kodi uses. Kodi supplies the current epg time frame value in PVR_PROPERTIES.iEpgMaxDays
+   * when creating the addon and calls SetEPGTimeFrame later whenever Kodi's epg time frame value changes.
+   * @param iDays number of days from "now". EPG_TIMEFRAME_UNLIMITED means that Kodi is interested in all epg events, regardless of event times.
+   * @return PVR_ERROR_NO_ERROR if new value was successfully set.
+   * @remarks Required if bSupportsEPG is set to true. Return PVR_ERROR_NOT_IMPLEMENTED if this add-on won't provide this function.
+   */
+  PVR_ERROR SetEPGTimeFrame(int iDays);
+
+  /*!
+   * Notify the pvr addon for power management events
+   */
+  void OnSystemSleep();
+  void OnSystemWake();
+  void OnPowerSavingActivated();
+  void OnPowerSavingDeactivated();
+
+  /*!
    * Called by XBMC to assign the function pointers of this add-on to pClient.
    * @param pClient The struct to assign the function pointers to.
    */
@@ -692,7 +712,6 @@ extern "C"
     pClient->SeekLiveStream                 = SeekLiveStream;
     pClient->PositionLiveStream             = PositionLiveStream;
     pClient->LengthLiveStream               = LengthLiveStream;
-    pClient->GetCurrentClientChannel        = GetCurrentClientChannel;
     pClient->SwitchChannel                  = SwitchChannel;
     pClient->SignalStatus                   = SignalStatus;
     pClient->GetLiveStreamURL               = GetLiveStreamURL;
@@ -722,7 +741,14 @@ extern "C"
     pClient->GetBackendHostname             = GetBackendHostname;
 
     pClient->IsTimeshifting                 = IsTimeshifting;
+    pClient->IsRealTimeStream               = IsRealTimeStream;
+
+    pClient->SetEPGTimeFrame                = SetEPGTimeFrame;
+
+    pClient->OnSystemSleep                  = OnSystemSleep;
+    pClient->OnSystemWake                   = OnSystemWake;
+    pClient->OnPowerSavingActivated         = OnPowerSavingActivated;
+    pClient->OnPowerSavingDeactivated       = OnPowerSavingDeactivated;
   };
 };
 
-#endif

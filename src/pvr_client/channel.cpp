@@ -69,10 +69,6 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio) {
 	return PVR_ERROR_NO_ERROR;
 }
 
-int GetCurrentClientChannel(void) {
-	return currentChannel.iUniqueId;
-}
-
 int GetChannelGroupsAmount(void) {
 	g_schedule.refreshIfNeeded();
 	return g_schedule.groupNames.size();
@@ -127,5 +123,6 @@ PVR_ERROR MoveChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEME
 PVR_ERROR OpenDialogChannelSettings(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR OpenDialogChannelAdd(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 unsigned int GetChannelSwitchDelay(void) { return 0; }
+PVR_ERROR SetEPGTimeFrame(int iDays) { return PVR_ERROR_NOT_IMPLEMENTED; }
 
 }

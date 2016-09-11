@@ -1,7 +1,8 @@
 #pragma once
+
 /*
- *      Copyright (C) 2005-2013 Team XBMC
- *      http://xbmc.org
+ *      Copyright (C) 2005-2015 Team Kodi
+ *      http://kodi.tv
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,13 +15,10 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with XBMC; see the file COPYING.  If not, see
+ *  along with Kodi; see the file COPYING.  If not, see
  *  <http://www.gnu.org/licenses/>.
  *
  */
-
-#ifndef __PVRCLIENT_TYPES_H__
-#define __PVRCLIENT_TYPES_H__
 
 #ifdef TARGET_WINDOWS
 #include <windows.h>
@@ -34,6 +32,7 @@
 #endif
 #include <string.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #include "xbmc_addon_types.h"
 #include "xbmc_epg_types.h"
@@ -79,10 +78,10 @@ struct DemuxPacket;
 #define PVR_STREAM_MAX_STREAMS 20
 
 /* current PVR API version */
-#define XBMC_PVR_API_VERSION "4.1.0"
+#define XBMC_PVR_API_VERSION "5.2.0"
 
 /* min. PVR API version */
-#define XBMC_PVR_MIN_API_VERSION "4.1.0"
+#define XBMC_PVR_MIN_API_VERSION "5.2.0"
 
 #ifdef __cplusplus
 extern "C" {
@@ -106,7 +105,7 @@ extern "C" {
   /*!
    * @brief special PVR_TIMER.iEpgUid value to indicate that a timer has no EPG event uid.
    */
-  const unsigned int PVR_TIMER_NO_EPG_UID = 0; /*!< @brief timer has no EPG event uid. */
+  const unsigned int PVR_TIMER_NO_EPG_UID = EPG_TAG_INVALID_UID; /*!< @brief timer has no EPG event uid. */
 
   /*!
    * @brief special PVR_TIMER.iClientChannelUid value to indicate "any channel". Useful for some repeating timer types.
@@ -160,6 +159,16 @@ extern "C" {
                                              PVR_WEEKDAY_SUNDAY;
 
   /*!
+   * @brief timeframe value for use with SetEPGTimeFrame function to indicate "no timeframe".
+   */
+  const int EPG_TIMEFRAME_UNLIMITED = -1;
+
+  /*!
+   * @brief special PVR_TIMER.iClientChannelUid and PVR_RECORDING.iChannelUid value to indicate that no channel uid is available.
+   */
+  const int PVR_CHANNEL_INVALID_UID = -1; /*!< @brief denotes that no channel uid is avaliable. */
+
+  /*!
    * @brief PVR add-on error codes
    */
   typedef enum
@@ -209,12 +218,38 @@ extern "C" {
   } PVR_MENUHOOK_CAT;
 
   /*!
+   * @brief PVR backend connection states. Used with ConnectionStateChange callback.
+   */
+  typedef enum
+  {
+    PVR_CONNECTION_STATE_UNKNOWN            = 0,  /*!< @brief unknown state (e.g. not yet tried to connect) */
+    PVR_CONNECTION_STATE_SERVER_UNREACHABLE = 1,  /*!< @brief backend server is not reachable (e.g. server not existing or network down)*/
+    PVR_CONNECTION_STATE_SERVER_MISMATCH    = 2,  /*!< @brief backend server is reachable, but there is not the expected type of server running (e.g. HTSP required, but FTP running at given server:port) */
+    PVR_CONNECTION_STATE_VERSION_MISMATCH   = 3,  /*!< @brief backend server is reachable, but server version does not match client requirements */
+    PVR_CONNECTION_STATE_ACCESS_DENIED      = 4,  /*!< @brief backend server is reachable, but denies client access (e.g. due to wrong credentials) */
+    PVR_CONNECTION_STATE_CONNECTED          = 5,  /*!< @brief connection to backend server is established */
+    PVR_CONNECTION_STATE_DISCONNECTED       = 6,  /*!< @brief no connection to backend server (e.g. due to network errors or client initiated disconnect)*/
+    PVR_CONNECTION_STATE_CONNECTING         = 7,  /*!< @brief connecting to backend */
+  } PVR_CONNECTION_STATE;
+
+  /*!
+   * @brief PVR recording channel types
+   */
+  typedef enum
+  {
+    PVR_RECORDING_CHANNEL_TYPE_UNKNOWN = 0, /*!< @brief unknown */
+    PVR_RECORDING_CHANNEL_TYPE_TV      = 1, /*!< @brief TV channel */
+    PVR_RECORDING_CHANNEL_TYPE_RADIO   = 2, /*!< @brief radio channel */
+  } PVR_RECORDING_CHANNEL_TYPE;
+
+  /*!
    * @brief Properties passed to the Create() method of an add-on.
    */
   typedef struct PVR_PROPERTIES
   {
     const char* strUserPath;           /*!< @brief path to the user profile */
     const char* strClientPath;         /*!< @brief path to this add-on */
+    int iEpgMaxDays;                   /*!< @brief if > EPG_TIMEFRAME_UNLIMITED, in async epg mode, deliver only events in the range from 'end time > now' to 'start time < now + iEpgMaxDays. EPG_TIMEFRAME_UNLIMITED, notify all events. */
   } PVR_PROPERTIES;
 
   /*!
@@ -247,11 +282,11 @@ extern "C" {
     unsigned int iStreamCount;
     struct PVR_STREAM
     {
-      unsigned int      iPhysicalId;        /*!< @brief (required) physical index */
+      unsigned int      iPID;               /*!< @brief (required) PID */
       xbmc_codec_type_t iCodecType;         /*!< @brief (required) codec type this stream */
       xbmc_codec_id_t   iCodecId;           /*!< @brief (required) codec id of this stream */
       char              strLanguage[4];     /*!< @brief (required) language id */
-      int               iIdentifier;        /*!< @brief (required) stream id */
+      int               iSubtitleInfo;      /*!< @brief (required) Subtitle Info */
       int               iFPSScale;          /*!< @brief (required) scale of 1000 and a rate of 29970 will result in 29.97 fps */
       int               iFPSRate;           /*!< @brief (required) FPS rate */
       int               iHeight;            /*!< @brief (required) height of the stream reported by the demuxer */
@@ -279,9 +314,6 @@ extern "C" {
     int    iSignal;                                        /*!< @brief (optional) signal strength */
     long   iBER;                                           /*!< @brief (optional) bit error rate */
     long   iUNC;                                           /*!< @brief (optional) uncorrected blocks */
-    double dVideoBitrate;                                  /*!< @brief (optional) video bitrate */
-    double dAudioBitrate;                                  /*!< @brief (optional) audio bitrate */
-    double dDolbyBitrate;                                  /*!< @brief (optional) dolby bitrate */
   } ATTRIBUTE_PACKED PVR_SIGNAL_STATUS;
 
   /*!
@@ -401,7 +433,7 @@ extern "C" {
                                                                     Kodi and passed the first time to the client. A valid index must be greater than PVR_TIMER_NO_CLIENT_INDEX. */
     unsigned int    iParentClientIndex;                        /*!< @brief (optional) for timers scheduled by a repeating timer, the index of the repeating timer that scheduled this timer (it's PVR_TIMER.iClientIndex value). Use PVR_TIMER_NO_PARENT
                                                                     to indicate that this timer was no scheduled by a repeating timer. */
-    int             iClientChannelUid;                         /*!< @brief (optional) unique identifier of the channel to record on. PVR_TIMER_ANY_CHANNEL will denote "any channel", not a specifoc one. */
+    int             iClientChannelUid;                         /*!< @brief (optional) unique identifier of the channel to record on. PVR_TIMER_ANY_CHANNEL will denote "any channel", not a specific one. PVR_CHANNEL_INVALID_UID denotes that channel uid is not available.*/
     time_t          startTime;                                 /*!< @brief (optional) start time of the recording in UTC. Instant timers that are sent to the add-on by Kodi will have this value set to 0.*/
     time_t          endTime;                                   /*!< @brief (optional) end time of the recording in UTC. */
     bool            bStartAnyTime;                             /*!< @brief (optional) for EPG based (not Manual) timers indicates startTime does not apply. Default = false */
@@ -423,7 +455,7 @@ extern "C" {
     unsigned int    iWeekdays;                                 /*!< @brief (optional) week days, for repeating timers */
     unsigned int    iPreventDuplicateEpisodes;                 /*!< @brief (optional) 1 if backend should only record new episodes in case of a repeating epg-based timer, 0 if all episodes shall be recorded (no duplicate detection). Actual algorithm for
                                                                     duplicate detection is defined by the backend. Addons may define own values for different duplicate detection algorithms, thus this is not just a bool.*/
-    unsigned int    iEpgUid;                                   /*!< @brief (optional) epg event id. Use PVR_TIMER_NO_EPG_UID to state that there is no EPG event id available for this timer. Values greater than PVR_TIMER_NO_EPG_UID represent a valid epg event id. */
+    unsigned int    iEpgUid;                                   /*!< @brief (optional) EPG event id associated with this timer. Valid ids must be greater than EPG_TAG_INVALID_UID. */
     unsigned int    iMarginStart;                              /*!< @brief (optional) if set, the backend starts the recording iMarginStart minutes before startTime. */
     unsigned int    iMarginEnd;                                /*!< @brief (optional) if set, the backend ends the recording iMarginEnd minutes after endTime. */
     int             iGenreType;                                /*!< @brief (optional) genre type */
@@ -458,7 +490,9 @@ extern "C" {
     int    iPlayCount;                                    /*!< @brief (optional) play count of this recording on the client */
     int    iLastPlayedPosition;                           /*!< @brief (optional) last played position of this recording on the client */
     bool   bIsDeleted;                                    /*!< @brief (optional) shows this recording is deleted and can be undelete */
-    unsigned int iEpgEventId;                             /*!< @brief (optional) EPG event id associated with this recording */
+    unsigned int iEpgEventId;                             /*!< @brief (optional) EPG event id associated with this recording. Valid ids must be greater than EPG_TAG_INVALID_UID. */
+    int    iChannelUid;                                   /*!< @brief (optional) unique identifier of the channel for this recording. PVR_CHANNEL_INVALID_UID denotes that channel uid is not available. */
+    PVR_RECORDING_CHANNEL_TYPE channelType;               /*!< @brief (optional) channel type. Set to PVR_RECORDING_CHANNEL_TYPE_UNKNOWN if the type cannot be determined. */
   } ATTRIBUTE_PACKED PVR_RECORDING;
 
   /*!
@@ -543,7 +577,6 @@ extern "C" {
     long long    (__cdecl* SeekLiveStream)(long long, int);
     long long    (__cdecl* PositionLiveStream)(void);
     long long    (__cdecl* LengthLiveStream)(void);
-    int          (__cdecl* GetCurrentClientChannel)(void);
     bool         (__cdecl* SwitchChannel)(const PVR_CHANNEL&);
     PVR_ERROR    (__cdecl* SignalStatus)(PVR_SIGNAL_STATUS&);
     const char*  (__cdecl* GetLiveStreamURL)(const PVR_CHANNEL&);
@@ -568,10 +601,15 @@ extern "C" {
     time_t       (__cdecl* GetBufferTimeEnd)(void);
     const char*  (__cdecl* GetBackendHostname)(void);
     bool         (__cdecl* IsTimeshifting)(void);
+    bool         (__cdecl* IsRealTimeStream)(void);
+    PVR_ERROR    (__cdecl* SetEPGTimeFrame)(int);
+    void         (__cdecl* OnSystemSleep)(void);
+    void         (__cdecl* OnSystemWake)(void);
+    void         (__cdecl* OnPowerSavingActivated)(void);
+    void         (__cdecl* OnPowerSavingDeactivated)(void);
   } PVRClient;
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //__PVRCLIENT_TYPES_H__

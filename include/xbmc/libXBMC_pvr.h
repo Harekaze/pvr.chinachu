@@ -27,15 +27,13 @@
 #include "xbmc_pvr_types.h"
 #include "libXBMC_addon.h"
 
-#ifdef _WIN32
-#define PVR_HELPER_DLL "\\library.xbmc.pvr\\libXBMC_pvr" ADDON_HELPER_EXT
-#else
-#define PVR_HELPER_DLL_NAME "libXBMC_pvr-" ADDON_HELPER_ARCH ADDON_HELPER_EXT
-#define PVR_HELPER_DLL "/library.xbmc.pvr/" PVR_HELPER_DLL_NAME
-#endif
+#define PVR_HELPER_DLL_NAME XBMC_DLL_NAME("pvr")
+#define PVR_HELPER_DLL XBMC_DLL("pvr")
 
 #define DVD_TIME_BASE 1000000
-#define DVD_NOPTS_VALUE    (-1LL<<52) // should be possible to represent in both double and __int64
+
+//! @todo original definition is in DVDClock.h
+#define DVD_NOPTS_VALUE 0xFFF0000000000000
 
 class CHelper_libXBMC_pvr
 {
@@ -67,15 +65,6 @@ public:
     std::string libBasePath;
     libBasePath  = ((cb_array*)m_Handle)->libPath;
     libBasePath += PVR_HELPER_DLL;
-
-#if defined(ANDROID)
-      struct stat st;
-      if(stat(libBasePath.c_str(),&st) != 0)
-      {
-        std::string tempbin = getenv("XBMC_ANDROID_LIBS");
-        libBasePath = tempbin + "/" + PVR_HELPER_DLL_NAME;
-      }
-#endif
 
     m_libXBMC_pvr = dlopen(libBasePath.c_str(), RTLD_LAZY);
     if (m_libXBMC_pvr == NULL)
@@ -153,6 +142,14 @@ public:
       dlsym(m_libXBMC_pvr, "PVR_allocate_demux_packet");
     if (PVR_allocate_demux_packet == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 #endif
+
+    PVR_connection_state_change = (void (*)(void* HANDLE, void* CB, const char *strConnectionString, PVR_CONNECTION_STATE newState, const char *strMessage))
+      dlsym(m_libXBMC_pvr, "PVR_connection_state_change");
+    if (PVR_connection_state_change == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+
+    PVR_epg_event_state_change = (void (*)(void* HANDLE, void* CB, EPG_TAG* tag, unsigned int iUniqueChannelId, EPG_EVENT_STATE newState))
+      dlsym(m_libXBMC_pvr, "PVR_epg_event_state_change");
+    if (PVR_epg_event_state_change == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
     m_Callbacks = PVR_register_me(m_Handle);
     return m_Callbacks != NULL;
@@ -300,6 +297,30 @@ public:
   }
 #endif
 
+  /*!
+   * @brief Notify a state change for a PVR backend connection
+   * @param strConnectionString The connection string reported by the backend that can be displayed in the UI.
+   * @param newState The new state.
+   * @param strMessage A localized addon-defined string representing the new state, that can be displayed
+   *        in the UI or NULL if the Kodi-defined default string for the new state shall be displayed.
+   */
+  void ConnectionStateChange(const char *strConnectionString, PVR_CONNECTION_STATE newState, const char *strMessage)
+  {
+    return PVR_connection_state_change(m_Handle, m_Callbacks, strConnectionString, newState, strMessage);
+  }
+
+  /*!
+   * @brief Notify a state change for an EPG event
+   * @param tag The EPG event.
+   * @param iUniqueChannelId The unique id of the channel for the EPG event
+   * @param newState The new state. For EPG_EVENT_CREATED and EPG_EVENT_UPDATED, tag must be filled with all available
+   *        event data, not just a delta. For EPG_EVENT_DELETED, it is sufficient to fill EPG_TAG.iUniqueBroadcastId
+   */
+  void EpgEventStateChange(EPG_TAG *tag, unsigned int iUniqueChannelId, EPG_EVENT_STATE newState)
+  {
+    return PVR_epg_event_state_change(m_Handle, m_Callbacks, tag, iUniqueChannelId, newState);
+  }
+
 protected:
   void* (*PVR_register_me)(void*);
   void (*PVR_unregister_me)(void*, void*);
@@ -320,6 +341,8 @@ protected:
   void (*PVR_free_demux_packet)(void*, void*, DemuxPacket*);
   DemuxPacket* (*PVR_allocate_demux_packet)(void*, void*, int);
 #endif
+  void (*PVR_connection_state_change)(void*, void*, const char*, PVR_CONNECTION_STATE, const char*);
+  void (*PVR_epg_event_state_change)(void*, void*, EPG_TAG*, unsigned int, EPG_EVENT_STATE);
 
 private:
   void* m_libXBMC_pvr;

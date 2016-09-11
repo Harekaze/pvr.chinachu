@@ -96,6 +96,10 @@ bool SwitchChannel(const PVR_CHANNEL &channel) {
 	return OpenLiveStream(channel);
 }
 
+bool IsRealTimeStream() {
+	return true;
+}
+
 /* not implemented */
 const char* GetLiveStreamURL(const PVR_CHANNEL &channel) { return ""; }
 int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize) { return 0; }
