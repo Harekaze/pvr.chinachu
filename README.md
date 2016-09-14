@@ -2,6 +2,7 @@
 Chinachu PVR addon for Kodi
 
 [![Build status: master](https://img.shields.io/travis/Harekaze/pvr.chinachu/master.svg?maxAge=259200&style=flat-square)](https://travis-ci.org/Harekaze/pvr.chinachu/)
+[![AppVeyor](https://img.shields.io/appveyor/ci/mzyy94/pvr-chinachu.svg?maxAge=2592000&style=flat-square)](https://ci.appveyor.com/project/mzyy94/pvr-chinachu)
 [![GitHub release](https://img.shields.io/github/release/Harekaze/pvr.chinachu.svg?maxAge=259200&style=flat-square)](https://github.com/Harekaze/pvr.chinachu/releases)
 [![GitHub release downloads](https://img.shields.io/github/downloads/Harekaze/pvr.chinachu/total.svg?style=flat-square)](https://github.com/Harekaze/pvr.chinachu/releases)
 [![GitHub issues](https://img.shields.io/github/issues/Harekaze/pvr.chinachu.svg?style=flat-square)](https://github.com/Harekaze/pvr.chinachu/issues)
