@@ -78,10 +78,10 @@ struct DemuxPacket;
 #define PVR_STREAM_MAX_STREAMS 20
 
 /* current PVR API version */
-#define XBMC_PVR_API_VERSION "5.2.0"
+#define XBMC_PVR_API_VERSION "5.2.1"
 
 /* min. PVR API version */
-#define XBMC_PVR_MIN_API_VERSION "5.2.0"
+#define XBMC_PVR_MIN_API_VERSION "5.2.1"
 
 #ifdef __cplusplus
 extern "C" {
@@ -455,7 +455,7 @@ extern "C" {
     unsigned int    iWeekdays;                                 /*!< @brief (optional) week days, for repeating timers */
     unsigned int    iPreventDuplicateEpisodes;                 /*!< @brief (optional) 1 if backend should only record new episodes in case of a repeating epg-based timer, 0 if all episodes shall be recorded (no duplicate detection). Actual algorithm for
                                                                     duplicate detection is defined by the backend. Addons may define own values for different duplicate detection algorithms, thus this is not just a bool.*/
-    unsigned int    iEpgUid;                                   /*!< @brief (optional) EPG event id associated with this timer. Valid ids must be greater than EPG_TAG_INVALID_UID. */
+    unsigned int    iEpgUid;                                   /*!< @brief (optional) EPG event id associated with this timer. Event ids must be unique for a channel. Valid ids must be greater than EPG_TAG_INVALID_UID. */
     unsigned int    iMarginStart;                              /*!< @brief (optional) if set, the backend starts the recording iMarginStart minutes before startTime. */
     unsigned int    iMarginEnd;                                /*!< @brief (optional) if set, the backend ends the recording iMarginEnd minutes after endTime. */
     int             iGenreType;                                /*!< @brief (optional) genre type */
@@ -594,7 +594,7 @@ extern "C" {
     bool         (__cdecl* CanPauseStream)(void);
     void         (__cdecl* PauseStream)(bool);
     bool         (__cdecl* CanSeekStream)(void);
-    bool         (__cdecl* SeekTime)(int, bool, double*);
+    bool         (__cdecl* SeekTime)(double, bool, double*);
     void         (__cdecl* SetSpeed)(int);
     time_t       (__cdecl* GetPlayingTime)(void);
     time_t       (__cdecl* GetBufferTimeStart)(void);

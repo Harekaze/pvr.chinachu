@@ -1,3 +1,4 @@
+
 /*
  *      Copyright (C) 2014-2016 Team Kodi
  *      http://kodi.tv
@@ -50,10 +51,10 @@
 #endif
 
 /* current Peripheral API version */
-#define PERIPHERAL_API_VERSION "1.0.19"
+#define PERIPHERAL_API_VERSION "1.2.0"
 
 /* min. Peripheral API version */
-#define PERIPHERAL_MIN_API_VERSION "1.0.19"
+#define PERIPHERAL_MIN_API_VERSION "1.2.0"
 
 /* indicates a joystick has no preference for port number */
 #define NO_PORT_REQUESTED     (-1)
@@ -111,6 +112,7 @@ extern "C"
   typedef struct PERIPHERAL_CAPABILITIES
   {
     bool provides_joysticks;            /*!< @brief true if the add-on provides joysticks */
+    bool provides_buttonmaps;           /*!< @brief true if the add-on provides button maps */
   } ATTRIBUTE_PACKED PERIPHERAL_CAPABILITIES;
   ///}
 
@@ -249,42 +251,34 @@ extern "C"
     JOYSTICK_FEATURE_TYPE_MOTOR,
   } JOYSTICK_FEATURE_TYPE;
 
-  typedef struct JOYSTICK_FEATURE_SCALAR
+  typedef enum JOYSTICK_FEATURE_PRIMITIVE
   {
-    struct JOYSTICK_DRIVER_PRIMITIVE primitive;
-  } ATTRIBUTE_PACKED JOYSTICK_FEATURE_SCALAR;
+    // Scalar feature
+    JOYSTICK_SCALAR_PRIMITIVE = 0,
 
-  typedef struct JOYSTICK_FEATURE_ANALOG_STICK
-  {
-    struct JOYSTICK_DRIVER_PRIMITIVE up;
-    struct JOYSTICK_DRIVER_PRIMITIVE down;
-    struct JOYSTICK_DRIVER_PRIMITIVE right;
-    struct JOYSTICK_DRIVER_PRIMITIVE left;
-  } ATTRIBUTE_PACKED JOYSTICK_FEATURE_ANALOG_STICK;
+    // Analog stick
+    JOYSTICK_ANALOG_STICK_UP = 0,
+    JOYSTICK_ANALOG_STICK_DOWN = 1,
+    JOYSTICK_ANALOG_STICK_RIGHT = 2,
+    JOYSTICK_ANALOG_STICK_LEFT = 3,
 
-  typedef struct JOYSTICK_FEATURE_ACCELEROMETER
-  {
-    struct JOYSTICK_DRIVER_PRIMITIVE positive_x;
-    struct JOYSTICK_DRIVER_PRIMITIVE positive_y;
-    struct JOYSTICK_DRIVER_PRIMITIVE positive_z;
-  } ATTRIBUTE_PACKED JOYSTICK_FEATURE_ACCELEROMETER;
+    // Accelerometer
+    JOYSTICK_ACCELEROMETER_POSITIVE_X = 0,
+    JOYSTICK_ACCELEROMETER_POSITIVE_Y = 1,
+    JOYSTICK_ACCELEROMETER_POSITIVE_Z = 2,
 
-  typedef struct JOYSTICK_FEATURE_MOTOR
-  {
-    struct JOYSTICK_DRIVER_PRIMITIVE primitive;
-  } ATTRIBUTE_PACKED JOYSTICK_FEATURE_MOTOR;
+    // Motor
+    JOYSTICK_MOTOR_PRIMITIVE = 0,
+
+    // Maximum number of primitives
+    JOYSTICK_PRIMITIVE_MAX = 4,
+  } JOYSTICK_FEATURE_PRIMITIVE;
 
   typedef struct JOYSTICK_FEATURE
   {
     char*                                   name;
     JOYSTICK_FEATURE_TYPE                   type;
-    union
-    {
-      struct JOYSTICK_FEATURE_SCALAR        scalar;
-      struct JOYSTICK_FEATURE_ANALOG_STICK  analog_stick;
-      struct JOYSTICK_FEATURE_ACCELEROMETER accelerometer;
-      struct JOYSTICK_FEATURE_MOTOR         motor;
-    };
+    struct JOYSTICK_DRIVER_PRIMITIVE        primitives[JOYSTICK_PRIMITIVE_MAX];
   } ATTRIBUTE_PACKED JOYSTICK_FEATURE;
   ///}
 
@@ -310,7 +304,12 @@ extern "C"
     void             (__cdecl* FreeJoystickInfo)(JOYSTICK_INFO*);
     PERIPHERAL_ERROR (__cdecl* GetFeatures)(const JOYSTICK_INFO*, const char*, unsigned int*, JOYSTICK_FEATURE**);
     void             (__cdecl* FreeFeatures)(unsigned int, JOYSTICK_FEATURE*);
-    PERIPHERAL_ERROR (__cdecl* MapFeatures)(const JOYSTICK_INFO*, const char*, unsigned int, JOYSTICK_FEATURE*);
+    PERIPHERAL_ERROR (__cdecl* MapFeatures)(const JOYSTICK_INFO*, const char*, unsigned int, const JOYSTICK_FEATURE*);
+    PERIPHERAL_ERROR (__cdecl* GetIgnoredPrimitives)(const JOYSTICK_INFO*, unsigned int*, JOYSTICK_DRIVER_PRIMITIVE**);
+    void             (__cdecl* FreePrimitives)(unsigned int, JOYSTICK_DRIVER_PRIMITIVE*);
+    PERIPHERAL_ERROR (__cdecl* SetIgnoredPrimitives)(const JOYSTICK_INFO*, unsigned int, const JOYSTICK_DRIVER_PRIMITIVE*);
+    void             (__cdecl* SaveButtonMap)(const JOYSTICK_INFO*);
+    void             (__cdecl* RevertButtonMap)(const JOYSTICK_INFO*);
     void             (__cdecl* ResetButtonMap)(const JOYSTICK_INFO*, const char*);
     void             (__cdecl* PowerOffJoystick)(unsigned int);
     ///}

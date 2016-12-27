@@ -533,12 +533,19 @@ namespace ADDON
       }
     }
 
+    static void FreeStruct(JOYSTICK_DRIVER_PRIMITIVE& primitive)
+    {
+      (void)primitive;
+    }
+
   private:
     JOYSTICK_DRIVER_PRIMITIVE_TYPE     m_type;
     unsigned int                       m_driverIndex;
     JOYSTICK_DRIVER_HAT_DIRECTION      m_hatDirection;
     JOYSTICK_DRIVER_SEMIAXIS_DIRECTION m_semiAxisDirection;
   };
+
+  typedef PeripheralVector<DriverPrimitive, JOYSTICK_DRIVER_PRIMITIVE> DriverPrimitives;
 
   /*!
    * ADDON::JoystickFeature
@@ -553,35 +560,14 @@ namespace ADDON
    * [1] All three driver primitives (buttons, hats and axes) have a state that
    *     can be represented using a single scalar value. For this reason,
    *     features that map to a single primitive are called "scalar features".
-   *
-   * Features can be mapped to a variable number of driver primitives. The names
-   * of the primitives for each feature are:
-   *
-   *    Scalar feature:
-   *       - primitive
-   *
-   *    Analog stick:
-   *       - up
-   *       - down
-   *       - right
-   *       - left
-   *
-   *    Accelerometer:
-   *       - positive X
-   *       - positive Y
-   *       - positive Z
-   *
-   *    Motor:
-   *       - primitive
    */
   class JoystickFeature
   {
   public:
-    enum { MAX_PRIMITIVES = 4 };
-
     JoystickFeature(const std::string& name = "", JOYSTICK_FEATURE_TYPE type = JOYSTICK_FEATURE_TYPE_UNKNOWN) :
       m_name(name),
-      m_type(type)
+      m_type(type),
+      m_primitives()
     {
     }
 
@@ -594,28 +580,8 @@ namespace ADDON
       m_name(feature.name ? feature.name : ""),
       m_type(feature.type)
     {
-      switch (m_type)
-      {
-        case JOYSTICK_FEATURE_TYPE_SCALAR:
-          SetPrimitive(feature.scalar.primitive);
-          break;
-        case JOYSTICK_FEATURE_TYPE_ANALOG_STICK:
-          SetUp(feature.analog_stick.up);
-          SetDown(feature.analog_stick.down);
-          SetRight(feature.analog_stick.right);
-          SetLeft(feature.analog_stick.left);
-          break;
-        case JOYSTICK_FEATURE_TYPE_ACCELEROMETER:
-          SetPositiveX(feature.accelerometer.positive_x);
-          SetPositiveY(feature.accelerometer.positive_y);
-          SetPositiveZ(feature.accelerometer.positive_z);
-          break;
-        case JOYSTICK_FEATURE_TYPE_MOTOR:
-          SetPrimitive(feature.motor.primitive);
-          break;
-        default:
-          break;
-      }
+      for (unsigned int i = 0; i < JOYSTICK_PRIMITIVE_MAX; i++)
+        m_primitives[i] = feature.primitives[i];
     }
 
     JoystickFeature& operator=(const JoystickFeature& rhs)
@@ -638,58 +604,25 @@ namespace ADDON
 
     const std::string& Name(void) const { return m_name; }
     JOYSTICK_FEATURE_TYPE Type(void) const { return m_type; }
+    bool IsValid() const { return m_type != JOYSTICK_FEATURE_TYPE_UNKNOWN; }
 
     void SetName(const std::string& name) { m_name = name; }
     void SetType(JOYSTICK_FEATURE_TYPE type) { m_type = type; }
+    void SetInvalid(void) { m_type = JOYSTICK_FEATURE_TYPE_UNKNOWN; }
 
-    // Scalar methods
-    const DriverPrimitive& Primitive(void) const { return m_primitives[0]; }
-    void SetPrimitive(const DriverPrimitive& primitive) { m_primitives[0] = primitive; }
+    const DriverPrimitive& Primitive(JOYSTICK_FEATURE_PRIMITIVE which) const { return m_primitives[which]; }
+    void SetPrimitive(JOYSTICK_FEATURE_PRIMITIVE which, const DriverPrimitive& primitive) { m_primitives[which] = primitive; }
 
-    // Analog stick methods
-    const DriverPrimitive& Up(void) const { return m_primitives[0]; }
-    const DriverPrimitive& Down(void) const { return m_primitives[1]; }
-    const DriverPrimitive& Right(void) const { return m_primitives[2]; }
-    const DriverPrimitive& Left(void) const { return m_primitives[3]; }
-    void SetUp(const DriverPrimitive& primitive) { m_primitives[0] = primitive; }
-    void SetDown(const DriverPrimitive& primitive) { m_primitives[1] = primitive; }
-    void SetRight(const DriverPrimitive& primitive) { m_primitives[2] = primitive; }
-    void SetLeft(const DriverPrimitive& primitive) { m_primitives[3] = primitive; }
-
-    // Accelerometer methods
-    const DriverPrimitive& PositiveX(void) const { return m_primitives[0]; }
-    const DriverPrimitive& PositiveY(void) const { return m_primitives[1]; }
-    const DriverPrimitive& PositiveZ(void) const { return m_primitives[2]; }
-    void SetPositiveX(const DriverPrimitive& primitive) { m_primitives[0] = primitive; }
-    void SetPositiveY(const DriverPrimitive& primitive) { m_primitives[1] = primitive; }
-    void SetPositiveZ(const DriverPrimitive& primitive) { m_primitives[2] = primitive; }
+    std::array<DriverPrimitive, JOYSTICK_PRIMITIVE_MAX>& Primitives() { return m_primitives; }
+    const std::array<DriverPrimitive, JOYSTICK_PRIMITIVE_MAX>& Primitives() const { return m_primitives; }
 
     void ToStruct(JOYSTICK_FEATURE& feature) const
     {
       feature.name = new char[m_name.length() + 1];
       feature.type = m_type;
-      switch (m_type)
-      {
-        case JOYSTICK_FEATURE_TYPE_SCALAR:
-          Primitive().ToStruct(feature.scalar.primitive);
-          break;
-        case JOYSTICK_FEATURE_TYPE_ANALOG_STICK:
-          Up().ToStruct(feature.analog_stick.up);
-          Down().ToStruct(feature.analog_stick.down);
-          Right().ToStruct(feature.analog_stick.right);
-          Left().ToStruct(feature.analog_stick.left);
-          break;
-        case JOYSTICK_FEATURE_TYPE_ACCELEROMETER:
-          PositiveX().ToStruct(feature.accelerometer.positive_x);
-          PositiveY().ToStruct(feature.accelerometer.positive_y);
-          PositiveZ().ToStruct(feature.accelerometer.positive_z);
-          break;
-        case JOYSTICK_FEATURE_TYPE_MOTOR:
-          Primitive().ToStruct(feature.motor.primitive);
-          break;
-        default:
-          break;
-      }
+      for (unsigned int i = 0; i < JOYSTICK_PRIMITIVE_MAX; i++)
+        m_primitives[i].ToStruct(feature.primitives[i]);
+
       std::strcpy(feature.name, m_name.c_str());
     }
 
@@ -701,7 +634,7 @@ namespace ADDON
   private:
     std::string                  m_name;
     JOYSTICK_FEATURE_TYPE        m_type;
-    std::array<DriverPrimitive, MAX_PRIMITIVES> m_primitives;
+    std::array<DriverPrimitive, JOYSTICK_PRIMITIVE_MAX> m_primitives;
   };
 
   typedef PeripheralVector<JoystickFeature, JOYSTICK_FEATURE> JoystickFeatures;
