@@ -85,7 +85,9 @@ namespace chinachu {
 			}
 
 			std::string channel = o["channel"].get<std::string>();
-			ch.channel.iUniqueId = std::atoi((o["sid"].get<std::string>()).c_str());
+			ch.channel.iUniqueId = o["sid"].is<std::string>() ?
+				std::atoi((o["sid"].get<std::string>()).c_str()) :
+				(int)(o["sid"].get<double>());
 
 			// Remove non-numerical charactor from channel number
 			while (channel.find_first_of("0123456789") != 0) {
@@ -93,12 +95,16 @@ namespace chinachu {
 				// If channel number contains only charactors,
 				if (channel.empty()) {
 					// use sid instead.
-					channel = o["sid"].get<std::string>();
+					channel = o["sid"].is<std::string>() ?
+						std::atoi((o["sid"].get<std::string>()).c_str()) :
+						(int)(o["sid"].get<double>());
 					break;
 				}
 			}
 			ch.channel.iChannelNumber = std::atoi(channel.c_str());
-			ch.channel.iSubChannelNumber = std::atoi((o["sid"].get<std::string>()).c_str());
+			ch.channel.iSubChannelNumber = o["sid"].is<std::string>() ?
+				std::atoi((o["sid"].get<std::string>()).c_str()) :
+				(int)(o["sid"].get<double>());
 			// use channel id as name instead when name field isn't available.
 			ch.channel.strChannelName = o["name"].is<std::string>() ? o["name"].get<std::string>() : o["id"].get<std::string>();
 			char strStreamURL[2048];
@@ -107,7 +113,7 @@ namespace chinachu {
 					(const char*)(chinachu::api::mirakurunURL + mirakurunLiveStreamingPath).c_str(),
 					o["type"].get<std::string>().c_str(),
 					o["channel"].get<std::string>().c_str(),
-					o["sid"].get<std::string>().c_str()
+					o["sid"].is<std::string>() ? std::atoi((o["sid"].get<std::string>()).c_str()) : (int)(o["sid"].get<double>())
 				);
 			} else {
 				snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1,

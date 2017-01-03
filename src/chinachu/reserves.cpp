@@ -77,7 +77,9 @@ namespace chinachu {
 			}
 			struct RESERVE_ITEM resv;
 
-			resv.iClientChannelUid = std::atoi((p["channel"].get<picojson::object>())["sid"].get<std::string>().c_str());
+			resv.iClientChannelUid = p["channel"].get<picojson::object>()["sid"].is<std::string>() ?
+				std::atoi((p["channel"].get<picojson::object>()["sid"].get<std::string>()).c_str()) :
+				(int)(p["channel"].get<picojson::object>()["sid"].get<double>());
 			resv.strTitle = p["fullTitle"].get<std::string>();
 			resv.strSummary = p["detail"].get<std::string>();
 			resv.strProgramId = p["id"].get<std::string>();
