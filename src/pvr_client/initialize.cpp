@@ -1,6 +1,6 @@
 /*
- *         Copyright (C) 2015-2016 Yuki MIZUNO
- *         https://github.com/mzyy94/pvr.chinachu/
+ *         Copyright (C) 2015-2017 Yuki MIZUNO
+ *         https://github.com/Harekaze/pvr.chinachu/
  *
  *
  * This file is part of pvr.chinachu.
@@ -81,7 +81,7 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 			chinachu::api::mirakurunURL += "api/";
 		}
 	}
-	g_schedule.mirakurunLiveStreamingPath = "channels/%s/%s/services/%s/stream?decode=1";
+	g_schedule.mirakurunLiveStreamingPath = "channels/%s/%s/services/%d/stream?decode=1";
 	g_schedule.liveStreamingPath = "channel/%s/watch.m2ts?ext=m2ts";
 	g_recorded.recordedStreamingPath = "recorded/%s/watch.m2ts?ext=m2ts";
 	g_recording.recordingStreamingPath = "recording/%s/watch.m2ts?ext=m2ts";

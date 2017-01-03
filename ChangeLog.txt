@@ -1,3 +1,6 @@
+v3.3.0
+- Support Chinachu gamma
+
 v3.2.0
 - Support service ID for mirakurun live watching
 

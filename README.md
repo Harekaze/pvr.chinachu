@@ -2,6 +2,7 @@
 Chinachu PVR addon for Kodi
 
 [![Build status: devel-beta](https://img.shields.io/travis/Harekaze/pvr.chinachu/devel-beta.svg?maxAge=259200&style=flat-square)](https://travis-ci.org/Harekaze/pvr.chinachu/)
+[![AppVeyor](https://img.shields.io/appveyor/ci/mzyy94/pvr-chinachu.svg?maxAge=2592000&style=flat-square)](https://ci.appveyor.com/project/mzyy94/pvr-chinachu)
 [![GitHub release](https://img.shields.io/github/release/Harekaze/pvr.chinachu.svg?maxAge=259200&style=flat-square)](https://github.com/Harekaze/pvr.chinachu/releases)
 [![GitHub release downloads](https://img.shields.io/github/downloads/Harekaze/pvr.chinachu/total.svg?style=flat-square)](https://github.com/Harekaze/pvr.chinachu/releases)
 [![GitHub issues](https://img.shields.io/github/issues/Harekaze/pvr.chinachu.svg?style=flat-square)](https://github.com/Harekaze/pvr.chinachu/issues)
@@ -13,8 +14,8 @@ Chinachu PVR addon for Kodi
 ## Supported environment
 
 ## Backend
-Chinachu tree [7a43f80bd3](https://github.com/kanreisa/Chinachu/tree/7a43f80bd30a4eacf9c13c8a96a9dff67e3b3956)
-Mirakurun version 1.7.1
+Chinachu gamma [829ed89578](https://github.com/kanreisa/Chinachu/tree/829ed89578e8597a0373f11e78921b732754f52e)
+Mirakurun version 2.0.0-rc.7
 
 ## Frontend
 - Kodi **17.x** Krypton
