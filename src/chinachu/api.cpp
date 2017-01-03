@@ -1,6 +1,6 @@
 /*
- *         Copyright (C) 2015-2016 Yuki MIZUNO
- *         https://github.com/mzyy94/pvr.chinachu/
+ *         Copyright (C) 2015-2017 Yuki MIZUNO
+ *         https://github.com/Harekaze/pvr.chinachu/
  *
  *
  * This file is part of pvr.chinachu.
