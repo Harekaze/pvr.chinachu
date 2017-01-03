@@ -74,6 +74,10 @@ namespace chinachu {
 		picojson::array ca = v.get<picojson::array>();
 		for (unsigned int i = 0, c_size = ca.size(); i < c_size; i++) {
 			picojson::object &o = ca[i].get<picojson::object>();
+			if (o["programs"].get<picojson::array>().size() == 0) {
+				continue;
+			}
+
 			struct CHANNEL_EPG ch;
 
 			ch.channel.strChannelType = o["type"].get<std::string>();
