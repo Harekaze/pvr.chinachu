@@ -59,9 +59,9 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio) {
 		strncpy(ch.strChannelName, channel.strChannelName.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 		strncpy(ch.strStreamURL, channel.strStreamURL.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 		ch.bIsHidden         = false;
+		strncpy(ch.strIconPath, channel.strIconPath.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 		// strncpy(ch.strInputFormat, "InputFormat", PVR_ADDON_INPUT_FORMAT_STRING_LENGTH - 1); /* not implemented */
 		// ch.iEncryptionSystem = 0; /* not implemented */
-		// strncpy(ch.strIconPath, "IconPath", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
 
 		PVR->TransferChannelEntry(handle, &ch);
 	}

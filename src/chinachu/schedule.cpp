@@ -122,6 +122,14 @@ namespace chinachu {
 			}
 			ch.channel.strStreamURL = strStreamURL;
 
+			if (o["hasLogoData"].get<bool>()) {
+				char strIconPath[2048];
+				snprintf(strIconPath, PVR_ADDON_URL_STRING_LENGTH - 1,
+					(const char*)(chinachu::api::baseURL + channelLogoPath).c_str(),
+					o["id"].get<std::string>().c_str());
+				ch.channel.strIconPath = strIconPath;
+			}
+
 			picojson::array pa = o["programs"].get<picojson::array>();
 			for (unsigned int j = 0, p_size = pa.size(); j < p_size; j++) {
 				picojson::object &p = pa[j].get<picojson::object>();

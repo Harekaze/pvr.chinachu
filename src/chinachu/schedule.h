@@ -48,6 +48,7 @@ namespace chinachu {
 		std::string strChannelType;
 		std::string strChannelName;
 		std::string strStreamURL;
+		std::string strIconPath;
 	};
 	struct CHANNEL_EPG {
 		CHANNEL_INFO channel;
@@ -58,6 +59,7 @@ namespace chinachu {
 			time_t lastUpdated;
 		public:
 			time_t nextUpdateTime;
+			std::string channelLogoPath;
 			std::string liveStreamingPath;
 			std::string mirakurunLiveStreamingPath;
 			std::vector<CHANNEL_EPG> schedule;

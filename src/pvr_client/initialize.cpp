@@ -83,6 +83,7 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 	}
 	g_schedule.mirakurunLiveStreamingPath = "channels/%s/%s/services/%d/stream?decode=1";
 	g_schedule.liveStreamingPath = "channel/%s/watch.m2ts?ext=m2ts";
+	g_schedule.channelLogoPath = "channel/%s/logo.png";
 	g_recorded.recordedStreamingPath = "recorded/%s/watch.m2ts?ext=m2ts";
 	g_recording.recordingStreamingPath = "recording/%s/watch.m2ts?ext=m2ts";
 
