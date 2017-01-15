@@ -110,7 +110,7 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 		unsigned int option;
 		XBMC->GetSetting("video_codec", &option);
 		if (option == 0) {
-			transcodeParams += "&c:v=libx264";
+			transcodeParams += "&c:v=h264";
 		} else if (option == 1) {
 			transcodeParams += "&c:v=mpeg2video";
 		}
@@ -134,7 +134,7 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 		unsigned int option;
 		XBMC->GetSetting("audio_codec", &option);
 		if (option == 0) {
-			transcodeParams += "&c:a=libfdk_aac";
+			transcodeParams += "&c:a=aac";
 		} else if (option == 1) {
 			transcodeParams += "&c:a=libvorbis";
 		}
