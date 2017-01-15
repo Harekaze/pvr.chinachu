@@ -57,22 +57,27 @@ namespace chinachu {
 		for (unsigned int i = 0, p_size = pa.size(); i < p_size; i++) {
 			picojson::object &p = pa[i].get<picojson::object>();
 			struct RECORDING rec;
+			char *endptr;
 
 			rec.strRecordingId = p["id"].is<std::string>() ? p["id"].get<std::string>() : "";
 			rec.strDirectory = p["title"].is<std::string>() ? p["title"].get<std::string>() : "";
-			rec.strTitle = p["fullTitle"].is<std::string>() ? p["fullTitle"].get<std::string>() : "";
+			rec.strTitle = p["title"].is<std::string>() ? p["title"].get<std::string>() : "";
 			rec.strEpisodeName = p["subTitle"].is<std::string>() ? p["subTitle"].get<std::string>() : "";
-			rec.strPlotOutline = p["subTitle"].is<std::string>() ? p["subTitle"].get<std::string>() : "";
+			rec.strPlotOutline = p["description"].is<std::string>() ? p["description"].get<std::string>() : p["subTitle"].get<std::string>();
 			rec.strPlot = p["detail"].is<std::string>() ? p["detail"].get<std::string>() : "";
 			rec.strChannelName = (p["channel"].get<picojson::object>())["name"].get<std::string>();
 			rec.iEpisodeNumber = p["episode"].is<double>() ? (unsigned int)(p["episode"].get<double>()) : 0;
 			rec.recordingTime = (time_t)(p["start"].get<double>() / 1000);
 			rec.iDuration = (int)(p["seconds"].get<double>());
+			rec.iPriority = p["priority"].is<double>() ? (int)(p["priority"].get<double>()) : 0;
 			rec.strGenreDescription = p["category"].get<std::string>();
+			std::string id = p["id"].get<std::string>();
+			std::remove(id.begin(), id.end(), '-');
+			rec.iEpgEventId = strtoul(id.c_str(), &endptr, 36);
 			int sid = p["channel"].get<picojson::object>()["sid"].is<std::string>() ?
 				std::atoi((p["channel"].get<picojson::object>()["sid"].get<std::string>()).c_str()) :
 				(int)(p["channel"].get<picojson::object>()["sid"].get<double>());
-			rec.iEpgEventId = chinachu::generateUniqueId((time_t)(p["start"].get<double>() / 1000), sid);
+			rec.iChannelUid = sid;
 			char urlBuffer[PVR_ADDON_URL_STRING_LENGTH];
 			snprintf(urlBuffer, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedStreamingPath).c_str(), p["id"].get<std::string>().c_str());
 			rec.strStreamURL = urlBuffer;

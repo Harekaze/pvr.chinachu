@@ -41,7 +41,9 @@ namespace chinachu {
 		int iEpisodeNumber;
 		time_t recordingTime;
 		int iDuration;
+		int iPriority;
 		unsigned int iEpgEventId;
+		int iChannelUid;
 		std::string strGenreDescription;
 	};
 	class Recorded {

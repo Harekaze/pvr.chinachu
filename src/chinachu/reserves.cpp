@@ -76,6 +76,7 @@ namespace chinachu {
 				continue;
 			}
 			struct RESERVE_ITEM resv;
+			char *endptr;
 
 			resv.iClientChannelUid = p["channel"].get<picojson::object>()["sid"].is<std::string>() ?
 				std::atoi((p["channel"].get<picojson::object>()["sid"].get<std::string>()).c_str()) :
@@ -94,7 +95,7 @@ namespace chinachu {
 			resv.endTime = (time_t)(p["end"].get<double>() / 1000);
 			resv.iGenreType = iGenreType[p["category"].get<std::string>()];
 			resv.iGenreSubType = iGenreSubType[p["category"].get<std::string>()];
-			resv.iEpgUid = chinachu::generateUniqueId(resv.startTime, resv.iClientChannelUid);
+			resv.iEpgUid = strtoul(resv.strProgramId.c_str(), &endptr, 36);
 			resv.bIsManualReserved = (p["isManualReserved"].is<bool>() && p["isManualReserved"].get<bool>());
 
 			reserves.push_back(resv);

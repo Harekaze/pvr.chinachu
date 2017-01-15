@@ -64,6 +64,7 @@ PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time
 				tag.iGenreType = iGenreType[epg.strGenreDescription];
 				tag.iGenreSubType = iGenreSubType[epg.strGenreDescription];
 				tag.iEpisodeNumber = epg.iEpisodeNumber;
+				tag.strEpisodeName = epg.strEpisodeName.c_str();
 				tag.strGenreDescription = epg.strGenreDescription.c_str();
 
 				PVR->TransferEpgEntry(handle, &tag);

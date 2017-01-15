@@ -39,6 +39,7 @@ namespace chinachu {
 		std::string strPlotOutline;
 		std::string strPlot;
 		std::string strOriginalTitle;
+		std::string strEpisodeName;
 		std::string strGenreDescription;
 	};
 	struct CHANNEL_INFO {
@@ -72,7 +73,6 @@ namespace chinachu {
 			bool refresh();
 			bool refreshIfNeeded();
 	};
-	unsigned int generateUniqueId(time_t time, unsigned int sid);
 } // namespace chinachu
 
 #endif /* end of include guard */

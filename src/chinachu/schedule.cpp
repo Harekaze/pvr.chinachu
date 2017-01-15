@@ -26,27 +26,6 @@
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 
 namespace chinachu {
-	unsigned int generateUniqueId(time_t time, unsigned int sid) {
-		/*
-		 * Unique ID format
-		 * year:  day  : hour :  min : sid
-		 * [0-]:[0-365]:[0-23]:[0-59]:[0-999]:[0-99999]
-		 */
-		struct tm *t2 = localtime(&time);
-		unsigned int id = 0;
-		id += t2->tm_year;
-		id *= 366;
-		id += t2->tm_yday;
-		id *= 24;
-		id += t2->tm_hour;
-		id *= 60;
-		id += t2->tm_min;
-		id *= 100000;
-		id += sid;
-		return id;
-	}
-
-
 	bool Schedule::refreshIfNeeded() {
 		time_t now;
 		time(&now);
@@ -138,15 +117,17 @@ namespace chinachu {
 			for (unsigned int j = 0, p_size = pa.size(); j < p_size; j++) {
 				picojson::object &p = pa[j].get<picojson::object>();
 				struct EPG_PROGRAM epg;
+				char *endptr;
 
 				epg.startTime = (time_t)(p["start"].get<double>() / 1000);
 				epg.endTime = (time_t)(p["end"].get<double>() / 1000);
-				epg.iUniqueBroadcastId = generateUniqueId(epg.startTime, ch.channel.iSubChannelNumber);
 				epg.strUniqueBroadcastId = p["id"].get<std::string>();
+				epg.iUniqueBroadcastId = strtoul(epg.strUniqueBroadcastId.c_str(), &endptr, 36);
 				epg.strTitle = p["title"].get<std::string>();
-				epg.strPlotOutline = p["subTitle"].get<std::string>();
-				epg.strPlot = p["detail"].get<std::string>();
-				epg.strOriginalTitle = p["fullTitle"].get<std::string>();
+				epg.strEpisodeName = p["subTitle"].is<std::string>() ? p["subTitle"].get<std::string>() : "";
+				epg.strPlotOutline = p["description"].is<std::string>() ? p["description"].get<std::string>() : p["subTitle"].get<std::string>();
+				epg.strPlot = p["detail"].is<std::string>() ? p["detail"].get<std::string>() : "";
+				epg.strOriginalTitle = p["fullTitle"].is<std::string>() ? p["fullTitle"].get<std::string>() : "";
 				epg.strGenreDescription = p["category"].is<std::string>() ? p["category"].get<std::string>() : "";
 				epg.iEpisodeNumber = o["episode"].is<double>() ? (unsigned int)(o["episode"].get<double>()) : 0;
 

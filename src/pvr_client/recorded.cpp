@@ -61,9 +61,11 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 			pvr_rec.recordingTime = rec.recordingTime;
 			pvr_rec.iEpisodeNumber = rec.iEpisodeNumber;
 			pvr_rec.iDuration = rec.iDuration;
+			pvr_rec.iPriority = rec.iPriority;
 			pvr_rec.iGenreType = iGenreType[rec.strGenreDescription];
 			pvr_rec.iGenreSubType = iGenreSubType[rec.strGenreDescription];
 			pvr_rec.iEpgEventId = rec.iEpgEventId;
+			pvr_rec.iChannelUid = rec.iChannelUid;
 			strncpy(pvr_rec.strStreamURL, rec.strStreamURL.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strThumbnailPath, rec.strThumbnailPath.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 			g_recorded.bGrouping && strncpy(pvr_rec.strDirectory, rec.strDirectory.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
@@ -71,7 +73,6 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 			// pvr_rec.iYear = 0; /* not implemented */
 			// strncpy(pvr_rec.strIconPath, "IconPath", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
 			// strncpy(pvr_rec.strFanartPath, "FanartPath", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
-			// pvr_rec.iPriority = 100; /* not implemented */
 			// pvr_rec.iLifetime = 0; /* not implemented */
 			// pvr_rec.iPlayCount = 0; /* not implemented */
 			// pvr_rec.iLastPlayedPosition = 0; /* not implemented */
