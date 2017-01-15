@@ -7,14 +7,16 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([foreign])
 LT_INIT
 
-ADDONNAME=PVRChinachu.pvr
+ADDONNAME=pvr.chinachu.so
 LIBEXT=so
 
 case $host in
 	*-apple-*)
+		ADDONNAME=pvr.chinachu.dylib
 		LIBEXT=dylib
 		;;
 	arm*-*-linux-gnu*)
+		ADDONNAME=pvr.chinachu.armel.so
 		AC_SUBST(AM_CPPFLAGS_EXT, "-D_ARMEL")
 		;;
 	*-androideabi)

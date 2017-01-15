@@ -9,13 +9,14 @@
 		<import addon="xbmc.codec" version="1.0.1"/>
 	</requires>
 	<extension point="xbmc.pvrclient"
-		library_linux="PVRChinachu.pvr"
-		library_osx="PVRChinachu.pvr"
+		library_linux="pvr.chinachu.so"
+		library_osx="pvr.chinachu.dylib"
 		library_android="libpvr.chinachu.so"
+		library_rbpi="pvr.chinachu.armel.so"
 		library_windx="pvr.chinachu.dll"
 		/>
 	<extension point="xbmc.addon.metadata">
-		<platform>linux osx android windx</platform>
+		<platform>linux osx android rbpi windx</platform>
 		<license>GPL v3.0</license>
 		<summary>Chinachu PVR client</summary>
 		<source>https://github.com/Harekaze/pvr.chinachu/</source>
