@@ -225,6 +225,28 @@ PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *typesCount) {
 		0, // iMaxRecordingsDefault
 	};
 
+	// FIXME: implemented to avoid Kodi's bug
+	const static PVR_TIMER_TYPE manualReserved2 = {
+		TIMER_MANUAL_RESERVED, // iId
+		PVR_TIMER_TYPE_IS_REPEATING | PVR_TIMER_TYPE_REQUIRES_EPG_TAG_ON_CREATE, // iAttributes
+		"Manual Reserved", // strDescription
+		0, // iPrioritiesSize
+		{0, NULL}, // priorities
+		0, // iPrioritiesDefault
+		0, // iLifetimesSize
+		{0, NULL}, // lifetimes
+		0, // iLifetimesDefault
+		0, // iPreventDuplicateEpisodesSize
+		{0, NULL}, // preventDuplicateEpisodes
+		0, // iPreventDuplicateEpisodesDefault
+		0, // iRecordingGroupSize
+		{0, NULL}, // recordingGroup
+		0, // iRecordingGroupDefault
+		0, // iMaxRecordingsSize
+		{0, NULL}, // maxRecordings
+		0, // iMaxRecordingsDefault
+	};
+
 	const static PVR_TIMER_TYPE patternMatched = {
 		TIMER_PATTERN_MATCHED, // iId
 		PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE, // iAttributes
@@ -248,7 +270,8 @@ PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *typesCount) {
 
 	types[0] = manualReserved;
 	types[1] = patternMatched;
-	*typesCount = 2;
+	types[2] = manualReserved2;
+	*typesCount = 3;
 
 	return PVR_ERROR_NO_ERROR;
 }
