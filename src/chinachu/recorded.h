@@ -49,15 +49,15 @@ namespace chinachu {
 	class Recorded {
 		private:
 			time_t lastUpdated;
+			time_t refreshInterval;
 		public:
 			bool bGrouping;
 			static time_t nextUpdateTime;
 			std::string recordedStreamingPath;
 			std::string recordedThumbnailPath;
 			std::vector<RECORDING> programs;
-			Recorded()
+			Recorded() : refreshInterval(180)
 			{
-				// refresh(); /* initial refresh */
 			}
 			bool refreshIfNeeded();
 			bool refresh();

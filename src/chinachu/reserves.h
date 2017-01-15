@@ -44,12 +44,12 @@ namespace chinachu {
 	class Reserve {
 		private:
 			time_t lastUpdated;
+			time_t refreshInterval;
 		public:
 			time_t nextUpdateTime;
 			std::vector<RESERVE_ITEM> reserves;
-			Reserve()
+			Reserve() : refreshInterval(180)
 			{
-				// refresh(); /* initial refresh */
 			}
 			bool refreshIfNeeded();
 			bool refresh();

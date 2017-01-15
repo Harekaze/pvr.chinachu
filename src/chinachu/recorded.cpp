@@ -32,7 +32,6 @@ namespace chinachu {
 	bool Recorded::refreshIfNeeded() {
 		time_t now;
 		time(&now);
-		const time_t refreshInterval = 10*60; // every 10 minutes
 		if (programs.empty() || (now - lastUpdated) > refreshInterval || now > nextUpdateTime)
 			return refresh();
 		return true;

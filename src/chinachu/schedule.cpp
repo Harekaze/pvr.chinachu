@@ -29,8 +29,7 @@ namespace chinachu {
 	bool Schedule::refreshIfNeeded() {
 		time_t now;
 		time(&now);
-		const time_t refreshInterval = 60*60;
-		if (schedule.empty() || (now - lastUpdated) > refreshInterval || now > nextUpdateTime)
+		if (schedule.empty() || (now - lastUpdated) > refreshInterval)
 			return refresh();
 		return true;
 	}
@@ -137,7 +136,6 @@ namespace chinachu {
 			schedule.push_back(ch);
 		}
 
-		nextUpdateTime = std::numeric_limits<time_t>::max();
 		time(&lastUpdated);
 
 		XBMC->Log(ADDON::LOG_NOTICE, "Updated schedule: channel ammount = %d", schedule.size());
