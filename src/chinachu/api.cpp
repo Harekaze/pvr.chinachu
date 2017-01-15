@@ -100,14 +100,8 @@ namespace chinachu {
 			return requestGET(apiPath, response);
 		}
 
-		// DELETE /recorded/:id/file.m2ts
-		int deleteRecordedFile(std::string id) {
-			const std::string apiPath = "recorded/" + id + "/file.m2ts";
-			return requestDELETE(apiPath);
-		}
-
 		// DELETE /recorded/:id.json
-		int deleteRecordedInfo(std::string id) {
+		int deleteRecordedProgram(std::string id) {
 			const std::string apiPath = "recorded/" + id + ".json";
 			return requestDELETE(apiPath);
 		}
