@@ -67,6 +67,11 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities) {
 }
 
 const char* GetConnectionString(void) {
+	char serverUrl[1024];
+	if (XBMC->GetSetting("server_url", &serverUrl)) {
+		return serverUrl;
+	}
+
 	return "";
 }
 
@@ -74,11 +79,8 @@ const char* GetBackendName(void) {
 	return "Chinachu";
 }
 
-#ifndef VERSION
-#define VERSION "unknown"
-#endif
 const char* GetBackendVersion(void) {
-	return VERSION;
+	return "gamma";
 }
 
 const char* GetBackendHostname(void) {
