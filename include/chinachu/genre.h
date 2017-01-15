@@ -43,6 +43,14 @@ namespace chinachu {
 		iGenreSubType["music"] =       0x00;
 		iGenreType["cinema"] =         0x70;
 		iGenreSubType["cinema"] =      0x06;
+		iGenreType["documentary"] =    0x20;
+		iGenreSubType["documentary"] = 0x03;
+		iGenreType["theater"] =        0x30;
+		iGenreSubType["theater"] =     0x00;
+		iGenreType["hobby"] =          0xa0;
+		iGenreSubType["hobby"] =       0x00;
+		iGenreType["welfare"] =        0x90;
+		iGenreSubType["welfare"] =     0x05;
 		iGenreType["etc"] =            0x00;
 		iGenreSubType["etc"] =         0x00;
 	}
