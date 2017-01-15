@@ -24,6 +24,5 @@
 		<setting id="show_thumbnail" type="bool" label="30401" default="true" />
 		<setting id="thumbnail_position" type="slider" label="30402" range="1,1,240" default="30" enable="eq(-1,true)" />
 		<setting id="try_playback" type="bool" label="30403" default="false" />
-		<setting id="grouping" type="bool" label="30404" default="true" />
 	</category>
 </settings>

@@ -105,11 +105,7 @@ msgctxt "#30403"
 msgid "Playback ongoing recording (Beta)"
 msgstr ""
 
-msgctxt "#30404"
-msgid "Enable program grouping"
-msgstr ""
-
-#empty strings from id 30405 to 30499
+#empty strings from id 30404 to 30499
 
 msgctxt "#30500"
 msgid "TV Guide"

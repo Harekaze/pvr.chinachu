@@ -73,10 +73,6 @@ msgctxt "#30403"
 msgid "Playback ongoing recording (Beta)"
 msgstr "録画中の番組を視聴可能にする (Beta)"
 
-msgctxt "#30404"
-msgid "Enable program grouping"
-msgstr "番組ごとにグループ分けする"
-
 msgctxt "#30500"
 msgid "TV Guide"
 msgstr "番組表"

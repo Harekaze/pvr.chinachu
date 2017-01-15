@@ -69,7 +69,7 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 			pvr_rec.channelType = PVR_RECORDING_CHANNEL_TYPE_TV;
 			strncpy(pvr_rec.strStreamURL, rec.strStreamURL.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strThumbnailPath, rec.strThumbnailPath.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
-			g_recorded.bGrouping && strncpy(pvr_rec.strDirectory, rec.strDirectory.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
+			strncpy(pvr_rec.strDirectory, rec.strDirectory.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 			// pvr_rec.iSeriesNumber = 0; /* not implemented */
 			// pvr_rec.iYear = 0; /* not implemented */
 			// strncpy(pvr_rec.strIconPath, "IconPath", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
@@ -105,7 +105,7 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 			pvr_rec.channelType = PVR_RECORDING_CHANNEL_TYPE_TV;
 			strncpy(pvr_rec.strStreamURL, rec.strStreamURL.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strThumbnailPath, rec.strThumbnailPath.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
-			g_recorded.bGrouping && strncpy(pvr_rec.strDirectory, rec.strDirectory.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
+			strncpy(pvr_rec.strDirectory, rec.strDirectory.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
 			// pvr_rec.iSeriesNumber = 0; /* not implemented */
 			// pvr_rec.iYear = 0; /* not implemented */
 			// strncpy(pvr_rec.strIconPath, "IconPath", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */

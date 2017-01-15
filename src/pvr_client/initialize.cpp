@@ -162,13 +162,6 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 		g_recording.bPlayback = false;
 	}
 
-	if (XBMC->GetSetting("grouping", &boolValue) && boolValue) {
-		g_recorded.bGrouping = true;
-		XBMC->Log(LOG_NOTICE, "Program grouping enabled");
-	} else {
-		g_recorded.bGrouping = false;
-	}
-
 	currentStatus = ADDON_STATUS_OK;
 
 	return currentStatus;
