@@ -14,8 +14,8 @@ Chinachu PVR addon for Kodi
 ## Supported environment
 
 ## Backend
-Chinachu gamma [829ed89578](https://github.com/kanreisa/Chinachu/tree/829ed89578e8597a0373f11e78921b732754f52e)
-Mirakurun version 2.0.0-rc.7
+- Chinachu gamma [b06327e64c](https://github.com/kanreisa/Chinachu/tree/b06327e64c4b492ba108a2f5646f76fade58358f)
+- Mirakurun version 2.0.0-rc.11
 
 ## Frontend
 - Kodi **17.x** Krypton
@@ -86,4 +86,4 @@ See [wiki/contribution](https://github.com/Harekaze/pvr.chinachu/wiki/contributi
 
 ## License
 
-GPLv3
+[GPLv3](LICENSE)
