@@ -74,9 +74,9 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 			timer.iClientChannelUid = resv.iClientChannelUid;
 			timer.iTimerType = resv.bIsManualReserved ? TIMER_MANUAL_RESERVED : TIMER_PATTERN_MATCHED;
 			timer.iEpgUid = resv.iEpgUid;
+			timer.bStartAnyTime = false;
+			timer.bEndAnyTime = false;
 			// timer.iParentClientIndex = 0; /* not implemented */
-			// timer.bStartAnyTime = false; /* not implemented */
-			// timer.bEndAnyTime = false; /* not implemented */
 			// strncpy(timer.strEpgSearchString, "SearchString", PVR_ADDON_NAME_STRING_LENGTH - 1); /* not implemented */
 			// timer.bFullTextEpgSearch = false; /* not implemented */
 			// strncpy(timer.strDirectory, "Directory", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
@@ -219,6 +219,7 @@ PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
 PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *typesCount) {
 	const static PVR_TIMER_TYPE manualReserved = {
 		TIMER_MANUAL_RESERVED, // iId
+		PVR_TIMER_TYPE_SUPPORTS_START_TIME | PVR_TIMER_TYPE_SUPPORTS_END_TIME |
 		PVR_TIMER_TYPE_IS_MANUAL | PVR_TIMER_TYPE_REQUIRES_EPG_TAG_ON_CREATE, // iAttributes
 		"Manual Reserved", // strDescription
 		0, // iPrioritiesSize
