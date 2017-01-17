@@ -47,6 +47,7 @@ namespace chinachu {
 		unsigned int iChannelNumber;
 		unsigned int iSubChannelNumber;
 		std::string strChannelType;
+		std::string strChannelId;
 		std::string strChannelName;
 		std::string strStreamURL;
 		std::string strIconPath;

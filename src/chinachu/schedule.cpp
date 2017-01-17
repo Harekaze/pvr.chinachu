@@ -87,8 +87,9 @@ namespace chinachu {
 			ch.channel.iSubChannelNumber = o["sid"].is<std::string>() ?
 				std::atoi((o["sid"].get<std::string>()).c_str()) :
 				(int)(o["sid"].get<double>());
+			ch.channel.strChannelId = o["id"].is<std::string>() ? o["id"].get<std::string>() : "";
 			// use channel id as name instead when name field isn't available.
-			ch.channel.strChannelName = o["name"].is<std::string>() ? o["name"].get<std::string>() : o["id"].get<std::string>();
+			ch.channel.strChannelName = o["name"].is<std::string>() ? o["name"].get<std::string>() : ch.channel.strChannelId;
 			char strStreamURL[2048];
 			if (!chinachu::api::mirakurunURL.empty()) {
 				snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1,
