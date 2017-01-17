@@ -46,7 +46,6 @@ int GetTimersAmount(void) {
 
 PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 	if (g_reserve.refreshIfNeeded()) {
-
 		time_t now;
 		time(&now);
 		for (unsigned int i = 0, lim = g_reserve.reserves.size(); i < lim; i++) {
@@ -54,7 +53,7 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 
 			PVR_TIMER timer;
 
-			timer.iClientIndex = i;
+			timer.iClientIndex = i + 1;
 			timer.startTime = resv.startTime;
 			timer.endTime = resv.endTime;
 			if (resv.state == PVR_TIMER_STATE_SCHEDULED) {
