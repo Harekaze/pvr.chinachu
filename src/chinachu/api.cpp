@@ -76,6 +76,17 @@ namespace chinachu {
 			}
 		}
 
+		int requestPOST(std::string apiPath, const char buffer[], const unsigned int buffer_size) {
+			std::string url = baseURL + apiPath;
+			if (void* handle = XBMC->OpenFileForWrite(url.c_str(), 0)) {
+				XBMC->WriteFile(handle, buffer, buffer_size);
+				XBMC->CloseFile(handle);
+				return 0;
+			} else {
+				return -1;
+			}
+		}
+
 		// GET /schedule.json
 		int getSchedule(std::string &response) {
 			const std::string apiPath = "schedule.json";
@@ -128,6 +139,16 @@ namespace chinachu {
 		int putProgram(std::string id) {
 			const std::string apiPath = "program/" + id + ".json";
 			return requestPUT(apiPath);
+		}
+
+		// POST /rules.json
+		int postRule(std::string type, std::string channel, std::string title) {
+			const std::string apiPath = "rules.json";
+			std::string buffer = "{\"types\":[\"\"],\"channels\":[\"\"],\"hour\":{\"start\":0,\"end\":24},\"reserve_titles\":[\"\"],\"isEnabled\":true,\"_method\":\"POST\"}";
+			buffer.replace(77, 0, title);
+			buffer.replace(27, 0, channel);
+			buffer.replace(11, 0, type);
+			return requestPOST(apiPath, buffer.c_str(), buffer.size());
 		}
 
 		// DELETE /reserves/:id.json

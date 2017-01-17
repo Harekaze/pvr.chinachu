@@ -27,6 +27,7 @@
 
 #define TIMER_MANUAL_RESERVED 0x01
 #define TIMER_PATTERN_MATCHED 0x02
+#define RULES_PATTERN_MATCHED 0x10
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
@@ -140,6 +141,20 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 	for (std::vector<chinachu::CHANNEL_EPG>::iterator channel = g_schedule.schedule.begin(); channel != g_schedule.schedule.end(); channel++) {
 		if ((*channel).channel.iUniqueId == timer.iClientChannelUid) {
+			if (timer.iTimerType == RULES_PATTERN_MATCHED) {
+				if (chinachu::api::postRule((*channel).channel.strChannelType, (*channel).channel.strChannelId, timer.strEpgSearchString) != -1) {
+					XBMC->Log(LOG_NOTICE, "Create new rule: [%s:%s] \"%s\"",
+						(*channel).channel.strChannelType.c_str(), (*channel).channel.strChannelId.c_str(), timer.strEpgSearchString);
+					time_t now;
+					time(&now);
+					g_reserve.nextUpdateTime = now; // refresh reserved programs immediately.
+					return PVR_ERROR_NO_ERROR;
+				} else {
+					XBMC->Log(LOG_ERROR, "Failed to create new rule: %s", (*channel).channel.strChannelId.c_str());
+					return PVR_ERROR_SERVER_ERROR;
+				}
+				return PVR_ERROR_NO_ERROR;
+			}
 			for (std::vector<chinachu::EPG_PROGRAM>::iterator program = (*channel).epgs.begin(); program != (*channel).epgs.end(); program++) {
 				if ((*program).startTime == timer.startTime && (*program).endTime == timer.endTime) {
 					if (chinachu::api::putProgram((*program).strUniqueBroadcastId) != -1) {
@@ -225,11 +240,11 @@ PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *typesCount) {
 		0, // iMaxRecordingsDefault
 	};
 
-	// FIXME: implemented to avoid Kodi's bug
-	const static PVR_TIMER_TYPE manualReserved2 = {
-		TIMER_MANUAL_RESERVED, // iId
-		PVR_TIMER_TYPE_IS_REPEATING | PVR_TIMER_TYPE_REQUIRES_EPG_TAG_ON_CREATE, // iAttributes
-		"Manual Reserved", // strDescription
+	const static PVR_TIMER_TYPE patternMatched = {
+		TIMER_PATTERN_MATCHED, // iId
+		PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES |
+		PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE | PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES, // iAttributes
+		"Pattern Matched", // strDescription
 		0, // iPrioritiesSize
 		{0, NULL}, // priorities
 		0, // iPrioritiesDefault
@@ -247,9 +262,10 @@ PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *typesCount) {
 		0, // iMaxRecordingsDefault
 	};
 
-	const static PVR_TIMER_TYPE patternMatched = {
-		TIMER_PATTERN_MATCHED, // iId
-		PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE, // iAttributes
+	const static PVR_TIMER_TYPE patternMatchedRule = {
+		RULES_PATTERN_MATCHED, // iId
+		PVR_TIMER_TYPE_IS_REPEATING | PVR_TIMER_TYPE_SUPPORTS_TITLE_EPG_MATCH |
+		PVR_TIMER_TYPE_SUPPORTS_CHANNELS, // iAttributes
 		"Pattern Matched", // strDescription
 		0, // iPrioritiesSize
 		{0, NULL}, // priorities
@@ -270,7 +286,7 @@ PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *typesCount) {
 
 	types[0] = manualReserved;
 	types[1] = patternMatched;
-	types[2] = manualReserved2;
+	types[2] = patternMatchedRule;
 	*typesCount = 3;
 
 	return PVR_ERROR_NO_ERROR;
