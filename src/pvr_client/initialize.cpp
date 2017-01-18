@@ -71,17 +71,6 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 		chinachu::api::baseURL += "api/";
 	}
 
-	char mirakurunUrl[1024];
-	if (XBMC->GetSetting("mirakurun_url", &mirakurunUrl)) {
-		chinachu::api::mirakurunURL = mirakurunUrl;
-		if (!chinachu::api::mirakurunURL.empty()) {
-			if (*(chinachu::api::mirakurunURL.end() - 1) != '/') {
-				chinachu::api::mirakurunURL += "/";
-			}
-			chinachu::api::mirakurunURL += "api/";
-		}
-	}
-	g_schedule.mirakurunLiveStreamingPath = "channels/%s/%s/services/%d/stream?decode=1";
 	g_schedule.liveStreamingPath = "channel/%s/watch.m2ts?ext=m2ts";
 	g_schedule.channelLogoPath = "channel/%s/logo.png";
 	g_recorded.recordedStreamingPath = "recorded/%s/watch.m2ts?ext=m2ts";

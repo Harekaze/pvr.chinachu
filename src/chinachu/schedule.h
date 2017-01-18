@@ -63,7 +63,6 @@ namespace chinachu {
 		public:
 			std::string channelLogoPath;
 			std::string liveStreamingPath;
-			std::string mirakurunLiveStreamingPath;
 			std::vector<CHANNEL_EPG> schedule;
 			std::vector<std::string> groupNames;
 			Schedule() : refreshInterval(3600)

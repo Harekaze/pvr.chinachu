@@ -15,7 +15,6 @@ Chinachu PVR addon for Kodi
 
 ## Backend
 - Chinachu gamma [b06327e64c](https://github.com/kanreisa/Chinachu/tree/b06327e64c4b492ba108a2f5646f76fade58358f)
-- Mirakurun version 2.0.0-rc.11
 
 ## Frontend
 - Kodi **17.x** Krypton

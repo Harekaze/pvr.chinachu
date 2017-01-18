@@ -30,9 +30,6 @@ namespace chinachu {
 	namespace api {
 		std::string baseURL = "";
 
-		// Mirakurun live tv watching url
-		std::string mirakurunURL = "";
-
 		int requestGET(std::string apiPath, std::string &response) {
 			std::string url = baseURL + apiPath;
 			if (void* handle = XBMC->OpenFile(url.c_str(), 0)) {
