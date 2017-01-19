@@ -27,7 +27,8 @@
 
 #define TIMER_MANUAL_RESERVED 0x01
 #define TIMER_PATTERN_MATCHED 0x02
-#define RULES_PATTERN_MATCHED 0x10
+#define CREATE_TIMER_MANUAL_RESERVED 0x11
+#define CREATE_RULES_PATTERN_MATCHED 0x12
 
 #define MSG_TIMER_MANUAL_RESERVED 30900
 #define MSG_TIMER_PATTERN_MATCHED 30901
@@ -143,7 +144,7 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 	for (std::vector<chinachu::CHANNEL_EPG>::iterator channel = g_schedule.schedule.begin(); channel != g_schedule.schedule.end(); channel++) {
 		if ((*channel).channel.iUniqueId == timer.iClientChannelUid) {
-			if (timer.iTimerType == RULES_PATTERN_MATCHED) {
+			if (timer.iTimerType == CREATE_RULES_PATTERN_MATCHED) {
 				if (chinachu::api::postRule((*channel).channel.strChannelType, (*channel).channel.strChannelId, timer.strEpgSearchString) != -1) {
 					XBMC->Log(LOG_NOTICE, "Create new rule: [%s:%s] \"%s\"",
 						(*channel).channel.strChannelType.c_str(), (*channel).channel.strChannelId.c_str(), timer.strEpgSearchString);
@@ -241,8 +242,15 @@ PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *size) {
 	count++;
 
 	memset(&types[count], 0, sizeof(types[count]));
+	PVR_TIMER_TYPE &manualReservedCreation = types[count];
+	manualReservedCreation.iId = CREATE_TIMER_MANUAL_RESERVED;
+	manualReservedCreation.iAttributes = PVR_TIMER_TYPE_REQUIRES_EPG_TAG_ON_CREATE;
+	strncpy(manualReservedCreation.strDescription, XBMC->GetLocalizedString(MSG_TIMER_MANUAL_RESERVED), PVR_ADDON_TIMERTYPE_STRING_LENGTH - 1);
+	count++;
+
+	memset(&types[count], 0, sizeof(types[count]));
 	PVR_TIMER_TYPE &patternMatchedRule = types[count];
-	patternMatchedRule.iId = RULES_PATTERN_MATCHED;
+	patternMatchedRule.iId = CREATE_RULES_PATTERN_MATCHED;
 	patternMatchedRule.iAttributes = PVR_TIMER_TYPE_SUPPORTS_CHANNELS |
 		PVR_TIMER_TYPE_IS_REPEATING | PVR_TIMER_TYPE_SUPPORTS_TITLE_EPG_MATCH;
 	strncpy(patternMatchedRule.strDescription, XBMC->GetLocalizedString(MSG_RULES_PATTERN_MATCHED), PVR_ADDON_TIMERTYPE_STRING_LENGTH - 1);
