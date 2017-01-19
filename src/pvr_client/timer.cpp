@@ -220,46 +220,33 @@ PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
 	}
 }
 
-PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *typesCount) {
-	PVR_TIMER_TYPE manualReserved = {
-		TIMER_MANUAL_RESERVED, // iId
-		PVR_TIMER_TYPE_SUPPORTS_START_TIME | PVR_TIMER_TYPE_SUPPORTS_END_TIME |
-		PVR_TIMER_TYPE_IS_MANUAL | PVR_TIMER_TYPE_REQUIRES_EPG_TAG_ON_CREATE, // iAttributes
-		"", // strDescription
-		0, // iPrioritiesSize
-		{0, NULL}, // priorities
-		0, // iPrioritiesDefault
-		0, // iLifetimesSize
-		{0, NULL}, // lifetimes
-		0, // iLifetimesDefault
-		0, // iPreventDuplicateEpisodesSize
-		{0, NULL}, // preventDuplicateEpisodes
-		0, // iPreventDuplicateEpisodesDefault
-		0, // iRecordingGroupSize
-		{0, NULL}, // recordingGroup
-		0, // iRecordingGroupDefault
-		0, // iMaxRecordingsSize
-		{0, NULL}, // maxRecordings
-		0, // iMaxRecordingsDefault
-	};
-	strncpy(manualReserved.strDescription, XBMC->GetLocalizedString(MSG_TIMER_MANUAL_RESERVED), PVR_ADDON_TIMERTYPE_STRING_LENGTH - 1);
+PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *size) {
+	int &count = *size;
+	count = 0;
 
-	PVR_TIMER_TYPE patternMatched;
+	memset(&types[count], 0, sizeof(types[count]));
+	PVR_TIMER_TYPE &manualReserved = types[count];
+	manualReserved.iId = TIMER_MANUAL_RESERVED;
+	manualReserved.iAttributes = PVR_TIMER_TYPE_SUPPORTS_START_TIME | PVR_TIMER_TYPE_SUPPORTS_END_TIME |
+		PVR_TIMER_TYPE_IS_MANUAL | PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES;
+	strncpy(manualReserved.strDescription, XBMC->GetLocalizedString(MSG_TIMER_MANUAL_RESERVED), PVR_ADDON_TIMERTYPE_STRING_LENGTH - 1);
+	count++;
+
+	memset(&types[count], 0, sizeof(types[count]));
+	PVR_TIMER_TYPE &patternMatched = types[count];
 	patternMatched.iId = TIMER_PATTERN_MATCHED;
 	patternMatched.iAttributes = PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES |
 		PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE | PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES;
 	strncpy(patternMatched.strDescription, XBMC->GetLocalizedString(MSG_TIMER_PATTERN_MATCHED), PVR_ADDON_TIMERTYPE_STRING_LENGTH - 1);
+	count++;
 
-	PVR_TIMER_TYPE patternMatchedRule;
+	memset(&types[count], 0, sizeof(types[count]));
+	PVR_TIMER_TYPE &patternMatchedRule = types[count];
 	patternMatchedRule.iId = RULES_PATTERN_MATCHED;
 	patternMatchedRule.iAttributes = PVR_TIMER_TYPE_SUPPORTS_CHANNELS |
 		PVR_TIMER_TYPE_IS_REPEATING | PVR_TIMER_TYPE_SUPPORTS_TITLE_EPG_MATCH;
 	strncpy(patternMatchedRule.strDescription, XBMC->GetLocalizedString(MSG_RULES_PATTERN_MATCHED), PVR_ADDON_TIMERTYPE_STRING_LENGTH - 1);
-
-	types[0] = manualReserved;
-	types[1] = patternMatched;
-	types[2] = patternMatchedRule;
-	*typesCount = 3;
+	count++;
 
 	return PVR_ERROR_NO_ERROR;
 }
