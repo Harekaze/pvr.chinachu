@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Kodi-Addons\n"
 "Report-Msgid-Bugs-To: https://github.com/Harekaze/pvr.chinachu/issues\n"
 "POT-Creation-Date: 2015-02-23 08:11+0000\n"
-"PO-Revision-Date: 2017-01-18 00:03+0900\n"
+"PO-Revision-Date: 2017-01-21 17:18+0900\n"
 "Last-Translator: Yuki MIZUNO <mizuyuu0904@gmail.com>\n"
 "Language-Team: LANGUAGE\n"
 "MIME-Version: 1.0\n"
@@ -114,7 +114,17 @@ msgctxt "#30500"
 msgid "TV Guide"
 msgstr ""
 
-#empty strings from id 30501 to 30899
+#empty strings from id 30501 to 30799
+
+msgctxt "#30800"
+msgid "Refresh recordings"
+msgstr ""
+
+msgctxt "#30801"
+msgid "Refresh timers"
+msgstr ""
+
+#empty strings from id 30802 to 30899
 
 msgctxt "#30900"
 msgid "Manual Reserved"

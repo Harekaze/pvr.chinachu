@@ -27,6 +27,12 @@
 #include "kodi/libXBMC_pvr.h"
 #include "chinachu/chinachu.h"
 
+#define MENUHOOK_FORCE_REFRESH_RECORDING 0x01
+#define MENUHOOK_FORCE_REFRESH_TIMER 0x02
+
+#define MSG_FORCE_REFRESH_RECORDING 30800
+#define MSG_FORCE_REFRESH_TIMER 30801
+
 using namespace ADDON;
 
 chinachu::Schedule g_schedule;
@@ -152,6 +158,18 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 		g_recording.bPlayback = false;
 	}
 
+	PVR_MENUHOOK menuHookRec;
+	menuHookRec.iLocalizedStringId = MSG_FORCE_REFRESH_RECORDING;
+	menuHookRec.category = PVR_MENUHOOK_ALL;
+	menuHookRec.iHookId = MENUHOOK_FORCE_REFRESH_RECORDING;
+	PVR->AddMenuHook(&menuHookRec);
+
+	PVR_MENUHOOK menuHookTimer;
+	menuHookTimer.iLocalizedStringId = MSG_FORCE_REFRESH_TIMER;
+	menuHookTimer.category = PVR_MENUHOOK_ALL;
+	menuHookTimer.iHookId = MENUHOOK_FORCE_REFRESH_TIMER;
+	PVR->AddMenuHook(&menuHookTimer);
+
 	currentStatus = ADDON_STATUS_OK;
 
 	return currentStatus;
@@ -183,11 +201,21 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
 	return ADDON_STATUS_NEED_RESTART;
 }
 
-void ADDON_FreeSettings(void) {}
+PVR_ERROR CallMenuHook(const PVR_MENUHOOK& menuhook, const PVR_MENUHOOK_DATA &item) {
+	if (menuhook.category == PVR_MENUHOOK_ALL && menuhook.iHookId == MENUHOOK_FORCE_REFRESH_RECORDING) {
+		PVR->TriggerRecordingUpdate();
+		return PVR_ERROR_NO_ERROR;
+	}
+	if (menuhook.category == PVR_MENUHOOK_ALL && menuhook.iHookId == MENUHOOK_FORCE_REFRESH_TIMER) {
+		PVR->TriggerTimerUpdate();
+		return PVR_ERROR_NO_ERROR;
+	}
+	return PVR_ERROR_FAILED;
+}
 
 /* not implemented */
 void ADDON_Announce(const char *flag, const char *sender, const char *message, const void *data) {}
-PVR_ERROR CallMenuHook(const PVR_MENUHOOK& menuhook, const PVR_MENUHOOK_DATA &item) { return PVR_ERROR_NOT_IMPLEMENTED; }
+void ADDON_FreeSettings(void) {}
 void OnSystemSleep() {}
 void OnSystemWake() {}
 void OnPowerSavingActivated() {}
