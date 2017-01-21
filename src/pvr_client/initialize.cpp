@@ -110,8 +110,9 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 		XBMC->GetSetting("video_bitrate", &option);
 		snprintf(buffer, buf_len - 1, "&b:v=%dk", option);
 		transcodeParams += buffer;
-		XBMC->GetSetting("video_size", &option);
-		snprintf(buffer, buf_len - 1, "&size=%dx%d", option, option * 9 / 16);
+		char videoSize[16];
+		XBMC->GetSetting("video_size", videoSize);
+		snprintf(buffer, buf_len - 1, "&size=%s", videoSize);
 		transcodeParams += buffer;
 	} else {
 		transcodeParams += "&c:v=copy";
