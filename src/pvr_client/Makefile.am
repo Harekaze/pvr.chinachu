@@ -16,6 +16,7 @@ libpvrchinachu_la_LIBADD = \
 	../chinachu/libchinachu.la
 
 libpvrchinachu_la_LDFLAGS = \
+	$(LDFLAGS_EXT) \
 	-avoid-version
 
 AM_CPPFLAGS = \

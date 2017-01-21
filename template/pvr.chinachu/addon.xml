@@ -11,12 +11,13 @@
 	<extension point="xbmc.pvrclient"
 		library_linux="pvr.chinachu.so"
 		library_osx="pvr.chinachu.dylib"
+		library_ios="pvr.chinachu-ios.dylib"
 		library_android="libpvr.chinachu.so"
 		library_rbpi="pvr.chinachu.armel.so"
 		library_windx="pvr.chinachu.dll"
 		/>
 	<extension point="xbmc.addon.metadata">
-		<platform>linux osx android rbpi windx</platform>
+		<platform>linux osx ios android rbpi windx</platform>
 		<license>GPL v3.0</license>
 		<summary>Chinachu PVR client</summary>
 		<source>https://github.com/Harekaze/pvr.chinachu/</source>
