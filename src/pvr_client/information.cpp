@@ -29,6 +29,8 @@ extern CHelper_libXBMC_pvr *PVR;
 
 using namespace ADDON;
 
+char serverUrl[1024];
+
 extern "C" {
 
 const char* GetPVRAPIVersion(void) {
@@ -67,7 +69,6 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities) {
 }
 
 const char* GetConnectionString(void) {
-	char serverUrl[1024];
 	if (XBMC->GetSetting("server_url", &serverUrl)) {
 		return serverUrl;
 	}
