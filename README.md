@@ -18,10 +18,12 @@ Chinachu PVR addon for Kodi
 
 ## Frontend
 - Kodi **17.x** Krypton
-  + for OS X 64bit
+  + for macOS
   + for Android ARM
-  + for Linux amd64/i386/armv7
+  + for Linux x64
+  + for Raspberry Pi
   + for Windows
+  + for iOS (beta)
 
 ## Latest release
 
@@ -29,7 +31,7 @@ Chinachu PVR addon for Kodi
 
 ## Building from source
 
-### Linux / OS X
+### Linux / macOS
 ```sh
 $ ./bootstrap
 $ ./configure
@@ -64,6 +66,16 @@ Requirements:
 
 > NOTE: PowerShell command 'Compress-Archive' creates broken zip file.
 > Please unzip created archive yourself, and re-zip it with other compression tool.
+
+### iOS
+```sh
+$ ./bootstrap
+$ ./configure --host=arm-apple-darwin
+$ make
+$ ls pvr.chinachu.*.zip
+```
+> NOTE: iOS targeted package can't install to Kodi for iOS with zip installation.
+> You should build Kodi.app including pvr.chinachu addon.
 
 ## Installing
 
