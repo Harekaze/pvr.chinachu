@@ -25,6 +25,12 @@
 #include "kodi/libXBMC_pvr.h"
 #include "chinachu/chinachu.h"
 
+#if defined(_WIN32) || defined(_WIN64)
+#define sleep(sec) Sleep(sec)
+#else
+#include <unistd.h>
+#endif
+
 #define TIMER_MANUAL_RESERVED 0x01
 #define TIMER_PATTERN_MATCHED 0x02
 #define CREATE_TIMER_MANUAL_RESERVED 0x11
@@ -128,6 +134,8 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 						return PVR_ERROR_NOT_IMPLEMENTED;
 				}
 
+				sleep(1);
+				PVR->TriggerTimerUpdate();
 				return PVR_ERROR_NO_ERROR;
 			}
 
@@ -147,8 +155,8 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 				if (chinachu::api::postRule((*channel).channel.strChannelType, (*channel).channel.strChannelId, timer.strEpgSearchString) != -1) {
 					XBMC->Log(LOG_NOTICE, "Create new rule: [%s:%s] \"%s\"",
 						(*channel).channel.strChannelType.c_str(), (*channel).channel.strChannelId.c_str(), timer.strEpgSearchString);
-					time_t now;
-					time(&now);
+					sleep(1);
+					PVR->TriggerTimerUpdate();
 					return PVR_ERROR_NO_ERROR;
 				} else {
 					XBMC->Log(LOG_ERROR, "Failed to create new rule: %s", (*channel).channel.strChannelId.c_str());
@@ -160,8 +168,8 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 				if ((*program).startTime == timer.startTime && (*program).endTime == timer.endTime) {
 					if (chinachu::api::putProgram((*program).strUniqueBroadcastId) != -1) {
 						XBMC->Log(LOG_NOTICE, "Reserved new program: %s", (*program).strUniqueBroadcastId.c_str());
-						time_t now;
-						time(&now);
+						sleep(1);
+						PVR->TriggerTimerUpdate();
 						return PVR_ERROR_NO_ERROR;
 					} else {
 						XBMC->Log(LOG_ERROR, "Failed to reserve new program: %s", (*program).strUniqueBroadcastId.c_str());
@@ -188,6 +196,8 @@ PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
 						if ((*program).startTime < now && now < (*program).endTime) { // Ongoing recording
 							if (chinachu::api::deleteRecordingProgram((*program).strUniqueBroadcastId) != -1) { // Cancel recording
 								XBMC->Log(LOG_NOTICE, "Cancel ongoing recording program: %s", (*program).strUniqueBroadcastId.c_str());
+								sleep(1);
+								PVR->TriggerTimerUpdate();
 								return PVR_ERROR_NO_ERROR;
 							} else {
 								XBMC->Log(LOG_ERROR, "Failed to cancel recording program: %s", (*program).strUniqueBroadcastId.c_str());
@@ -196,6 +206,8 @@ PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
 						} else {
 							if (chinachu::api::deleteReserves((*program).strUniqueBroadcastId) != -1) {
 								XBMC->Log(LOG_NOTICE, "Delete manual reserved program: %s", (*program).strUniqueBroadcastId.c_str());
+								sleep(1);
+								PVR->TriggerTimerUpdate();
 								return PVR_ERROR_NO_ERROR;
 							} else {
 								XBMC->Log(LOG_ERROR, "Failed to delete reserved program: %s", (*program).strUniqueBroadcastId.c_str());

@@ -25,6 +25,12 @@
 #include "kodi/libXBMC_pvr.h"
 #include "chinachu/chinachu.h"
 
+#if defined(_WIN32) || defined(_WIN64)
+#define sleep(sec) Sleep(sec)
+#else
+#include <unistd.h>
+#endif
+
 using namespace ADDON;
 
 extern CHelper_libXBMC_addon *XBMC;
@@ -94,6 +100,8 @@ PVR_ERROR DeleteRecording(const PVR_RECORDING &recording) {
 				break;
 			}
 		}
+		sleep(1);
+		PVR->TriggerRecordingUpdate();
 		return PVR_ERROR_NO_ERROR;
 	}
 	return PVR_ERROR_SERVER_ERROR;
