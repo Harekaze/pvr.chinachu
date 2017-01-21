@@ -29,6 +29,14 @@ namespace chinachu {
 	bool Schedule::refresh() {
 		picojson::value v;
 		std::string response;
+		const time_t refreshInterval = 10*60; // every 10 minutes
+		static time_t lastUpdated;
+		time_t now;
+
+		time(&now);
+		if (now - lastUpdated < refreshInterval) {
+			return true;
+		}
 
 		chinachu::api::getSchedule(response);
 		std::string err = picojson::parse(v, response);
@@ -121,6 +129,7 @@ namespace chinachu {
 
 		XBMC->Log(ADDON::LOG_NOTICE, "Updated schedule: channel ammount = %d", schedule.size());
 
+		lastUpdated = now;
 		return true;
 	}
 
