@@ -45,12 +45,12 @@ PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time
 		}
 
 		for (unsigned int j = 0, lims = g_schedule.schedule[i].epgs.size(); j < lims; j++) {
-			chinachu::EPG_PROGRAM epg = g_schedule.schedule[i].epgs[j];
+			const chinachu::EPG_PROGRAM epg = g_schedule.schedule[i].epgs[j];
 
 			if (epg.endTime < iStart) continue;
 
 			EPG_TAG tag;
-			memset(&epg, 0, sizeof(EPG_TAG));
+			memset(&tag, 0, sizeof(EPG_TAG));
 
 			tag.iUniqueBroadcastId = epg.iUniqueBroadcastId;
 			tag.strTitle = epg.strTitle.c_str();
