@@ -26,15 +26,6 @@
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 
 namespace chinachu {
-	bool Schedule::refreshIfNeeded() {
-		time_t now;
-		time(&now);
-		if (schedule.empty() || (now - lastUpdated) > refreshInterval)
-			return refresh();
-		return true;
-	}
-
-
 	bool Schedule::refresh() {
 		picojson::value v;
 		std::string response;
@@ -127,8 +118,6 @@ namespace chinachu {
 
 			schedule.push_back(ch);
 		}
-
-		time(&lastUpdated);
 
 		XBMC->Log(ADDON::LOG_NOTICE, "Updated schedule: channel ammount = %d", schedule.size());
 

@@ -36,7 +36,6 @@ extern CHelper_libXBMC_pvr *PVR;
 extern "C" {
 
 int GetChannelsAmount(void) {
-	g_schedule.refreshIfNeeded();
 	return g_schedule.schedule.size();
 }
 
@@ -45,7 +44,9 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio) {
 		return PVR_ERROR_NO_ERROR;
 	}
 
-	g_schedule.refreshIfNeeded();
+	if (!g_schedule.refresh()) {
+		return PVR_ERROR_SERVER_ERROR;
+	}
 
 	for (unsigned int i = 0; i < g_schedule.schedule.size(); i++) {
 		chinachu::CHANNEL_INFO &channel = g_schedule.schedule[i].channel;
@@ -69,13 +70,10 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio) {
 }
 
 int GetChannelGroupsAmount(void) {
-	g_schedule.refreshIfNeeded();
 	return g_schedule.groupNames.size();
 }
 
 PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio) {
-	g_schedule.refreshIfNeeded();
-
 	for (unsigned int i = 0; i < g_schedule.groupNames.size(); i++) {
 		chinachu::CHANNEL_INFO &channel = g_schedule.schedule[i].channel;
 
@@ -92,8 +90,6 @@ PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio) {
 }
 
 PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group) {
-	g_schedule.refreshIfNeeded();
-
 	for (unsigned int i = 0; i < g_schedule.schedule.size(); i++) {
 		chinachu::CHANNEL_INFO &channel = g_schedule.schedule[i].channel;
 

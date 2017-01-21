@@ -29,19 +29,11 @@
 
 namespace chinachu {
 	class Recording {
-		private:
-			time_t lastUpdated;
-			time_t refreshInterval;
 		public:
 			bool bPlayback;
-			static time_t nextUpdateTime;
 			std::string recordingStreamingPath;
 			std::string recordingThumbnailPath;
 			std::vector<RECORDING> programs;
-			Recording() : refreshInterval(180)
-			{
-			}
-			bool refreshIfNeeded();
 			bool refresh();
 	};
 } // namespace chinachu

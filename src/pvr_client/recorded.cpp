@@ -35,51 +35,14 @@ extern chinachu::Recording g_recording;
 extern "C" {
 
 int GetRecordingsAmount(bool deleted) {
-	g_recorded.refreshIfNeeded();
-	g_recording.refreshIfNeeded();
-	return g_recorded.programs.size() + g_recording.programs.size();
+	return g_recorded.programs.size();
 }
-PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
-	if (g_recording.refreshIfNeeded() && g_recorded.refreshIfNeeded()) {
 
+PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
+	if (g_recorded.refresh()) {
 		std::map<std::string, int> iGenreType;
 		std::map<std::string, int> iGenreSubType;
 		chinachu::initGenreType(iGenreType, iGenreSubType);
-
-		for (unsigned int i = 0, lim = g_recording.programs.size(); i < lim; i++) {
-			chinachu::RECORDING rec = g_recording.programs[i];
-
-			PVR_RECORDING pvr_rec;
-
-			strncpy(pvr_rec.strRecordingId, rec.strRecordingId.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
-			strncpy(pvr_rec.strTitle, rec.strTitle.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
-			strncpy(pvr_rec.strEpisodeName, rec.strEpisodeName.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
-			strncpy(pvr_rec.strPlotOutline, rec.strPlotOutline.c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
-			strncpy(pvr_rec.strPlot, rec.strPlot.c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
-			strncpy(pvr_rec.strChannelName, rec.strChannelName.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
-			pvr_rec.recordingTime = rec.recordingTime;
-			pvr_rec.iEpisodeNumber = rec.iEpisodeNumber;
-			pvr_rec.iDuration = rec.iDuration;
-			pvr_rec.iPriority = rec.iPriority;
-			pvr_rec.iGenreType = iGenreType[rec.strGenreDescription];
-			pvr_rec.iGenreSubType = iGenreSubType[rec.strGenreDescription];
-			pvr_rec.iEpgEventId = rec.iEpgEventId;
-			pvr_rec.iChannelUid = rec.iChannelUid;
-			pvr_rec.channelType = PVR_RECORDING_CHANNEL_TYPE_TV;
-			strncpy(pvr_rec.strStreamURL, rec.strStreamURL.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
-			strncpy(pvr_rec.strThumbnailPath, rec.strThumbnailPath.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
-			strncpy(pvr_rec.strDirectory, rec.strDirectory.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
-			// pvr_rec.iSeriesNumber = 0; /* not implemented */
-			// pvr_rec.iYear = 0; /* not implemented */
-			// strncpy(pvr_rec.strIconPath, "IconPath", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
-			// strncpy(pvr_rec.strFanartPath, "FanartPath", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
-			// pvr_rec.iLifetime = 0; /* not implemented */
-			// pvr_rec.iPlayCount = 0; /* not implemented */
-			// pvr_rec.iLastPlayedPosition = 0; /* not implemented */
-
-			PVR->TransferRecordingEntry(handle, &pvr_rec);
-
-		}
 
 		for (unsigned int i = 0, lim = g_recorded.programs.size(); i < lim; i++) {
 			chinachu::RECORDING rec = g_recorded.programs[i];

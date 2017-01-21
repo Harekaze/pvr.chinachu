@@ -47,18 +47,10 @@ namespace chinachu {
 		std::string strGenreDescription;
 	};
 	class Recorded {
-		private:
-			time_t lastUpdated;
-			time_t refreshInterval;
 		public:
-			static time_t nextUpdateTime;
 			std::string recordedStreamingPath;
 			std::string recordedThumbnailPath;
 			std::vector<RECORDING> programs;
-			Recorded() : refreshInterval(180)
-			{
-			}
-			bool refreshIfNeeded();
 			bool refresh();
 	};
 } // namespace chinachu

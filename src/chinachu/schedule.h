@@ -57,20 +57,13 @@ namespace chinachu {
 		std::vector<EPG_PROGRAM> epgs;
 	};
 	class Schedule {
-		private:
-			time_t lastUpdated;
-			time_t refreshInterval;
 		public:
 			std::string channelLogoPath;
 			std::string liveStreamingPath;
 			std::vector<CHANNEL_EPG> schedule;
 			std::vector<std::string> groupNames;
-			Schedule() : refreshInterval(3600)
-			{
-			}
 			std::vector<EPG_PROGRAM> scheduleForChannel(PVR_CHANNEL ch);
 			bool refresh();
-			bool refreshIfNeeded();
 	};
 } // namespace chinachu
 

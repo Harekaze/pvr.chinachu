@@ -42,16 +42,8 @@ namespace chinachu {
 		int iEpgUid;
 	};
 	class Reserve {
-		private:
-			time_t lastUpdated;
-			time_t refreshInterval;
 		public:
-			time_t nextUpdateTime;
 			std::vector<RESERVE_ITEM> reserves;
-			Reserve() : refreshInterval(180)
-			{
-			}
-			bool refreshIfNeeded();
 			bool refresh();
 	};
 } // namespace chinachu

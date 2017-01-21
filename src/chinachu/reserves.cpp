@@ -30,22 +30,6 @@ extern ADDON::CHelper_libXBMC_addon *XBMC;
 
 
 namespace chinachu {
-	bool Reserve::refreshIfNeeded() {
-		time_t now;
-		time(&now);
-		if (reserves.empty() || (now - lastUpdated) > refreshInterval || now > nextUpdateTime)
-			return refresh();
-
-		for (std::vector<RESERVE_ITEM>::iterator it = reserves.begin(); it != reserves.end(); it++) {
-			if (it->endTime < now) {
-				reserves.erase(it);
-			}
-		}
-
-		return true;
-	}
-
-
 	bool Reserve::refresh() {
 		picojson::value v;
 		std::string response;
@@ -100,17 +84,7 @@ namespace chinachu {
 			reserves.push_back(resv);
 		}
 
-		time(&lastUpdated);
-		if (!reserves.empty()) {
-			nextUpdateTime = (*reserves.begin()).endTime + 60;
-		}
-		if (nextUpdateTime <= lastUpdated) {
-			nextUpdateTime = lastUpdated + 10 * 60;
-		}
-		chinachu::Recording::nextUpdateTime = nextUpdateTime - 60;
-
 		XBMC->Log(ADDON::LOG_NOTICE, "Updated reserved program: ammount = %d", reserves.size());
-		XBMC->Log(ADDON::LOG_NOTICE, "Next reserved program update at %s", asctime(localtime(&nextUpdateTime)));
 
 		return true;
 	}

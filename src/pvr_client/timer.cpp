@@ -45,12 +45,11 @@ using namespace ADDON;
 extern "C" {
 
 int GetTimersAmount(void) {
-	g_reserve.refreshIfNeeded();
 	return g_reserve.reserves.size();
 }
 
 PVR_ERROR GetTimers(ADDON_HANDLE handle) {
-	if (g_reserve.refreshIfNeeded()) {
+	if (g_reserve.refresh()) {
 		time_t now;
 		time(&now);
 		for (unsigned int i = 0, lim = g_reserve.reserves.size(); i < lim; i++) {
@@ -150,7 +149,6 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 						(*channel).channel.strChannelType.c_str(), (*channel).channel.strChannelId.c_str(), timer.strEpgSearchString);
 					time_t now;
 					time(&now);
-					g_reserve.nextUpdateTime = now; // refresh reserved programs immediately.
 					return PVR_ERROR_NO_ERROR;
 				} else {
 					XBMC->Log(LOG_ERROR, "Failed to create new rule: %s", (*channel).channel.strChannelId.c_str());
@@ -164,7 +162,6 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 						XBMC->Log(LOG_NOTICE, "Reserved new program: %s", (*program).strUniqueBroadcastId.c_str());
 						time_t now;
 						time(&now);
-						g_reserve.nextUpdateTime = now + 10; // refresh reserved programs after 10 sec.
 						return PVR_ERROR_NO_ERROR;
 					} else {
 						XBMC->Log(LOG_ERROR, "Failed to reserve new program: %s", (*program).strUniqueBroadcastId.c_str());
@@ -191,7 +188,6 @@ PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
 						if ((*program).startTime < now && now < (*program).endTime) { // Ongoing recording
 							if (chinachu::api::deleteRecordingProgram((*program).strUniqueBroadcastId) != -1) { // Cancel recording
 								XBMC->Log(LOG_NOTICE, "Cancel ongoing recording program: %s", (*program).strUniqueBroadcastId.c_str());
-								g_reserve.nextUpdateTime = now; // refresh reserved programs immediately.
 								return PVR_ERROR_NO_ERROR;
 							} else {
 								XBMC->Log(LOG_ERROR, "Failed to cancel recording program: %s", (*program).strUniqueBroadcastId.c_str());
@@ -200,7 +196,6 @@ PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
 						} else {
 							if (chinachu::api::deleteReserves((*program).strUniqueBroadcastId) != -1) {
 								XBMC->Log(LOG_NOTICE, "Delete manual reserved program: %s", (*program).strUniqueBroadcastId.c_str());
-								g_reserve.nextUpdateTime = now; // refresh reserved programs immediately.
 								return PVR_ERROR_NO_ERROR;
 							} else {
 								XBMC->Log(LOG_ERROR, "Failed to delete reserved program: %s", (*program).strUniqueBroadcastId.c_str());
