@@ -38,6 +38,8 @@ using namespace ADDON;
 chinachu::Schedule g_schedule;
 chinachu::Recorded g_recorded;
 chinachu::Recording g_recording;
+chinachu::Rule g_rule;
+chinachu::Reserve g_reserve;
 CHelper_libXBMC_addon *XBMC = NULL;
 CHelper_libXBMC_pvr *PVR = NULL;
 

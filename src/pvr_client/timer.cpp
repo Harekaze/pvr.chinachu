@@ -35,29 +35,61 @@
 #define TIMER_PATTERN_MATCHED 0x02
 #define CREATE_TIMER_MANUAL_RESERVED 0x11
 #define CREATE_RULES_PATTERN_MATCHED 0x12
+#define RULES_PATTERN_MATCHED 0x22
 
 #define MSG_TIMER_MANUAL_RESERVED 30900
 #define MSG_TIMER_PATTERN_MATCHED 30901
 #define MSG_RULES_PATTERN_MATCHED 30902
 
+#define UINT_MAX_HALF (UINT_MAX ^ (UINT_MAX >> 1))
+
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
 extern chinachu::Recorded g_recorded;
 extern chinachu::Schedule g_schedule;
-chinachu::Reserve g_reserve;
+extern chinachu::Rule g_rule;
+extern chinachu::Reserve g_reserve;
 
 using namespace ADDON;
 
 extern "C" {
 
 int GetTimersAmount(void) {
-	return g_reserve.reserves.size();
+	return g_rule.rules.size() + g_reserve.reserves.size();
 }
 
 PVR_ERROR GetTimers(ADDON_HANDLE handle) {
-	if (g_reserve.refresh()) {
+	if (g_rule.refresh() && g_reserve.refresh()) {
 		time_t now;
 		time(&now);
+
+		for (unsigned int i = 0, lim = g_rule.rules.size(); i < lim; i++) {
+			chinachu::RULE_ITEM rule = g_rule.rules[i];
+
+			PVR_TIMER timer;
+
+			timer.iClientIndex = i + UINT_MAX_HALF;
+			timer.state = rule.state;
+			strncpy(timer.strTitle, rule.strTitle.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
+			for (size_t j = 0; j < g_schedule.schedule.size(); j++) {
+				chinachu::CHANNEL_INFO channel = g_schedule.schedule[j].channel;
+				if (channel.strChannelId == rule.strClientChannelUid) {
+					timer.iClientChannelUid = channel.iUniqueId;
+					break;
+				}
+			}
+			timer.iGenreType = rule.iGenreType;
+			timer.iGenreSubType = rule.iGenreSubType;
+			timer.iTimerType = RULES_PATTERN_MATCHED;
+			timer.bStartAnyTime = true;
+			timer.bEndAnyTime = true;
+			strncpy(timer.strEpgSearchString, rule.strEpgSearchString.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
+			strncpy(timer.strSummary, rule.strEpgSearchString.c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
+			timer.bFullTextEpgSearch = rule.bFullTextEpgSearch;
+
+			PVR->TransferTimerEntry(handle, &timer);
+		}
+
 		for (unsigned int i = 0, lim = g_reserve.reserves.size(); i < lim; i++) {
 			chinachu::RESERVE_ITEM resv = g_reserve.reserves[i];
 
@@ -256,10 +288,19 @@ PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *size) {
 	count++;
 
 	memset(&types[count], 0, sizeof(types[count]));
-	PVR_TIMER_TYPE &patternMatchedRule = types[count];
-	patternMatchedRule.iId = CREATE_RULES_PATTERN_MATCHED;
-	patternMatchedRule.iAttributes = PVR_TIMER_TYPE_SUPPORTS_CHANNELS |
+	PVR_TIMER_TYPE &patternMatchedRuleCreation = types[count];
+	patternMatchedRuleCreation.iId = CREATE_RULES_PATTERN_MATCHED;
+	patternMatchedRuleCreation.iAttributes = PVR_TIMER_TYPE_SUPPORTS_CHANNELS |
 		PVR_TIMER_TYPE_IS_REPEATING | PVR_TIMER_TYPE_SUPPORTS_TITLE_EPG_MATCH;
+	strncpy(patternMatchedRuleCreation.strDescription, XBMC->GetLocalizedString(MSG_RULES_PATTERN_MATCHED), PVR_ADDON_TIMERTYPE_STRING_LENGTH - 1);
+	count++;
+
+	memset(&types[count], 0, sizeof(types[count]));
+	PVR_TIMER_TYPE &patternMatchedRule = types[count];
+	patternMatchedRule.iId = RULES_PATTERN_MATCHED;
+	patternMatchedRule.iAttributes = PVR_TIMER_TYPE_SUPPORTS_CHANNELS | PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE |
+		PVR_TIMER_TYPE_IS_READONLY | PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES |
+		PVR_TIMER_TYPE_IS_REPEATING | PVR_TIMER_TYPE_SUPPORTS_TITLE_EPG_MATCH | PVR_TIMER_TYPE_SUPPORTS_FULLTEXT_EPG_MATCH;
 	strncpy(patternMatchedRule.strDescription, XBMC->GetLocalizedString(MSG_RULES_PATTERN_MATCHED), PVR_ADDON_TIMERTYPE_STRING_LENGTH - 1);
 	count++;
 
