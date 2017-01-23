@@ -14,7 +14,7 @@ Chinachu PVR addon for Kodi
 ## Supported environment
 
 ## Backend
-- Chinachu gamma [b06327e64c](https://github.com/kanreisa/Chinachu/tree/b06327e64c4b492ba108a2f5646f76fade58358f)
+- Chinachu gamma [f1458c9084](https://github.com/Chinachu/Chinachu/commit/f1458c90849bf7a4d0d65383c04b1117dba593d2)
 
 ## Frontend
 - Kodi **17.x** Krypton
