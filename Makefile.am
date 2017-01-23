@@ -6,11 +6,10 @@ all:
 	cp -r template/pvr.chinachu .
 	cp ChangeLog.txt pvr.chinachu/
 	cp LICENSE pvr.chinachu/
-	cat template/pvr.chinachu/addon.xml | sed 's/VERSION/$(VERSION)/g' > pvr.chinachu/addon.xml
 	cp src/$(ADDONNAME) pvr.chinachu/$(ADDONNAME)
 	$(STRIP) -x pvr.chinachu/$(ADDONNAME)
-	zip -9 -r ./pvr.chinachu.$(VERSION).zip pvr.chinachu
+	zip -9 -r ./pvr.chinachu.zip pvr.chinachu
 	rm -rf pvr.chinachu
 
 clean-local:
-	rm -f ./pvr.chinachu.$(VERSION).zip
+	rm -f ./pvr.chinachu.zip

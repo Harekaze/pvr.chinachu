@@ -47,8 +47,8 @@ $ ls pvr.chinachu.*.zip
 ```sh
 $ export APP_ABI=armeabi-v7a
 $ ndk-build
-$ VERSION=3.3.0 ./jni/pack.sh
-$ ls pvr.chinachu.*.zip
+$ ./jni/pack.sh
+$ ls pvr.chinachu.zip
 ```
 
 ### Windows
@@ -59,7 +59,7 @@ Requirements:
 
 ```powershell
 > ./build.ps1
-> ls ./pvr.chinachu.*.zip
+> ls ./pvr.chinachu.zip
 ```
 > TIPS: If a powershell warning about Execution Policies has occurred, run `Set-ExecutionPolocy Unrestricted`
 > with Administrator privileges. After building this project, run `Set-ExecutionPolocy RemoteSigned`, please.
@@ -72,7 +72,7 @@ Requirements:
 $ ./bootstrap
 $ ./configure --host=arm-apple-darwin
 $ make
-$ ls pvr.chinachu.*.zip
+$ ls pvr.chinachu.zip
 ```
 > NOTE: iOS targeted package can't install to Kodi for iOS with zip installation.
 > You should build Kodi.app including pvr.chinachu addon.
