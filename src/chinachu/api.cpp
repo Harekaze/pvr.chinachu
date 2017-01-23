@@ -138,6 +138,12 @@ namespace chinachu {
 			return requestPUT(apiPath);
 		}
 
+		// GET /rules.json
+		int getRules(std::string &response) {
+			const std::string apiPath = "rules.json";
+			return requestGET(apiPath, response);
+		}
+
 		// POST /rules.json
 		int postRule(std::string type, std::string channel, std::string title) {
 			const std::string apiPath = "rules.json";

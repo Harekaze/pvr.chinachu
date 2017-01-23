@@ -10,6 +10,8 @@ libchinachu_la_SOURCES = \
 	recording.h \
 	reserves.cpp \
 	reserves.h \
+	rules.cpp \
+	rules.h \
 	schedule.cpp \
 	schedule.h
 

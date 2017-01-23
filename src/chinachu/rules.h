@@ -19,14 +19,30 @@
  * along with pvr.chinachu.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef CHINACHU_CHINACHU_H
-#define CHINACHU_CHINACHU_H
+#ifndef CHINACHU_RULES_H
+#define CHINACHU_RULES_H
+#include <iostream>
 
-#include "schedule.h"
-#include "recorded.h"
-#include "recording.h"
-#include "reserves.h"
-#include "rules.h"
-#include "api.h"
+#include "picojson/picojson.h"
+#include "chinachu/genre.h"
+#include "kodi/xbmc_pvr_types.h"
+
+namespace chinachu {
+	struct RULE_ITEM {
+		std::string strTitle;
+		std::string strEpgSearchString;
+		std::string strClientChannelUid;
+		PVR_TIMER_STATE state;
+		bool bFullTextEpgSearch;
+		bool bIsDisabled;
+		int iGenreType;
+		int iGenreSubType;
+	};
+	class Rule {
+		public:
+			std::vector<RULE_ITEM> rules;
+			bool refresh();
+	};
+} // namespace chinachu
 
 #endif /* end of include guard */
