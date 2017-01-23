@@ -45,9 +45,9 @@ $ ls pvr.chinachu.*.zip
 *Android NDK is required.*
 
 ```sh
-$ ./bootstrap
-$ ./configure --host=arm-linux-androideabi
-$ make CPPFLAGS=-DPICOJSON_USE_LOCALE=0
+$ export APP_ABI=armeabi-v7a
+$ ndk-build
+$ VERSION=3.3.0 ./jni/pack.sh
 $ ls pvr.chinachu.*.zip
 ```
 
