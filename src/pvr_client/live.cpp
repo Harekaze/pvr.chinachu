@@ -54,7 +54,7 @@ PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time
 
 			tag.iUniqueBroadcastId = epg.iUniqueBroadcastId;
 			tag.strTitle = epg.strTitle.c_str();
-			tag.iChannelNumber =  g_schedule.schedule[i].channel.iChannelNumber;
+			tag.iChannelNumber = g_schedule.schedule[i].channel.iChannelNumber;
 			tag.startTime = epg.startTime;
 			tag.endTime = epg.endTime;
 			tag.strPlotOutline = epg.strPlotOutline.c_str();

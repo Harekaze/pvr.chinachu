@@ -75,8 +75,6 @@ int GetChannelGroupsAmount(void) {
 
 PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio) {
 	for (unsigned int i = 0; i < g_schedule.groupNames.size(); i++) {
-		chinachu::CHANNEL_INFO &channel = g_schedule.schedule[i].channel;
-
 		PVR_CHANNEL_GROUP chGroup;
 
 		strncpy(chGroup.strGroupName, g_schedule.groupNames[i].c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);

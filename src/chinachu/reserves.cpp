@@ -68,11 +68,11 @@ namespace chinachu {
 			resv.strSummary = p["detail"].get<std::string>();
 			resv.strProgramId = p["id"].get<std::string>();
 			if (p["isConflict"].is<bool>() && p["isConflict"].get<bool>()) {
-				resv.state =  PVR_TIMER_STATE_CONFLICT_NOK;
+				resv.state = PVR_TIMER_STATE_CONFLICT_NOK;
 			} else if (p["isSkip"].is<bool>() && p["isSkip"].get<bool>()) {
-				resv.state =  PVR_TIMER_STATE_DISABLED;
+				resv.state = PVR_TIMER_STATE_DISABLED;
 			} else {
-				resv.state =  PVR_TIMER_STATE_SCHEDULED;
+				resv.state = PVR_TIMER_STATE_SCHEDULED;
 			}
 			resv.startTime = (time_t)(p["start"].get<double>() / 1000);
 			resv.endTime = (time_t)(p["end"].get<double>() / 1000);

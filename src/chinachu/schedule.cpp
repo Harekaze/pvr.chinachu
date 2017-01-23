@@ -140,7 +140,7 @@ namespace chinachu {
 				return schedule[i].epgs;
 			}
 		}
-		std::vector<EPG_PROGRAM> epmty;
-		return epmty;
+		std::vector<EPG_PROGRAM> empty;
+		return empty;
 	}
 }
