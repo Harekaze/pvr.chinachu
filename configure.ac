@@ -28,10 +28,6 @@ case $host in
 		ADDONNAME=pvr.chinachu.armel.so
 		AC_SUBST(AM_CPPFLAGS_EXT, "-D_ARMEL")
 		;;
-	*-androideabi)
-		ADDONNAME=libpvr.chinachu.so
-		AC_SUBST(AM_CPPFLAGS_EXT, "-DANDROID")
-		;;
 esac
 
 AC_SUBST(ADDONNAME)
