@@ -54,6 +54,7 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 			chinachu::RECORDING rec = g_recorded.programs[i];
 
 			PVR_RECORDING pvr_rec;
+			memset(&pvr_rec, 0, sizeof(PVR_RECORDING));
 
 			strncpy(pvr_rec.strRecordingId, rec.strRecordingId.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 			strncpy(pvr_rec.strTitle, rec.strTitle.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);

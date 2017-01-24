@@ -68,6 +68,7 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 			chinachu::RULE_ITEM rule = g_rule.rules[i];
 
 			PVR_TIMER timer;
+			memset(&timer, 0, sizeof(PVR_TIMER));
 
 			timer.iClientIndex = i + UINT_MAX_HALF;
 			timer.state = rule.state;
@@ -95,6 +96,7 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 			chinachu::RESERVE_ITEM resv = g_reserve.reserves[i];
 
 			PVR_TIMER timer;
+			memset(&timer, 0, sizeof(PVR_TIMER));
 
 			timer.iClientIndex = i + 1;
 			timer.startTime = resv.startTime;

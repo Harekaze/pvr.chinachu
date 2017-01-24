@@ -52,6 +52,7 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio) {
 		chinachu::CHANNEL_INFO &channel = g_schedule.schedule[i].channel;
 
 		PVR_CHANNEL ch;
+		memset(&ch, 0, sizeof(PVR_CHANNEL));
 
 		ch.iUniqueId         = channel.iUniqueId;
 		ch.bIsRadio          = false;
@@ -76,6 +77,7 @@ int GetChannelGroupsAmount(void) {
 PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio) {
 	for (unsigned int i = 0; i < g_schedule.groupNames.size(); i++) {
 		PVR_CHANNEL_GROUP chGroup;
+		memset(&chGroup, 0, sizeof(PVR_CHANNEL_GROUP));
 
 		strncpy(chGroup.strGroupName, g_schedule.groupNames[i].c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 		chGroup.bIsRadio = false;
@@ -95,6 +97,7 @@ PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &g
 			continue;
 
 		PVR_CHANNEL_GROUP_MEMBER chMem;
+		memset(&chMem, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
 
 		chMem.iChannelUniqueId = channel.iUniqueId;
 		chMem.iChannelNumber = channel.iChannelNumber;

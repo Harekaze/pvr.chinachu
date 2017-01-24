@@ -161,12 +161,14 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 	}
 
 	PVR_MENUHOOK menuHookRec;
+	memset(&menuHookRec, 0, sizeof(PVR_MENUHOOK));
 	menuHookRec.iLocalizedStringId = MSG_FORCE_REFRESH_RECORDING;
 	menuHookRec.category = PVR_MENUHOOK_ALL;
 	menuHookRec.iHookId = MENUHOOK_FORCE_REFRESH_RECORDING;
 	PVR->AddMenuHook(&menuHookRec);
 
 	PVR_MENUHOOK menuHookTimer;
+	memset(&menuHookTimer, 0, sizeof(PVR_MENUHOOK));
 	menuHookTimer.iLocalizedStringId = MSG_FORCE_REFRESH_TIMER;
 	menuHookTimer.category = PVR_MENUHOOK_ALL;
 	menuHookTimer.iHookId = MENUHOOK_FORCE_REFRESH_TIMER;
