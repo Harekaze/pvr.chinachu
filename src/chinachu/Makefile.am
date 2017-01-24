@@ -20,6 +20,7 @@ libchinachu_la_LDFLAGS = \
 
 AM_CPPFLAGS = \
 	$(AM_CPPFLAGS_EXT) \
+	-std=c++11 \
 	-I. \
 	-I$(top_srcdir)/include -I$(top_srcdir)/src
 
