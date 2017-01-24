@@ -9,7 +9,7 @@ Chinachu PVR addon for Kodi
 [![GitHub stars](https://img.shields.io/github/stars/Harekaze/pvr.chinachu.svg?style=flat-square)](https://github.com/Harekaze/pvr.chinachu/stargazers)
 [![GitHub license](https://img.shields.io/badge/license-GPLv3-orange.svg?style=flat-square)](https://raw.githubusercontent.com/Harekaze/pvr.chinachu/master/LICENSE)
 
-![icon](/template/pvr.chinachu/icon.png)
+![fanart](/template/pvr.chinachu/fanart.png)
 
 ## Supported environment
 
