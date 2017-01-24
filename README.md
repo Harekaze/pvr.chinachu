@@ -45,9 +45,8 @@ $ ls pvr.chinachu.*.zip
 *Android NDK is required.*
 
 ```sh
-$ export APP_ABI=armeabi-v7a
-$ ndk-build
-$ ./jni/pack.sh
+$ ndk-build APP_ABI=armeabi-v7a
+$ ./jni/pack.sh APP_ABI=armeabi-v7a
 $ ls pvr.chinachu.zip
 ```
 

@@ -2,6 +2,11 @@
 
 ADDONNAME=libpvr.chinachu.so
 
+if [ $# -eq 0 ]; then
+	echo "usage: $0 APP_ABI=armeabi-v7a"
+	exit 1
+fi
+export "$1"
 if [ -z ${APP_ABI+x} ]; then
 	echo "APP_ABI is unset"
 	exit 1
