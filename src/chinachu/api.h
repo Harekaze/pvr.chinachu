@@ -64,6 +64,9 @@ namespace chinachu {
 		// POST /rules.json
 		int postRule(std::string type, std::string channel, std::string title);
 
+		// PUT /rules/:id/:action.json
+		int putRuleAction(int id, bool state);
+
 		// DELETE /reserves/:id.json
 		int deleteReserves(std::string id);
 
