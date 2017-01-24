@@ -78,6 +78,7 @@
     <ClCompile Include="..\..\src\chinachu\recorded.cpp" />
     <ClCompile Include="..\..\src\chinachu\recording.cpp" />
     <ClCompile Include="..\..\src\chinachu\reserves.cpp" />
+    <ClCompile Include="..\..\src\chinachu\rules.cpp" />
     <ClCompile Include="..\..\src\chinachu\schedule.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -87,6 +88,7 @@
     <ClInclude Include="..\..\src\chinachu\recorded.h" />
     <ClInclude Include="..\..\src\chinachu\recording.h" />
     <ClInclude Include="..\..\src\chinachu\reserves.h" />
+    <ClInclude Include="..\..\src\chinachu\rules.h" />
     <ClInclude Include="..\..\src\chinachu\schedule.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

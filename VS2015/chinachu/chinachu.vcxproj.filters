@@ -27,6 +27,9 @@
     <ClCompile Include="..\..\src\chinachu\reserves.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\chinachu\rules.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\chinachu\schedule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -45,6 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\chinachu\reserves.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\chinachu\rules.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\chinachu\schedule.h">
