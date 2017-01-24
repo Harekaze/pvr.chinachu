@@ -24,6 +24,6 @@
 		<website>https://github.com/Harekaze/pvr.chinachu/wiki</website>
 		<forum>https://github.com/Harekaze/pvr.chinachu/issues</forum>
 		<language>en ja</language>
-		<disclaimer></disclaimer>
+		<disclaimer>Chinachu PVR client for Kodi</disclaimer>
 	</extension>
 </addon>
