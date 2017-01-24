@@ -30,7 +30,7 @@
     <ClCompile Include="..\..\src\pvr_client\live.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\pvr_client\recorded.cpp">
+    <ClCompile Include="..\..\src\pvr_client\recording.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\pvr_client\stream.cpp">

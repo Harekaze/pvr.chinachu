@@ -83,7 +83,7 @@
     <ClCompile Include="..\..\src\pvr_client\information.cpp" />
     <ClCompile Include="..\..\src\pvr_client\initialize.cpp" />
     <ClCompile Include="..\..\src\pvr_client\live.cpp" />
-    <ClCompile Include="..\..\src\pvr_client\recorded.cpp" />
+    <ClCompile Include="..\..\src\pvr_client\recording.cpp" />
     <ClCompile Include="..\..\src\pvr_client\stream.cpp" />
     <ClCompile Include="..\..\src\pvr_client\timer.cpp" />
   </ItemGroup>
