@@ -32,7 +32,7 @@ namespace chinachu {
 		std::string baseURL = "";
 
 		int requestGET(std::string apiPath, std::string &response) {
-			std::string url = baseURL + apiPath;
+			const std::string url = baseURL + apiPath;
 			if (void* handle = XBMC->OpenFile(url.c_str(), 0)) {
 				const unsigned int buffer_size = 4096;
 				char buffer[buffer_size];
@@ -49,10 +49,10 @@ namespace chinachu {
 		}
 
 		int requestDELETE(std::string apiPath) {
-			std::string url = baseURL + apiPath;
+			const std::string url = baseURL + apiPath;
 			if (void* handle = XBMC->OpenFileForWrite(url.c_str(), 0)) {
 				const unsigned int buffer_size = 20;
-				char buffer[] = "{\"_method\":\"DELETE\"}";
+				const char buffer[] = "{\"_method\":\"DELETE\"}";
 				XBMC->WriteFile(handle, buffer, buffer_size);
 				XBMC->CloseFile(handle);
 				return 0;
@@ -62,10 +62,10 @@ namespace chinachu {
 		}
 
 		int requestPUT(std::string apiPath) {
-			std::string url = baseURL + apiPath;
+			const std::string url = baseURL + apiPath;
 			if (void* handle = XBMC->OpenFileForWrite(url.c_str(), 0)) {
 				const unsigned int buffer_size = 17;
-				char buffer[] = "{\"_method\":\"PUT\"}";
+				const char buffer[] = "{\"_method\":\"PUT\"}";
 				XBMC->WriteFile(handle, buffer, buffer_size);
 				XBMC->CloseFile(handle);
 				return 0;
@@ -75,7 +75,7 @@ namespace chinachu {
 		}
 
 		int requestPOST(std::string apiPath, const char buffer[], const unsigned int buffer_size) {
-			std::string url = baseURL + apiPath;
+			const std::string url = baseURL + apiPath;
 			if (void* handle = XBMC->OpenFileForWrite(url.c_str(), 0)) {
 				XBMC->WriteFile(handle, buffer, buffer_size);
 				XBMC->CloseFile(handle);

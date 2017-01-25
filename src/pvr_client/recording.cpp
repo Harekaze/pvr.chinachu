@@ -49,7 +49,7 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 		chinachu::initGenreType(iGenreType, iGenreSubType);
 
 		for (unsigned int i = 0, lim = g_recorded.programs.size(); i < lim; i++) {
-			chinachu::RECORDING rec = g_recorded.programs[i];
+			const chinachu::RECORDING rec = g_recorded.programs[i];
 
 			PVR_RECORDING pvr_rec;
 			memset(&pvr_rec, 0, sizeof(PVR_RECORDING));
@@ -125,7 +125,7 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) {
 		XBMC->Log(ADDON::LOG_ERROR, "[storage.json] Request failed");
 		return PVR_ERROR_SERVER_ERROR;
 	}
-	std::string err = picojson::parse(v, response);
+	const std::string err = picojson::parse(v, response);
 	if (!err.empty()) {
 		XBMC->Log(ADDON::LOG_ERROR, "[storage.json] Failed to parse JSON string: %s", err.c_str());
 		return PVR_ERROR_SERVER_ERROR;

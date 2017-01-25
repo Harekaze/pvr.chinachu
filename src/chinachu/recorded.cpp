@@ -36,13 +36,13 @@ namespace chinachu {
 			XBMC->Log(ADDON::LOG_ERROR, "[recorded.json] Request failed");
 			return false;
 		}
-		std::string err = picojson::parse(v, response);
+		const std::string err = picojson::parse(v, response);
 		if (!err.empty()) {
 			XBMC->Log(ADDON::LOG_ERROR, "[recorded.json] Failed to parse JSON string: %s", err.c_str());
 			return false;
 		}
 
-		bool showThumbnail = !recordedThumbnailPath.empty();
+		const bool showThumbnail = !recordedThumbnailPath.empty();
 		programs.clear();
 
 		picojson::array pa = v.get<picojson::array>();
@@ -66,7 +66,7 @@ namespace chinachu {
 			std::string id = p["id"].get<std::string>();
 			std::remove(id.begin(), id.end(), '-');
 			rec.iEpgEventId = strtoul(id.c_str(), &endptr, 36);
-			int sid = p["channel"].get<picojson::object>()["sid"].is<std::string>() ?
+			const int sid = p["channel"].get<picojson::object>()["sid"].is<std::string>() ?
 				std::atoi((p["channel"].get<picojson::object>()["sid"].get<std::string>()).c_str()) :
 				(int)(p["channel"].get<picojson::object>()["sid"].get<double>());
 			rec.iChannelUid = sid;

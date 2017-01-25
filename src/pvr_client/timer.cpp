@@ -63,7 +63,7 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 		time(&now);
 
 		for (unsigned int i = 0, lim = g_rule.rules.size(); i < lim; i++) {
-			chinachu::RULE_ITEM rule = g_rule.rules[i];
+			const chinachu::RULE_ITEM rule = g_rule.rules[i];
 
 			PVR_TIMER timer;
 			memset(&timer, 0, sizeof(PVR_TIMER));
@@ -72,7 +72,7 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 			timer.state = rule.state;
 			strncpy(timer.strTitle, rule.strTitle.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 			for (size_t j = 0; j < g_schedule.schedule.size(); j++) {
-				chinachu::CHANNEL_INFO channel = g_schedule.schedule[j].channel;
+				const chinachu::CHANNEL_INFO channel = g_schedule.schedule[j].channel;
 				if (channel.strChannelId == rule.strClientChannelUid) {
 					timer.iClientChannelUid = channel.iUniqueId;
 					break;
@@ -91,7 +91,7 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 		}
 
 		for (unsigned int i = 0, lim = g_reserve.reserves.size(); i < lim; i++) {
-			chinachu::RESERVE_ITEM resv = g_reserve.reserves[i];
+			const chinachu::RESERVE_ITEM resv = g_reserve.reserves[i];
 
 			PVR_TIMER timer;
 			memset(&timer, 0, sizeof(PVR_TIMER));

@@ -43,7 +43,7 @@ namespace chinachu {
 			XBMC->Log(ADDON::LOG_ERROR, "[rules.json] Request failed");
 			return false;
 		}
-		std::string err = picojson::parse(v, response);
+		const std::string err = picojson::parse(v, response);
 		if (!err.empty()) {
 			XBMC->Log(ADDON::LOG_ERROR, "[rules.json] Failed to parse JSON string: %s", err.c_str());
 			return false;
