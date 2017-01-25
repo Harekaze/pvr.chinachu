@@ -92,14 +92,14 @@ namespace chinachu {
 			ch.channel.strChannelId = o["id"].is<std::string>() ? o["id"].get<std::string>() : "";
 			// use channel id as name instead when name field isn't available.
 			ch.channel.strChannelName = o["name"].is<std::string>() ? o["name"].get<std::string>() : ch.channel.strChannelId;
-			char strStreamURL[2048];
+			char strStreamURL[PVR_ADDON_URL_STRING_LENGTH];
 			snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1,
 				(const char*)(chinachu::api::baseURL + liveStreamingPath).c_str(),
 				o["id"].get<std::string>().c_str());
 			ch.channel.strStreamURL = strStreamURL;
 
 			if (o["hasLogoData"].get<bool>()) {
-				char strIconPath[2048];
+				char strIconPath[PVR_ADDON_URL_STRING_LENGTH];
 				snprintf(strIconPath, PVR_ADDON_URL_STRING_LENGTH - 1,
 					(const char*)(chinachu::api::baseURL + channelLogoPath).c_str(),
 					o["id"].get<std::string>().c_str());

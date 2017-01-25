@@ -85,14 +85,12 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 	int boolValue = 0;
 	if (XBMC->GetSetting("show_thumbnail", &boolValue) && boolValue) {
 		int intValue = 0;
-		char valueString[4];
 
 		XBMC->GetSetting("thumbnail_position", &intValue);
-		snprintf(valueString, 4, "%d", intValue);
 		g_recorded.recordedThumbnailPath = "recorded/%s/preview.png?pos=";
-		g_recorded.recordedThumbnailPath += valueString;
+		g_recorded.recordedThumbnailPath += std::to_string(intValue);
 		g_recording.recordingThumbnailPath = "recording/%s/preview.png?pos=";
-		g_recording.recordingThumbnailPath += valueString;
+		g_recording.recordingThumbnailPath += std::to_string(intValue);
 	} else {
 		g_recorded.recordedThumbnailPath = "";
 	}
