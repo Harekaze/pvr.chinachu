@@ -33,14 +33,12 @@
 #define MSG_FORCE_REFRESH_RECORDING 30800
 #define MSG_FORCE_REFRESH_TIMER 30801
 
-using namespace ADDON;
-
 chinachu::Schedule g_schedule;
 chinachu::Recorded g_recorded;
 chinachu::Recording g_recording;
 chinachu::Rule g_rule;
 chinachu::Reserve g_reserve;
-CHelper_libXBMC_addon *XBMC = NULL;
+ADDON::CHelper_libXBMC_addon *XBMC = NULL;
 CHelper_libXBMC_pvr *PVR = NULL;
 
 ADDON_STATUS currentStatus = ADDON_STATUS_UNKNOWN;
@@ -53,7 +51,7 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 		return ADDON_STATUS_UNKNOWN;
 	}
 
-	XBMC = new CHelper_libXBMC_addon;
+	XBMC = new ADDON::CHelper_libXBMC_addon;
 	PVR = new CHelper_libXBMC_pvr;
 
 	if (!XBMC->RegisterMe(callbacks) || !PVR->RegisterMe(callbacks)) {
@@ -102,7 +100,7 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 	std::string transcodeParams = "";
 
 	if (XBMC->GetSetting("video_transcode", &boolValue) && boolValue) {
-		XBMC->Log(LOG_NOTICE, "Video transcoding enabled.");
+		XBMC->Log(ADDON::LOG_NOTICE, "Video transcoding enabled.");
 
 		unsigned int option;
 		XBMC->GetSetting("video_codec", &option);
@@ -127,7 +125,7 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 	}
 
 	if (XBMC->GetSetting("audio_transcode", &boolValue) && boolValue) {
-		XBMC->Log(LOG_NOTICE, "Audio transcoding enabled.");
+		XBMC->Log(ADDON::LOG_NOTICE, "Audio transcoding enabled.");
 
 		unsigned int option;
 		XBMC->GetSetting("audio_codec", &option);
@@ -147,7 +145,7 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 		transcodeParams += "&c:a=copy";
 	}
 
-	XBMC->Log(LOG_NOTICE, "Transcoding parameter: %s", transcodeParams.c_str());
+	XBMC->Log(ADDON::LOG_NOTICE, "Transcoding parameter: %s", transcodeParams.c_str());
 
 	g_schedule.liveStreamingPath += transcodeParams;
 	g_recorded.recordedStreamingPath += transcodeParams;
@@ -155,7 +153,7 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 
 	if (XBMC->GetSetting("try_playback", &boolValue) && boolValue) {
 		g_recording.bPlayback = true;
-		XBMC->Log(LOG_NOTICE, "Playback ongoing recording (Beta) enabled");
+		XBMC->Log(ADDON::LOG_NOTICE, "Playback ongoing recording (Beta) enabled");
 	} else {
 		g_recording.bPlayback = false;
 	}

@@ -31,12 +31,10 @@
 #include <unistd.h>
 #endif
 
-using namespace ADDON;
-
-extern CHelper_libXBMC_addon *XBMC;
-extern CHelper_libXBMC_pvr *PVR;
 extern chinachu::Recorded g_recorded;
 extern chinachu::Recording g_recording;
+extern ADDON::CHelper_libXBMC_addon *XBMC;
+extern CHelper_libXBMC_pvr *PVR;
 
 extern "C" {
 

@@ -27,8 +27,6 @@
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
 
-using namespace ADDON;
-
 extern "C" {
 
 /* not implemented */

@@ -25,11 +25,9 @@
 #include "kodi/libXBMC_pvr.h"
 #include "chinachu/chinachu.h"
 
-using namespace ADDON;
-
 extern chinachu::Schedule g_schedule;
 extern chinachu::CHANNEL_INFO currentChannel;
-extern CHelper_libXBMC_addon *XBMC;
+extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
 
 extern "C" {
