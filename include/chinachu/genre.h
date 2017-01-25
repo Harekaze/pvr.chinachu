@@ -25,36 +25,23 @@
 #include <string>
 
 namespace chinachu {
-	inline void initGenreType(std::map<std::string, int> &iGenreType, std::map<std::string, int> &iGenreSubType) {
-
-		iGenreType["anime"] =          0x50;
-		iGenreSubType["anime"] =       0x05;
-		iGenreType["information"] =    0x20;
-		iGenreSubType["information"] = 0x02;
-		iGenreType["news"] =           0x20;
-		iGenreSubType["news"] =        0x01;
-		iGenreType["sports"] =         0x40;
-		iGenreSubType["sports"] =      0x00;
-		iGenreType["variety"] =        0x30;
-		iGenreSubType["variety"] =     0x02;
-		iGenreType["drama"] =          0x10;
-		iGenreSubType["drama"] =       0x00;
-		iGenreType["music"] =          0x60;
-		iGenreSubType["music"] =       0x00;
-		iGenreType["cinema"] =         0x70;
-		iGenreSubType["cinema"] =      0x06;
-		iGenreType["documentary"] =    0x20;
-		iGenreSubType["documentary"] = 0x03;
-		iGenreType["theater"] =        0x30;
-		iGenreSubType["theater"] =     0x00;
-		iGenreType["hobby"] =          0xa0;
-		iGenreSubType["hobby"] =       0x00;
-		iGenreType["welfare"] =        0x90;
-		iGenreSubType["welfare"] =     0x05;
-		iGenreType["etc"] =            0x00;
-		iGenreSubType["etc"] =         0x00;
-	}
-
+	static std::map<std::string, int> iGenreTypePair = {
+		{"anime", 0x55},
+		{"information", 0x22},
+		{"news", 0x21},
+		{"sports", 0x40},
+		{"variety", 0x32},
+		{"drama", 0x10},
+		{"music", 0x60},
+		{"cinema", 0x76},
+		{"documentary", 0x23},
+		{"theater", 0x30},
+		{"hobby", 0xa0},
+		{"welfare", 0x95},
+		{"etc", 0x00},
+	};
+	const int GENRE_TYPE_MASK = 0xf0;
+	const int GENRE_SUBTYPE_MASK = 0x0f;
 } // namespace chinachu
 
 #endif /* end of include guard */

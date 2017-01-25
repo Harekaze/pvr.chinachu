@@ -33,10 +33,6 @@ extern CHelper_libXBMC_pvr *PVR;
 extern "C" {
 
 PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd) {
-	std::map<std::string, int> iGenreType;
-	std::map<std::string, int> iGenreSubType;
-	chinachu::initGenreType(iGenreType, iGenreSubType);
-
 	for (unsigned int i = 0, lim = g_schedule.schedule.size(); i < lim; i++) {
 		if (g_schedule.schedule[i].channel.iUniqueId != channel.iUniqueId) {
 			continue;
@@ -57,8 +53,8 @@ PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time
 			tag.endTime = epg.endTime;
 			tag.strPlotOutline = epg.strPlotOutline.c_str();
 			tag.strPlot = epg.strPlot.c_str();
-			tag.iGenreType = iGenreType[epg.strGenreDescription];
-			tag.iGenreSubType = iGenreSubType[epg.strGenreDescription];
+			tag.iGenreType = chinachu::iGenreTypePair[epg.strGenreDescription] ^ chinachu::GENRE_TYPE_MASK;
+			tag.iGenreSubType = chinachu::iGenreTypePair[epg.strGenreDescription] ^ chinachu::GENRE_SUBTYPE_MASK;
 			tag.iEpisodeNumber = epg.iEpisodeNumber;
 			tag.strEpisodeName = epg.strEpisodeName.c_str();
 			tag.strGenreDescription = epg.strGenreDescription.c_str();

@@ -35,10 +35,6 @@ namespace chinachu {
 		picojson::value v;
 		std::string response;
 
-		std::map<std::string, int> iGenreType;
-		std::map<std::string, int> iGenreSubType;
-		chinachu::initGenreType(iGenreType, iGenreSubType);
-
 		if (chinachu::api::getRules(response) == chinachu::api::REQUEST_FAILED) {
 			XBMC->Log(ADDON::LOG_ERROR, "[rules.json] Request failed");
 			return false;
@@ -124,8 +120,8 @@ namespace chinachu {
 
 			if (p["categories"].is<picojson::array>() && p["categories"].get<picojson::array>().size() == 1) {
 				const std::string strGenreType = p["categories"].get<picojson::array>()[0].get<std::string>();
-				rule.iGenreType = iGenreType[strGenreType];
-				rule.iGenreSubType = iGenreSubType[strGenreType];
+				rule.iGenreType = chinachu::iGenreTypePair[strGenreType] ^ chinachu::GENRE_TYPE_MASK;
+				rule.iGenreSubType = chinachu::iGenreTypePair[strGenreType] ^ chinachu::GENRE_SUBTYPE_MASK;
 			}
 
 			rule.bIsDisabled = (p["isDisabled"].is<bool>() && p["isDisabled"].get<bool>());

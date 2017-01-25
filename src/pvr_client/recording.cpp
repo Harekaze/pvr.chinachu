@@ -44,10 +44,6 @@ int GetRecordingsAmount(bool deleted) {
 
 PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 	if (g_recorded.refresh()) {
-		std::map<std::string, int> iGenreType;
-		std::map<std::string, int> iGenreSubType;
-		chinachu::initGenreType(iGenreType, iGenreSubType);
-
 		for (unsigned int i = 0, lim = g_recorded.programs.size(); i < lim; i++) {
 			const chinachu::RECORDING rec = g_recorded.programs[i];
 
@@ -64,8 +60,8 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 			pvr_rec.iEpisodeNumber = rec.iEpisodeNumber;
 			pvr_rec.iDuration = rec.iDuration;
 			pvr_rec.iPriority = rec.iPriority;
-			pvr_rec.iGenreType = iGenreType[rec.strGenreDescription];
-			pvr_rec.iGenreSubType = iGenreSubType[rec.strGenreDescription];
+			pvr_rec.iGenreType = chinachu::iGenreTypePair[rec.strGenreDescription] ^ chinachu::GENRE_TYPE_MASK;
+			pvr_rec.iGenreSubType = chinachu::iGenreTypePair[rec.strGenreDescription] ^ chinachu::GENRE_SUBTYPE_MASK;
 			pvr_rec.iEpgEventId = rec.iEpgEventId;
 			pvr_rec.iChannelUid = rec.iChannelUid;
 			pvr_rec.channelType = PVR_RECORDING_CHANNEL_TYPE_TV;
