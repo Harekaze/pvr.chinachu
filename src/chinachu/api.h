@@ -27,9 +27,8 @@
 
 namespace chinachu {
 	namespace api {
+		extern const int REQUEST_FAILED;
 		extern std::string baseURL;
-
-		int request(std::string apiPath, std::string &response);
 
 		// GET /schedule.json
 		int getSchedule(std::string &response);

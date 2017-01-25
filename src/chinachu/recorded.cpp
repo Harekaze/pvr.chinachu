@@ -32,7 +32,10 @@ namespace chinachu {
 		picojson::value v;
 		std::string response;
 
-		chinachu::api::getRecorded(response);
+		if (chinachu::api::getRecorded(response) == chinachu::api::REQUEST_FAILED) {
+			XBMC->Log(ADDON::LOG_ERROR, "[recorded.json] Request failed");
+			return false;
+		}
 		std::string err = picojson::parse(v, response);
 		if (!err.empty()) {
 			XBMC->Log(ADDON::LOG_ERROR, "[recorded.json] Failed to parse JSON string: %s", err.c_str());

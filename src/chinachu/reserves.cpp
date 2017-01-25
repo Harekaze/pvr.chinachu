@@ -38,7 +38,10 @@ namespace chinachu {
 		std::map<std::string, int> iGenreSubType;
 		chinachu::initGenreType(iGenreType, iGenreSubType);
 
-		chinachu::api::getReserves(response);
+		if (chinachu::api::getReserves(response) == chinachu::api::REQUEST_FAILED) {
+			XBMC->Log(ADDON::LOG_ERROR, "[reserves.json] Request failed");
+			return false;
+		}
 		std::string err = picojson::parse(v, response);
 		if (!err.empty()) {
 			XBMC->Log(ADDON::LOG_ERROR, "[reserves.json] Failed to parse JSON string: %s", err.c_str());

@@ -28,6 +28,7 @@ extern CHelper_libXBMC_pvr *PVR;
 
 namespace chinachu {
 	namespace api {
+		const int REQUEST_FAILED = -1;
 		std::string baseURL = "";
 
 		int requestGET(std::string apiPath, std::string &response) {
@@ -41,7 +42,7 @@ namespace chinachu {
 				}
 				XBMC->CloseFile(handle);
 			} else {
-				return -1;
+				return REQUEST_FAILED;
 			}
 
 			return response.length();
@@ -56,7 +57,7 @@ namespace chinachu {
 				XBMC->CloseFile(handle);
 				return 0;
 			} else {
-				return -1;
+				return REQUEST_FAILED;
 			}
 		}
 
@@ -69,7 +70,7 @@ namespace chinachu {
 				XBMC->CloseFile(handle);
 				return 0;
 			} else {
-				return -1;
+				return REQUEST_FAILED;
 			}
 		}
 
@@ -80,7 +81,7 @@ namespace chinachu {
 				XBMC->CloseFile(handle);
 				return 0;
 			} else {
-				return -1;
+				return REQUEST_FAILED;
 			}
 		}
 

@@ -38,7 +38,10 @@ namespace chinachu {
 			return true;
 		}
 
-		chinachu::api::getSchedule(response);
+		if (chinachu::api::getSchedule(response) == chinachu::api::REQUEST_FAILED) {
+			XBMC->Log(ADDON::LOG_ERROR, "[schedule.json] Request failed");
+			return false;
+		}
 		std::string err = picojson::parse(v, response);
 		if (!err.empty()) {
 			XBMC->Log(ADDON::LOG_ERROR, "[schedule.json] Failed to parse JSON string: %s", err.c_str());
