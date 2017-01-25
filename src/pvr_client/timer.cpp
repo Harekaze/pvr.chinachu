@@ -151,13 +151,19 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 		if (timer.state != rule.state) {
 			switch (timer.state) {
 				case PVR_TIMER_STATE_SCHEDULED:
-					chinachu::api::putRuleAction(index, true);
-					XBMC->Log(ADDON::LOG_NOTICE, "Enable rule: #%d", index);
-					break;
+					if (chinachu::api::putRuleAction(index, true) != chinachu::api::REQUEST_FAILED) {
+						XBMC->Log(ADDON::LOG_NOTICE, "Enable rule: #%d", index);
+						break;
+					}
+					XBMC->Log(ADDON::LOG_ERROR, "Failed to enable rule: #%d", index);
+					return PVR_ERROR_SERVER_ERROR;
 				case PVR_TIMER_STATE_DISABLED:
-					chinachu::api::putRuleAction(index, false);
-					XBMC->Log(ADDON::LOG_NOTICE, "Disable rule: #%d", index);
-					break;
+					if (chinachu::api::putRuleAction(index, false) != chinachu::api::REQUEST_FAILED) {
+						XBMC->Log(ADDON::LOG_NOTICE, "Disable rule: #%d", index);
+						break;
+					}
+					XBMC->Log(ADDON::LOG_ERROR, "Failed to disable rule: #%d", index);
+					return PVR_ERROR_SERVER_ERROR;
 				default:
 					XBMC->Log(ADDON::LOG_ERROR, "Unknown state change: #%d", index);
 					return PVR_ERROR_NOT_IMPLEMENTED;
@@ -178,15 +184,19 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 	if (timer.state != resv.state) {
 		switch (timer.state) {
 			case PVR_TIMER_STATE_SCHEDULED:
-				chinachu::api::putReservesUnskip(resv.strProgramId);
-				XBMC->Log(ADDON::LOG_NOTICE, "Unskip reserving: %s", resv.strProgramId.c_str());
-				g_reserve.reserves[timer.iClientIndex].state = timer.state;
-				break;
+				if (chinachu::api::putReservesUnskip(resv.strProgramId) != chinachu::api::REQUEST_FAILED) {
+					XBMC->Log(ADDON::LOG_NOTICE, "Unskip reserving: %s", resv.strProgramId.c_str());
+					break;
+				}
+				XBMC->Log(ADDON::LOG_ERROR, "Failed to enable state: %s", resv.strProgramId.c_str());
+				return PVR_ERROR_SERVER_ERROR;
 			case PVR_TIMER_STATE_DISABLED:
-				chinachu::api::putReservesSkip(resv.strProgramId);
-				XBMC->Log(ADDON::LOG_NOTICE, "Skip reserving: %s", resv.strProgramId.c_str());
-				g_reserve.reserves[timer.iClientIndex].state = timer.state;
-				break;
+				if (chinachu::api::putReservesSkip(resv.strProgramId) != chinachu::api::REQUEST_FAILED) {
+					XBMC->Log(ADDON::LOG_NOTICE, "Skip reserving: %s", resv.strProgramId.c_str());
+					break;
+				}
+				XBMC->Log(ADDON::LOG_ERROR, "Failed to disable state: %s", resv.strProgramId.c_str());
+				return PVR_ERROR_SERVER_ERROR;
 			default:
 				XBMC->Log(ADDON::LOG_ERROR, "Unknown state change: %s", resv.strProgramId.c_str());
 				return PVR_ERROR_NOT_IMPLEMENTED;
@@ -205,7 +215,7 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 	for (std::vector<chinachu::CHANNEL_EPG>::iterator channel = g_schedule.schedule.begin(); channel != g_schedule.schedule.end(); channel++) {
 		if ((*channel).channel.iUniqueId == timer.iClientChannelUid) {
 			if (timer.iTimerType == CREATE_RULES_PATTERN_MATCHED) {
-				if (chinachu::api::postRule((*channel).channel.strChannelType, (*channel).channel.strChannelId, timer.strEpgSearchString) != -1) {
+				if (chinachu::api::postRule((*channel).channel.strChannelType, (*channel).channel.strChannelId, timer.strEpgSearchString) != chinachu::api::REQUEST_FAILED) {
 					XBMC->Log(ADDON::LOG_NOTICE, "Create new rule: [%s:%s] \"%s\"",
 						(*channel).channel.strChannelType.c_str(), (*channel).channel.strChannelId.c_str(), timer.strEpgSearchString);
 					sleep(1);
@@ -219,7 +229,7 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 			}
 			for (std::vector<chinachu::EPG_PROGRAM>::iterator program = (*channel).epgs.begin(); program != (*channel).epgs.end(); program++) {
 				if ((*program).startTime == timer.startTime && (*program).endTime == timer.endTime) {
-					if (chinachu::api::putProgram((*program).strUniqueBroadcastId) != -1) {
+					if (chinachu::api::putProgram((*program).strUniqueBroadcastId) != chinachu::api::REQUEST_FAILED) {
 						XBMC->Log(ADDON::LOG_NOTICE, "Reserved new program: %s", (*program).strUniqueBroadcastId.c_str());
 						sleep(1);
 						PVR->TriggerTimerUpdate();
@@ -247,7 +257,7 @@ PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
 						time_t now;
 						time(&now);
 						if ((*program).startTime < now && now < (*program).endTime) { // Ongoing recording
-							if (chinachu::api::deleteRecordingProgram((*program).strUniqueBroadcastId) != -1) { // Cancel recording
+							if (chinachu::api::deleteRecordingProgram((*program).strUniqueBroadcastId) != chinachu::api::REQUEST_FAILED) { // Cancel recording
 								XBMC->Log(ADDON::LOG_NOTICE, "Cancel ongoing recording program: %s", (*program).strUniqueBroadcastId.c_str());
 								sleep(1);
 								PVR->TriggerTimerUpdate();
@@ -257,7 +267,7 @@ PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
 								return PVR_ERROR_SERVER_ERROR;
 							}
 						} else {
-							if (chinachu::api::deleteReserves((*program).strUniqueBroadcastId) != -1) {
+							if (chinachu::api::deleteReserves((*program).strUniqueBroadcastId) != chinachu::api::REQUEST_FAILED) {
 								XBMC->Log(ADDON::LOG_NOTICE, "Delete manual reserved program: %s", (*program).strUniqueBroadcastId.c_str());
 								sleep(1);
 								PVR->TriggerTimerUpdate();
