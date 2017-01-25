@@ -21,6 +21,7 @@
  */
 #include <iostream>
 #include <cstdio>
+#include <limits.h>
 #include "kodi/xbmc_pvr_dll.h"
 #include "kodi/libKODI_guilib.h"
 #include "kodi/libXBMC_addon.h"
@@ -40,6 +41,7 @@ chinachu::Rule g_rule;
 chinachu::Reserve g_reserve;
 ADDON::CHelper_libXBMC_addon *XBMC = NULL;
 CHelper_libXBMC_pvr *PVR = NULL;
+time_t nextUpdateTime = std::numeric_limits<time_t>::max();
 
 ADDON_STATUS currentStatus = ADDON_STATUS_UNKNOWN;
 

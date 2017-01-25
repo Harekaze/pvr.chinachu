@@ -47,9 +47,11 @@
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
 extern chinachu::Recorded g_recorded;
+extern chinachu::Recording g_recording;
 extern chinachu::Schedule g_schedule;
 extern chinachu::Rule g_rule;
 extern chinachu::Reserve g_reserve;
+extern time_t nextUpdateTime;
 
 extern "C" {
 
@@ -58,7 +60,7 @@ int GetTimersAmount(void) {
 }
 
 PVR_ERROR GetTimers(ADDON_HANDLE handle) {
-	if (g_rule.refresh() && g_reserve.refresh()) {
+	if (g_rule.refresh() && g_reserve.refresh() && g_recording.refresh()) {
 		time_t now;
 		time(&now);
 
@@ -134,6 +136,13 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 			// timer.iMarginEnd = 0; /* not implemented */
 
 			PVR->TransferTimerEntry(handle, &timer);
+		}
+
+		// Set next update time
+		if (g_recording.programs.size() > 0) {
+			for (unsigned int i = 0; i < g_recording.programs.size(); i++) {
+				nextUpdateTime = std::min(nextUpdateTime, g_recording.programs[i].recordingTime + g_recording.programs[i].iDuration);
+			}
 		}
 
 		return PVR_ERROR_NO_ERROR;

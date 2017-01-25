@@ -20,6 +20,7 @@
  *
  */
 #include <iostream>
+#include <limits.h>
 #include "kodi/libKODI_guilib.h"
 #include "kodi/libXBMC_addon.h"
 #include "kodi/libXBMC_pvr.h"
@@ -32,9 +33,9 @@
 #endif
 
 extern chinachu::Recorded g_recorded;
-extern chinachu::Recording g_recording;
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
+extern time_t nextUpdateTime;
 
 extern "C" {
 
@@ -102,10 +103,18 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) {
 	std::string response;
 	const time_t refreshInterval = 10*60; // every 10 minutes
 	static time_t lastUpdated;
-	time_t now;
 	static long long total, used;
 
+	time_t now;
 	time(&now);
+
+	// Updater
+	if (now > nextUpdateTime) {
+		nextUpdateTime = std::numeric_limits<time_t>::max();
+		PVR->TriggerTimerUpdate();
+		PVR->TriggerRecordingUpdate();
+	}
+
 	if (now - lastUpdated < refreshInterval) {
 		*iTotal = total;
 		*iUsed = used;
