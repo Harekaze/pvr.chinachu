@@ -21,7 +21,7 @@
  */
 #include <iostream>
 #include <cstdio>
-#include <limits.h>
+#include <limits>
 #include "kodi/xbmc_pvr_dll.h"
 #include "kodi/libKODI_guilib.h"
 #include "kodi/libXBMC_addon.h"
