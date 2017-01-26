@@ -361,8 +361,15 @@ PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *size) {
 	memset(&types[count], 0, sizeof(types[count]));
 	PVR_TIMER_TYPE &manualReservedCreation = types[count];
 	manualReservedCreation.iId = CREATE_TIMER_MANUAL_RESERVED;
-	manualReservedCreation.iAttributes = PVR_TIMER_TYPE_REQUIRES_EPG_TAG_ON_CREATE;
+	manualReservedCreation.iAttributes = PVR_TIMER_TYPE_IS_MANUAL | PVR_TIMER_TYPE_REQUIRES_EPG_TAG_ON_CREATE | PVR_TIMER_TYPE_IS_READONLY;
 	strncpy(manualReservedCreation.strDescription, XBMC->GetLocalizedString(MSG_TIMER_MANUAL_RESERVED), PVR_ADDON_TIMERTYPE_STRING_LENGTH - 1);
+	count++;
+
+	memset(&types[count], 0, sizeof(types[count]));
+	PVR_TIMER_TYPE &instantReservedCreation = types[count];
+	instantReservedCreation.iId = CREATE_TIMER_MANUAL_RESERVED;
+	instantReservedCreation.iAttributes = PVR_TIMER_TYPE_REQUIRES_EPG_TAG_ON_CREATE;
+	strncpy(instantReservedCreation.strDescription, XBMC->GetLocalizedString(MSG_TIMER_MANUAL_RESERVED), PVR_ADDON_TIMERTYPE_STRING_LENGTH - 1);
 	count++;
 
 	memset(&types[count], 0, sizeof(types[count]));
