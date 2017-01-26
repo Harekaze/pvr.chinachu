@@ -13,10 +13,10 @@ Chinachu PVR addon for Kodi
 
 ## Supported environment
 
-## Backend
+### Backend
 - Chinachu gamma [f1458c9084](https://github.com/Chinachu/Chinachu/commit/f1458c90849bf7a4d0d65383c04b1117dba593d2)
 
-## Frontend
+### Frontend
 - Kodi **17.x** Krypton
   + for macOS
   + for Android ARM
@@ -24,6 +24,16 @@ Chinachu PVR addon for Kodi
   + for Raspberry Pi
   + for Windows
   + for iOS (beta)
+
+#### Old versions
+
+|  Tag       | Kodi             | Platform
+|------------|:-----------------|:--
+| v0.x, v1.x | Kodi 15 Isengard | macOS/Linux/Raspberry Pi/(Windows)
+| v2.x, v3.x | Kodi 16 Jarvis   | macOS/Linux/Raspberry Pi/Windows/(Android)
+| v4.x       | Kodi 17 Krypton  | macOS/Linux/Raspberry Pi/Windows/Android/(iOS)
+
+:warning: *No features backpors, No security backports* :warning:
 
 ## Latest release
 
@@ -36,7 +46,7 @@ Chinachu PVR addon for Kodi
 $ ./bootstrap
 $ ./configure
 $ make
-$ ls pvr.chinachu.*.zip
+$ ls pvr.chinachu.zip
 ```
 > TIPS: If a warning about AC_CHECK_HEADER_STDBOOL has occurred, install gnulib and execute bootstrap with
 > AUTORECONF_FLAGS option with gnulib's m4 directory (e.g. `AUTORECONF_FLAGS=-I/usr/share/gnulib/m4 ./bootstrap`)
