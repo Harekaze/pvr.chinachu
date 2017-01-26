@@ -146,9 +146,10 @@ namespace chinachu {
 		}
 
 		// POST /rules.json
-		int postRule(std::string type, std::string channel, std::string title) {
+		int postRule(std::string type, std::string channel, std::string title, std::string genre) {
 			const std::string apiPath = "rules.json";
-			std::string buffer = "{\"types\":[\"\"],\"channels\":[\"\"],\"hour\":{\"start\":0,\"end\":24},\"reserve_titles\":[\"\"],\"isEnabled\":true,\"_method\":\"POST\"}";
+			std::string buffer = "{\"types\":[\"\"],\"channels\":[\"\"],\"hour\":{\"start\":0,\"end\":24},\"reserve_titles\":[\"\"],\"categories\":[\"\"],\"_method\":\"POST\"}";
+			buffer.replace(95, 0, genre);
 			buffer.replace(77, 0, title);
 			buffer.replace(27, 0, channel);
 			buffer.replace(11, 0, type);

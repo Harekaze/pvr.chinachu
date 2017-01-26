@@ -61,7 +61,7 @@ namespace chinachu {
 		int getRules(std::string &response);
 
 		// POST /rules.json
-		int postRule(std::string type, std::string channel, std::string title);
+		int postRule(std::string type, std::string channel, std::string title, std::string genre);
 
 		// PUT /rules/:id/:action.json
 		int putRuleAction(int id, bool state);

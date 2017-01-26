@@ -224,9 +224,16 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 	for (std::vector<chinachu::CHANNEL_EPG>::iterator channel = g_schedule.schedule.begin(); channel != g_schedule.schedule.end(); channel++) {
 		if ((*channel).channel.iUniqueId == timer.iClientChannelUid) {
 			if (timer.iTimerType == CREATE_RULES_PATTERN_MATCHED) {
-				if (chinachu::api::postRule((*channel).channel.strChannelType, (*channel).channel.strChannelId, timer.strEpgSearchString) != chinachu::api::REQUEST_FAILED) {
-					XBMC->Log(ADDON::LOG_NOTICE, "Create new rule: [%s:%s] \"%s\"",
-						(*channel).channel.strChannelType.c_str(), (*channel).channel.strChannelId.c_str(), timer.strEpgSearchString);
+				std::string genre;
+				for (std::vector<chinachu::EPG_PROGRAM>::iterator program = (*channel).epgs.begin(); program != (*channel).epgs.end(); program++) {
+					if ((*program).startTime == timer.startTime && (*program).endTime == timer.endTime) {
+						genre = (*program).strGenreDescription;
+						break;
+					}
+				}
+				if (chinachu::api::postRule((*channel).channel.strChannelType, (*channel).channel.strChannelId, timer.strEpgSearchString, genre) != chinachu::api::REQUEST_FAILED) {
+					XBMC->Log(ADDON::LOG_NOTICE, "Create new rule: [%s:%s]<%s> \"%s\"",
+						(*channel).channel.strChannelType.c_str(), (*channel).channel.strChannelId.c_str(), genre.c_str(), timer.strEpgSearchString);
 					sleep(1);
 					PVR->TriggerTimerUpdate();
 					return PVR_ERROR_NO_ERROR;
