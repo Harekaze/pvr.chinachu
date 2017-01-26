@@ -42,6 +42,7 @@ chinachu::Reserve g_reserve;
 ADDON::CHelper_libXBMC_addon *XBMC = NULL;
 CHelper_libXBMC_pvr *PVR = NULL;
 time_t nextUpdateTime = std::numeric_limits<time_t>::max();
+time_t lastStartTime;
 
 ADDON_STATUS currentStatus = ADDON_STATUS_UNKNOWN;
 
@@ -64,6 +65,8 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 		return ADDON_STATUS_PERMANENT_FAILURE;
 	}
 
+	time(&lastStartTime);
+
 	const char* strUserPath = ((PVR_PROPERTIES*)props)->strUserPath;
 
 	if (!XBMC->DirectoryExists(strUserPath)) {
@@ -73,6 +76,15 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 	char serverUrl[1024];
 	if (XBMC->GetSetting("server_url", &serverUrl)) {
 		chinachu::api::baseURL = serverUrl;
+		const std::string httpPrefix = "http://";
+		const std::string httpsPrefix = "https://";
+		if (chinachu::api::baseURL.substr(0, httpPrefix.size()) != httpPrefix && chinachu::api::baseURL.substr(0, httpsPrefix.size()) != httpsPrefix) {
+			if (currentStatus == ADDON_STATUS_UNKNOWN) {
+				XBMC->QueueNotification(ADDON::QUEUE_WARNING, XBMC->GetLocalizedString(30600));
+				currentStatus = ADDON_STATUS_NEED_SAVEDSETTINGS;
+			}
+			return currentStatus;
+		}
 		if (*(chinachu::api::baseURL.end() - 1) != '/') {
 			chinachu::api::baseURL += "/";
 		}
@@ -181,6 +193,7 @@ void ADDON_Destroy(void) {
 
 
 void ADDON_Stop(void) {
+	currentStatus = ADDON_STATUS_UNKNOWN;
 }
 
 // Settings configuration
@@ -194,7 +207,15 @@ unsigned int ADDON_GetSettings(ADDON_StructSetting ***sSet) {
 }
 
 ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue) {
-	return ADDON_STATUS_NEED_RESTART;
+	time_t now;
+	time(&now);
+	if (now - 2 < lastStartTime) {
+		return currentStatus;
+	}
+	if (currentStatus == ADDON_STATUS_OK) {
+		return ADDON_STATUS_NEED_RESTART;
+	}
+	return ADDON_STATUS_PERMANENT_FAILURE;
 }
 
 PVR_ERROR CallMenuHook(const PVR_MENUHOOK& menuhook, const PVR_MENUHOOK_DATA &item) {
