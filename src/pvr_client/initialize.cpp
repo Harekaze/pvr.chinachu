@@ -152,13 +152,6 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 	g_recorded.recordedStreamingPath += transcodeParams;
 	g_recording.recordingStreamingPath += transcodeParams;
 
-	if (XBMC->GetSetting("try_playback", &boolValue) && boolValue) {
-		g_recording.bPlayback = true;
-		XBMC->Log(ADDON::LOG_NOTICE, "Playback ongoing recording (Beta) enabled");
-	} else {
-		g_recording.bPlayback = false;
-	}
-
 	PVR_MENUHOOK menuHookRec;
 	memset(&menuHookRec, 0, sizeof(PVR_MENUHOOK));
 	menuHookRec.iLocalizedStringId = MSG_FORCE_REFRESH_RECORDING;

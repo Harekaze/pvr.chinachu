@@ -30,7 +30,6 @@
 namespace chinachu {
 	class Recording {
 		public:
-			bool bPlayback;
 			std::string recordingStreamingPath;
 			std::string recordingThumbnailPath;
 			std::vector<RECORDING> programs;
