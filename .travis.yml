@@ -1,4 +1,6 @@
 language: cpp
+dist: trusty
+sudo: required
 os:
   - linux
   - osx
@@ -13,4 +15,3 @@ before_script:
 script:
   - ./configure
   - make
-
