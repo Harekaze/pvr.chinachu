@@ -53,8 +53,8 @@ PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time
 			tag.endTime = epg.endTime;
 			tag.strPlotOutline = epg.strPlotOutline.c_str();
 			tag.strPlot = epg.strPlot.c_str();
-			tag.iGenreType = chinachu::iGenreTypePair[epg.strGenreDescription] ^ chinachu::GENRE_TYPE_MASK;
-			tag.iGenreSubType = chinachu::iGenreTypePair[epg.strGenreDescription] ^ chinachu::GENRE_SUBTYPE_MASK;
+			tag.iGenreType = chinachu::iGenreTypePair[epg.strGenreDescription] & chinachu::GENRE_TYPE_MASK;
+			tag.iGenreSubType = chinachu::iGenreTypePair[epg.strGenreDescription] & chinachu::GENRE_SUBTYPE_MASK;
 			tag.iEpisodeNumber = epg.iEpisodeNumber;
 			tag.strEpisodeName = epg.strEpisodeName.c_str();
 			tag.strGenreDescription = epg.strGenreDescription.c_str();

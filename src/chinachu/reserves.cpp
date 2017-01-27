@@ -75,8 +75,8 @@ namespace chinachu {
 			}
 			resv.startTime = (time_t)(p["start"].get<double>() / 1000);
 			resv.endTime = (time_t)(p["end"].get<double>() / 1000);
-			resv.iGenreType = chinachu::iGenreTypePair[p["category"].get<std::string>()] ^ chinachu::GENRE_TYPE_MASK;
-			resv.iGenreSubType = chinachu::iGenreTypePair[p["category"].get<std::string>()] ^ chinachu::GENRE_SUBTYPE_MASK;
+			resv.iGenreType = chinachu::iGenreTypePair[p["category"].get<std::string>()] & chinachu::GENRE_TYPE_MASK;
+			resv.iGenreSubType = chinachu::iGenreTypePair[p["category"].get<std::string>()] & chinachu::GENRE_SUBTYPE_MASK;
 			resv.iEpgUid = strtoul(resv.strProgramId.c_str(), &endptr, 36);
 			resv.bIsManualReserved = (p["isManualReserved"].is<bool>() && p["isManualReserved"].get<bool>());
 

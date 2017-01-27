@@ -120,8 +120,8 @@ namespace chinachu {
 
 			if (p["categories"].is<picojson::array>() && p["categories"].get<picojson::array>().size() == 1) {
 				const std::string strGenreType = p["categories"].get<picojson::array>()[0].get<std::string>();
-				rule.iGenreType = chinachu::iGenreTypePair[strGenreType] ^ chinachu::GENRE_TYPE_MASK;
-				rule.iGenreSubType = chinachu::iGenreTypePair[strGenreType] ^ chinachu::GENRE_SUBTYPE_MASK;
+				rule.iGenreType = chinachu::iGenreTypePair[strGenreType] & chinachu::GENRE_TYPE_MASK;
+				rule.iGenreSubType = chinachu::iGenreTypePair[strGenreType] & chinachu::GENRE_SUBTYPE_MASK;
 			}
 
 			rule.bIsDisabled = (p["isDisabled"].is<bool>() && p["isDisabled"].get<bool>());

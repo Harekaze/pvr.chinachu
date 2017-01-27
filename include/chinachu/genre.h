@@ -25,7 +25,7 @@
 #include <string>
 
 namespace chinachu {
-	static std::map<std::string, int> iGenreTypePair = {
+	static std::map<std::string, unsigned char> iGenreTypePair = {
 		{"anime", 0x55},
 		{"information", 0x22},
 		{"news", 0x21},
@@ -40,8 +40,8 @@ namespace chinachu {
 		{"welfare", 0x95},
 		{"etc", 0x00},
 	};
-	const int GENRE_TYPE_MASK = 0xf0;
-	const int GENRE_SUBTYPE_MASK = 0x0f;
+	const unsigned char GENRE_TYPE_MASK = 0xf0;
+	const unsigned char GENRE_SUBTYPE_MASK = 0x0f;
 } // namespace chinachu
 
 #endif /* end of include guard */

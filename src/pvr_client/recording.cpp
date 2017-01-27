@@ -61,8 +61,8 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 			pvr_rec.iEpisodeNumber = rec.iEpisodeNumber;
 			pvr_rec.iDuration = rec.iDuration;
 			pvr_rec.iPriority = rec.iPriority;
-			pvr_rec.iGenreType = chinachu::iGenreTypePair[rec.strGenreDescription] ^ chinachu::GENRE_TYPE_MASK;
-			pvr_rec.iGenreSubType = chinachu::iGenreTypePair[rec.strGenreDescription] ^ chinachu::GENRE_SUBTYPE_MASK;
+			pvr_rec.iGenreType = chinachu::iGenreTypePair[rec.strGenreDescription] & chinachu::GENRE_TYPE_MASK;
+			pvr_rec.iGenreSubType = chinachu::iGenreTypePair[rec.strGenreDescription] & chinachu::GENRE_SUBTYPE_MASK;
 			pvr_rec.iEpgEventId = rec.iEpgEventId;
 			pvr_rec.iChannelUid = rec.iChannelUid;
 			pvr_rec.channelType = PVR_RECORDING_CHANNEL_TYPE_TV;
