@@ -161,38 +161,37 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 		return PVR_ERROR_NOT_IMPLEMENTED;
 	}
 
-	unsigned int index = 0;
+	int index = -1;
 	for (unsigned int i = 0, lim = g_reserve.reserves.size(); i < lim; i++) {
-		if (g_reserve.reserves[i].iEpgUid == timer.iClientIndex) {
+		if (g_reserve.reserves[i].iClientIndex == timer.iClientIndex) {
 			index = i;
 			break;
 		}
 	}
-	if (index == 0) {
+	if (index < 0) {
 		XBMC->Log(ADDON::LOG_ERROR, "No timer found: %d", timer.iClientIndex);
 		return PVR_ERROR_FAILED;
 	}
-	const PVR_TIMER resv = g_reserve.reserves[index];
 
 	// Only reserving state changing is supported
-	if (timer.state != resv.state) {
+	if (timer.state != g_reserve.reserves[index].state) {
 		switch (timer.state) {
 			case PVR_TIMER_STATE_SCHEDULED:
-				if (chinachu::api::putReservesUnskip(resv.strDirectory) != chinachu::api::REQUEST_FAILED) {
-					XBMC->Log(ADDON::LOG_NOTICE, "Unskip reserving: %s", resv.strDirectory);
+				if (chinachu::api::putReservesUnskip(timer.strDirectory) != chinachu::api::REQUEST_FAILED) {
+					XBMC->Log(ADDON::LOG_NOTICE, "Unskip reserving: %s", timer.strDirectory);
 					break;
 				}
-				XBMC->Log(ADDON::LOG_ERROR, "Failed to enable state: %s", resv.strDirectory);
+				XBMC->Log(ADDON::LOG_ERROR, "Failed to enable state: %s", timer.strDirectory);
 				return PVR_ERROR_SERVER_ERROR;
 			case PVR_TIMER_STATE_DISABLED:
-				if (chinachu::api::putReservesSkip(resv.strDirectory) != chinachu::api::REQUEST_FAILED) {
-					XBMC->Log(ADDON::LOG_NOTICE, "Skip reserving: %s", resv.strDirectory);
+				if (chinachu::api::putReservesSkip(timer.strDirectory) != chinachu::api::REQUEST_FAILED) {
+					XBMC->Log(ADDON::LOG_NOTICE, "Skip reserving: %s", timer.strDirectory);
 					break;
 				}
-				XBMC->Log(ADDON::LOG_ERROR, "Failed to disable state: %s", resv.strDirectory);
+				XBMC->Log(ADDON::LOG_ERROR, "Failed to disable state: %s", timer.strDirectory);
 				return PVR_ERROR_SERVER_ERROR;
 			default:
-				XBMC->Log(ADDON::LOG_ERROR, "Unknown state change: %s", resv.strDirectory);
+				XBMC->Log(ADDON::LOG_ERROR, "Unknown state change: %s", timer.strDirectory);
 				return PVR_ERROR_NOT_IMPLEMENTED;
 		}
 
@@ -201,7 +200,7 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 		return PVR_ERROR_NO_ERROR;
 	}
 
-	XBMC->Log(ADDON::LOG_ERROR, "Only state change is supported: %s", resv.strDirectory);
+	XBMC->Log(ADDON::LOG_ERROR, "Only state change is supported: %s", timer.strDirectory);
 
 	return PVR_ERROR_NOT_IMPLEMENTED;
 }
