@@ -27,23 +27,13 @@
 #include "chinachu/genre.h"
 #include "kodi/xbmc_pvr_types.h"
 
+#define TIMER_MANUAL_RESERVED 0x01
+#define TIMER_PATTERN_MATCHED 0x02
+
 namespace chinachu {
-	struct RESERVE_ITEM {
-		std::string strTitle;
-		std::string strSummary;
-		std::string strProgramId;
-		int iClientChannelUid;
-		time_t startTime;
-		time_t endTime;
-		PVR_TIMER_STATE state;
-		bool bIsManualReserved;
-		int iGenreType;
-		int iGenreSubType;
-		int iEpgUid;
-	};
 	class Reserve {
 		public:
-			std::vector<RESERVE_ITEM> reserves;
+			std::vector<PVR_TIMER> reserves;
 			bool refresh();
 	};
 } // namespace chinachu

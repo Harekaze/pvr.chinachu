@@ -57,15 +57,17 @@ namespace chinachu {
 			if ((p["end"].get<double>() / 1000) < now) {
 				continue;
 			}
-			struct RESERVE_ITEM resv;
+			struct PVR_TIMER resv;
 			char *endptr;
 
+			resv.iEpgUid = strtoul(p["id"].get<std::string>().c_str(), &endptr, 36);
+			resv.iClientIndex = resv.iEpgUid;
 			resv.iClientChannelUid = p["channel"].get<picojson::object>()["sid"].is<std::string>() ?
 				std::atoi((p["channel"].get<picojson::object>()["sid"].get<std::string>()).c_str()) :
 				(int)(p["channel"].get<picojson::object>()["sid"].get<double>());
-			resv.strTitle = p["fullTitle"].get<std::string>();
-			resv.strSummary = p["detail"].get<std::string>();
-			resv.strProgramId = p["id"].get<std::string>();
+			strncpy(resv.strTitle, p["fullTitle"].get<std::string>().c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
+			strncpy(resv.strSummary, p["detail"].get<std::string>().c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
+			strncpy(resv.strDirectory, p["id"].get<std::string>().c_str(), PVR_ADDON_URL_STRING_LENGTH - 1); // instead of strProgramId
 			if (p["isConflict"].is<bool>() && p["isConflict"].get<bool>()) {
 				resv.state = PVR_TIMER_STATE_CONFLICT_NOK;
 			} else if (p["isSkip"].is<bool>() && p["isSkip"].get<bool>()) {
@@ -77,8 +79,9 @@ namespace chinachu {
 			resv.endTime = (time_t)(p["end"].get<double>() / 1000);
 			resv.iGenreType = chinachu::iGenreTypePair[p["category"].get<std::string>()] & chinachu::GENRE_TYPE_MASK;
 			resv.iGenreSubType = chinachu::iGenreTypePair[p["category"].get<std::string>()] & chinachu::GENRE_SUBTYPE_MASK;
-			resv.iEpgUid = strtoul(resv.strProgramId.c_str(), &endptr, 36);
-			resv.bIsManualReserved = (p["isManualReserved"].is<bool>() && p["isManualReserved"].get<bool>());
+			resv.bStartAnyTime = false;
+			resv.bEndAnyTime = false;
+			resv.iTimerType = (p["isManualReserved"].is<bool>() && p["isManualReserved"].get<bool>()) ? TIMER_MANUAL_RESERVED : TIMER_PATTERN_MATCHED;
 
 			reserves.push_back(resv);
 		}

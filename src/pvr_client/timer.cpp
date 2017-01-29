@@ -32,8 +32,6 @@
 #include <unistd.h>
 #endif
 
-#define TIMER_MANUAL_RESERVED 0x01
-#define TIMER_PATTERN_MATCHED 0x02
 #define CREATE_TIMER_MANUAL_RESERVED 0x11
 #define CREATE_RULES_PATTERN_MATCHED 0x12
 #define RULES_PATTERN_MATCHED 0x22
@@ -93,21 +91,15 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 		}
 
 		for (unsigned int i = 0, lim = g_reserve.reserves.size(); i < lim; i++) {
-			const chinachu::RESERVE_ITEM resv = g_reserve.reserves[i];
+			PVR_TIMER timer = g_reserve.reserves[i];
 
-			PVR_TIMER timer;
-			memset(&timer, 0, sizeof(PVR_TIMER));
-
-			timer.iClientIndex = resv.iEpgUid;
-			timer.startTime = resv.startTime;
-			timer.endTime = resv.endTime;
-			if (resv.state == PVR_TIMER_STATE_SCHEDULED) {
-				if (now < resv.startTime) {
+			if (timer.state == PVR_TIMER_STATE_SCHEDULED) {
+				if (now < timer.startTime) {
 					timer.state = PVR_TIMER_STATE_SCHEDULED;
-				} else if (resv.startTime < now && now < resv.endTime) {
+				} else if (timer.startTime < now && now < timer.endTime) {
 					timer.state = PVR_TIMER_STATE_ABORTED;
 					for (unsigned int j = 0, lim = g_recording.programs.size(); j < lim; j++) {
-						if (resv.iEpgUid == g_recording.programs[j].iEpgEventId) {
+						if (timer.iEpgUid == g_recording.programs[j].iEpgEventId) {
 							timer.state = PVR_TIMER_STATE_RECORDING;
 							break;
 						}
@@ -115,31 +107,7 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 				} else {
 					timer.state = PVR_TIMER_STATE_COMPLETED;
 				}
-			} else {
-				timer.state = resv.state;
 			}
-			strncpy(timer.strTitle, resv.strTitle.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
-			strncpy(timer.strSummary, resv.strSummary.c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
-			timer.iGenreType = resv.iGenreType;
-			timer.iGenreSubType = resv.iGenreSubType;
-			timer.iClientChannelUid = resv.iClientChannelUid;
-			timer.iTimerType = resv.bIsManualReserved ? TIMER_MANUAL_RESERVED : TIMER_PATTERN_MATCHED;
-			timer.iEpgUid = resv.iEpgUid;
-			timer.bStartAnyTime = false;
-			timer.bEndAnyTime = false;
-			// timer.iParentClientIndex = 0; /* not implemented */
-			// strncpy(timer.strEpgSearchString, "SearchString", PVR_ADDON_NAME_STRING_LENGTH - 1); /* not implemented */
-			// timer.bFullTextEpgSearch = false; /* not implemented */
-			// strncpy(timer.strDirectory, "Directory", PVR_ADDON_URL_STRING_LENGTH - 1); /* not implemented */
-			// timer.iPriority = 100; /* not implemented */
-			// timer.iLifetime = 0; /* not implemented */
-			// timer.iMaxRecordings = 0; /* not implemented */
-			// timer.iRecordingGroup = 0; /* not implemented */
-			// timer.firstDay = 0; /* not implemented */
-			// timer.iWeekdays = 0; /* not implemented */
-			// timer.iPreventDuplicateEpisodes = 0; /* not implemented */
-			// timer.iMarginStart = 0; /* not implemented */
-			// timer.iMarginEnd = 0; /* not implemented */
 
 			PVR->TransferTimerEntry(handle, &timer);
 		}
@@ -204,27 +172,27 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 		XBMC->Log(ADDON::LOG_ERROR, "No timer found: %d", timer.iClientIndex);
 		return PVR_ERROR_FAILED;
 	}
-	const chinachu::RESERVE_ITEM resv = g_reserve.reserves[index];
+	const PVR_TIMER resv = g_reserve.reserves[index];
 
 	// Only reserving state changing is supported
 	if (timer.state != resv.state) {
 		switch (timer.state) {
 			case PVR_TIMER_STATE_SCHEDULED:
-				if (chinachu::api::putReservesUnskip(resv.strProgramId) != chinachu::api::REQUEST_FAILED) {
-					XBMC->Log(ADDON::LOG_NOTICE, "Unskip reserving: %s", resv.strProgramId.c_str());
+				if (chinachu::api::putReservesUnskip(resv.strDirectory) != chinachu::api::REQUEST_FAILED) {
+					XBMC->Log(ADDON::LOG_NOTICE, "Unskip reserving: %s", resv.strDirectory);
 					break;
 				}
-				XBMC->Log(ADDON::LOG_ERROR, "Failed to enable state: %s", resv.strProgramId.c_str());
+				XBMC->Log(ADDON::LOG_ERROR, "Failed to enable state: %s", resv.strDirectory);
 				return PVR_ERROR_SERVER_ERROR;
 			case PVR_TIMER_STATE_DISABLED:
-				if (chinachu::api::putReservesSkip(resv.strProgramId) != chinachu::api::REQUEST_FAILED) {
-					XBMC->Log(ADDON::LOG_NOTICE, "Skip reserving: %s", resv.strProgramId.c_str());
+				if (chinachu::api::putReservesSkip(resv.strDirectory) != chinachu::api::REQUEST_FAILED) {
+					XBMC->Log(ADDON::LOG_NOTICE, "Skip reserving: %s", resv.strDirectory);
 					break;
 				}
-				XBMC->Log(ADDON::LOG_ERROR, "Failed to disable state: %s", resv.strProgramId.c_str());
+				XBMC->Log(ADDON::LOG_ERROR, "Failed to disable state: %s", resv.strDirectory);
 				return PVR_ERROR_SERVER_ERROR;
 			default:
-				XBMC->Log(ADDON::LOG_ERROR, "Unknown state change: %s", resv.strProgramId.c_str());
+				XBMC->Log(ADDON::LOG_ERROR, "Unknown state change: %s", resv.strDirectory);
 				return PVR_ERROR_NOT_IMPLEMENTED;
 		}
 
@@ -233,7 +201,8 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 		return PVR_ERROR_NO_ERROR;
 	}
 
-	XBMC->Log(ADDON::LOG_ERROR, "Only state change is supported: %s", resv.strProgramId.c_str());
+	XBMC->Log(ADDON::LOG_ERROR, "Only state change is supported: %s", resv.strDirectory);
+
 	return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
