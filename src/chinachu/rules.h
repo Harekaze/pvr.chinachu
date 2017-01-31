@@ -27,20 +27,16 @@
 #include "chinachu/genre.h"
 #include "kodi/xbmc_pvr_types.h"
 
+#define TIMER_CLIENT_START_INDEX 1
+
+#define RULES_PATTERN_MATCHED 0x22
+
+#define CHANNEL_SID_BASE 100000
+
 namespace chinachu {
-	struct RULE_ITEM {
-		std::string strTitle;
-		std::string strEpgSearchString;
-		std::string strClientChannelUid;
-		PVR_TIMER_STATE state;
-		bool bFullTextEpgSearch;
-		bool bIsDisabled;
-		int iGenreType;
-		int iGenreSubType;
-	};
 	class Rule {
 		public:
-			std::vector<RULE_ITEM> rules;
+			std::vector<PVR_TIMER> rules;
 			bool refresh();
 	};
 } // namespace chinachu

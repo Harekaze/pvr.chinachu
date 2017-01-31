@@ -34,13 +34,10 @@
 
 #define CREATE_TIMER_MANUAL_RESERVED 0x11
 #define CREATE_RULES_PATTERN_MATCHED 0x12
-#define RULES_PATTERN_MATCHED 0x22
 
 #define MSG_TIMER_MANUAL_RESERVED 30900
 #define MSG_TIMER_PATTERN_MATCHED 30901
 #define MSG_RULES_PATTERN_MATCHED 30902
-
-#define TIMER_CLIENT_START_INDEX 1
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
@@ -63,31 +60,8 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 		time(&now);
 
 		for (unsigned int i = 0, lim = g_rule.rules.size(); i < lim; i++) {
-			const chinachu::RULE_ITEM rule = g_rule.rules[i];
-
-			PVR_TIMER timer;
-			memset(&timer, 0, sizeof(PVR_TIMER));
-
-			timer.iClientIndex = i + TIMER_CLIENT_START_INDEX;
-			timer.state = rule.state;
-			strncpy(timer.strTitle, rule.strTitle.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
-			for (size_t j = 0; j < g_schedule.schedule.size(); j++) {
-				const chinachu::CHANNEL_INFO channel = g_schedule.schedule[j].channel;
-				if (channel.strChannelId == rule.strClientChannelUid) {
-					timer.iClientChannelUid = channel.iUniqueId;
-					break;
-				}
-			}
-			timer.iGenreType = rule.iGenreType;
-			timer.iGenreSubType = rule.iGenreSubType;
-			timer.iTimerType = RULES_PATTERN_MATCHED;
-			timer.bStartAnyTime = true;
-			timer.bEndAnyTime = true;
-			strncpy(timer.strEpgSearchString, rule.strEpgSearchString.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
-			strncpy(timer.strSummary, rule.strEpgSearchString.c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
-			timer.bFullTextEpgSearch = rule.bFullTextEpgSearch;
-
-			PVR->TransferTimerEntry(handle, &timer);
+			PVR_TIMER rule = g_rule.rules[i];
+			PVR->TransferTimerEntry(handle, &rule);
 		}
 
 		for (unsigned int i = 0, lim = g_reserve.reserves.size(); i < lim; i++) {
@@ -128,7 +102,7 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 	if (timer.iTimerType == RULES_PATTERN_MATCHED) {
 		const unsigned int index = timer.iClientIndex - TIMER_CLIENT_START_INDEX;
-		const chinachu::RULE_ITEM rule = g_rule.rules[index];
+		const PVR_TIMER rule = g_rule.rules[index];
 
 		// Only rule availability changing is supported
 		if (timer.state != rule.state) {

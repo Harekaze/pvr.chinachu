@@ -77,45 +77,48 @@ namespace chinachu {
 				continue;
 			}
 
-			struct RULE_ITEM rule;
+			PVR_TIMER rule;
+			rule.iClientIndex = i + TIMER_CLIENT_START_INDEX;
 
 			if (p["reserve_titles"].is<picojson::array>() && p["reserve_titles"].get<picojson::array>().size() > 0) {
 				rule.bFullTextEpgSearch = false;
-				rule.strEpgSearchString = p["reserve_titles"].get<picojson::array>()[0].get<std::string>();
+				std::string strEpgSearchString = p["reserve_titles"].get<picojson::array>()[0].get<std::string>();
 				for (size_t j = 1, res_size = p["reserve_titles"].get<picojson::array>().size(); j < res_size; j++) {
-					rule.strEpgSearchString += ", ";
-					rule.strEpgSearchString += p["reserve_titles"].get<picojson::array>()[j].get<std::string>();
+					strEpgSearchString += ", ";
+					strEpgSearchString += p["reserve_titles"].get<picojson::array>()[j].get<std::string>();
 				}
 				if (p["ignore_titles"].is<picojson::array>() && p["ignore_titles"].get<picojson::array>().size() > 0) {
 					for (size_t j = 0, res_size = p["ignore_titles"].get<picojson::array>().size(); j < res_size; j++) {
-						rule.strEpgSearchString += ", -";
-						rule.strEpgSearchString += p["ignore_titles"].get<picojson::array>()[j].get<std::string>();
+						strEpgSearchString += ", -";
+						strEpgSearchString += p["ignore_titles"].get<picojson::array>()[j].get<std::string>();
 					}
 				}
+				strncpy(rule.strEpgSearchString, strEpgSearchString.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 			} else if (p["reserve_descriptions"].is<picojson::array>() && p["reserve_descriptions"].get<picojson::array>().size() > 0) {
 				rule.bFullTextEpgSearch = true;
-				rule.strEpgSearchString = p["reserve_descriptions"].get<picojson::array>()[0].get<std::string>();
+				std::string strEpgSearchString = p["reserve_descriptions"].get<picojson::array>()[0].get<std::string>();
 				for (size_t j = 1, res_size = p["reserve_descriptions"].get<picojson::array>().size(); j < res_size; j++) {
-					rule.strEpgSearchString += ", ";
-					rule.strEpgSearchString += p["reserve_descriptions"].get<picojson::array>()[j].get<std::string>();
+					strEpgSearchString += ", ";
+					strEpgSearchString += p["reserve_descriptions"].get<picojson::array>()[j].get<std::string>();
 				}
 				if (p["ignore_descriptions"].is<picojson::array>() && p["ignore_descriptions"].get<picojson::array>().size() > 0) {
 					for (size_t j = 0, res_size = p["ignore_descriptions"].get<picojson::array>().size(); j < res_size; j++) {
-						rule.strEpgSearchString += ", -";
-						rule.strEpgSearchString += p["ignore_descriptions"].get<picojson::array>()[j].get<std::string>();
+						strEpgSearchString += ", -";
+						strEpgSearchString += p["ignore_descriptions"].get<picojson::array>()[j].get<std::string>();
 					}
 				}
+				strncpy(rule.strEpgSearchString, strEpgSearchString.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 			} else {
 				XBMC->Log(ADDON::LOG_DEBUG, "Skipped - invalid reserve/ignore pattern rule: %d", i);
 				continue;
 			}
 
-			char title[PVR_ADDON_NAME_STRING_LENGTH];
-			snprintf(title, PVR_ADDON_NAME_STRING_LENGTH - 1, "Rule #%d: %s", i, rule.strEpgSearchString.c_str());
-			rule.strTitle = title;
+			snprintf(rule.strTitle, PVR_ADDON_NAME_STRING_LENGTH - 1, "#%d: %s", i, rule.strEpgSearchString);
 
 			if (p["channels"].is<picojson::array>() && p["channels"].get<picojson::array>().size() == 1) {
-				rule.strClientChannelUid = p["channels"].get<picojson::array>()[0].get<std::string>();
+				char *endptr;
+				unsigned int iClientChannelUid = strtoul(p["channels"].get<picojson::array>()[0].get<std::string>().c_str(), &endptr, 36);
+				rule.iClientChannelUid = iClientChannelUid % CHANNEL_SID_BASE;
 			}
 
 			if (p["categories"].is<picojson::array>() && p["categories"].get<picojson::array>().size() == 1) {
@@ -124,8 +127,10 @@ namespace chinachu {
 				rule.iGenreSubType = chinachu::iGenreTypePair[strGenreType] & chinachu::GENRE_SUBTYPE_MASK;
 			}
 
-			rule.bIsDisabled = (p["isDisabled"].is<bool>() && p["isDisabled"].get<bool>());
-			rule.state = rule.bIsDisabled ? PVR_TIMER_STATE_DISABLED : PVR_TIMER_STATE_SCHEDULED;
+			rule.state = (p["isDisabled"].is<bool>() && p["isDisabled"].get<bool>()) ? PVR_TIMER_STATE_DISABLED : PVR_TIMER_STATE_SCHEDULED;
+			rule.bStartAnyTime = true;
+			rule.bEndAnyTime = true;
+			rule.iTimerType = RULES_PATTERN_MATCHED;
 
 			rules.push_back(rule);
 		}
