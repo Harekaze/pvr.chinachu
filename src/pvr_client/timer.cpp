@@ -105,6 +105,10 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 		const PVR_TIMER rule = g_rule.rules[index];
 
 		// Only rule availability changing is supported
+		if (timer.iTimerType != rule.iTimerType) {
+			XBMC->Log(ADDON::LOG_ERROR, "Unsupport timer type change: #%d", index);
+			return PVR_ERROR_NOT_IMPLEMENTED;
+		}
 		if (timer.state != rule.state) {
 			switch (timer.state) {
 				case PVR_TIMER_STATE_SCHEDULED:
@@ -131,8 +135,8 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 			return PVR_ERROR_NO_ERROR;
 		}
 
-		XBMC->Log(ADDON::LOG_ERROR, "Only state change is supported: #%d", index);
-		return PVR_ERROR_NOT_IMPLEMENTED;
+		XBMC->Log(ADDON::LOG_DEBUG, "Nothing to do - Only state change is supported: #%d", index);
+		return PVR_ERROR_NO_ERROR;
 	}
 
 	int index = -1;
@@ -147,8 +151,17 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 		return PVR_ERROR_FAILED;
 	}
 
+	const PVR_TIMER resv = g_reserve.reserves[index];
 	// Only reserving state changing is supported
-	if (timer.state != g_reserve.reserves[index].state) {
+	if (strncmp(timer.strEpgSearchString, resv.strEpgSearchString, PVR_ADDON_NAME_STRING_LENGTH - 1) != 0) {
+		XBMC->Log(ADDON::LOG_ERROR, "Unsupport search string change: %s", timer.strDirectory);
+		return PVR_ERROR_NOT_IMPLEMENTED;
+	}
+	if (timer.iTimerType != resv.iTimerType) {
+		XBMC->Log(ADDON::LOG_ERROR, "Unsupport timer type change: %s", timer.strDirectory);
+		return PVR_ERROR_NOT_IMPLEMENTED;
+	}
+	if (timer.state != resv.state) {
 		switch (timer.state) {
 			case PVR_TIMER_STATE_SCHEDULED:
 				if (chinachu::api::putReservesUnskip(timer.strDirectory) != chinachu::api::REQUEST_FAILED) {
@@ -174,9 +187,8 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 		return PVR_ERROR_NO_ERROR;
 	}
 
-	XBMC->Log(ADDON::LOG_ERROR, "Only state change is supported: %s", timer.strDirectory);
-
-	return PVR_ERROR_NOT_IMPLEMENTED;
+	XBMC->Log(ADDON::LOG_DEBUG, "Nothing to do - Only state change is supported: %s", timer.strDirectory);
+	return PVR_ERROR_NO_ERROR;
 }
 
 PVR_ERROR AddTimer(const PVR_TIMER &timer) {
