@@ -48,36 +48,37 @@ namespace chinachu {
 		picojson::array pa = v.get<picojson::array>();
 		for (unsigned int i = 0, p_size = pa.size(); i < p_size; i++) {
 			picojson::object &p = pa[i].get<picojson::object>();
-			struct RECORDING rec;
+			PVR_RECORDING rec;
 			char *endptr;
 
-			rec.strRecordingId = p["id"].is<std::string>() ? p["id"].get<std::string>() : "";
-			rec.strDirectory = p["title"].is<std::string>() ? p["title"].get<std::string>() : "";
-			rec.strTitle = p["title"].is<std::string>() ? p["title"].get<std::string>() : "";
-			rec.strEpisodeName = p["subTitle"].is<std::string>() ? p["subTitle"].get<std::string>() : "";
-			rec.strPlotOutline = p["description"].is<std::string>() ? p["description"].get<std::string>() : p["subTitle"].get<std::string>();
-			rec.strPlot = p["detail"].is<std::string>() ? p["detail"].get<std::string>() : "";
-			rec.strChannelName = (p["channel"].get<picojson::object>())["name"].get<std::string>();
+			strncpy(rec.strRecordingId, p["id"].is<std::string>() ? p["id"].get<std::string>().c_str() : "", PVR_ADDON_NAME_STRING_LENGTH - 1);
+			strncpy(rec.strDirectory, p["title"].is<std::string>() ? p["title"].get<std::string>().c_str() : "", PVR_ADDON_URL_STRING_LENGTH - 1);
+			strncpy(rec.strTitle, p["title"].is<std::string>() ? p["title"].get<std::string>().c_str() : "", PVR_ADDON_NAME_STRING_LENGTH - 1);
+			strncpy(rec.strEpisodeName, p["subTitle"].is<std::string>() ? p["subTitle"].get<std::string>().c_str() : "", PVR_ADDON_NAME_STRING_LENGTH - 1);
+			strncpy(rec.strPlotOutline, p["description"].is<std::string>() ? p["description"].get<std::string>().c_str() : rec.strEpisodeName, PVR_ADDON_DESC_STRING_LENGTH - 1);
+			strncpy(rec.strPlot, p["detail"].is<std::string>() ? p["detail"].get<std::string>().c_str() : "", PVR_ADDON_DESC_STRING_LENGTH - 1);
+			strncpy(rec.strChannelName, (p["channel"].get<picojson::object>())["name"].get<std::string>().c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 			rec.iEpisodeNumber = p["episode"].is<double>() ? (unsigned int)(p["episode"].get<double>()) : 0;
 			rec.recordingTime = (time_t)(p["start"].get<double>() / 1000);
 			rec.iDuration = (int)(p["seconds"].get<double>());
 			rec.iPriority = p["priority"].is<double>() ? (int)(p["priority"].get<double>()) : 0;
-			rec.strGenreDescription = p["category"].get<std::string>();
+			const std::string strGenreType = p["category"].get<std::string>();
+			rec.iGenreType = chinachu::iGenreTypePair[strGenreType] & chinachu::GENRE_TYPE_MASK;
+			rec.iGenreSubType = chinachu::iGenreTypePair[strGenreType] & chinachu::GENRE_SUBTYPE_MASK;
 			std::string id = p["id"].get<std::string>();
 			std::remove(id.begin(), id.end(), '-');
 			rec.iEpgEventId = strtoul(id.c_str(), &endptr, 36);
+			rec.channelType = PVR_RECORDING_CHANNEL_TYPE_TV;
+			rec.bIsDeleted = false;
 			const int sid = p["channel"].get<picojson::object>()["sid"].is<std::string>() ?
 				std::atoi((p["channel"].get<picojson::object>()["sid"].get<std::string>()).c_str()) :
 				(int)(p["channel"].get<picojson::object>()["sid"].get<double>());
 			rec.iChannelUid = sid;
-			char urlBuffer[PVR_ADDON_URL_STRING_LENGTH];
-			snprintf(urlBuffer, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedStreamingPath).c_str(), p["id"].get<std::string>().c_str());
-			rec.strStreamURL = urlBuffer;
+			snprintf(rec.strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedStreamingPath).c_str(), p["id"].get<std::string>().c_str());
 			if (showThumbnail) {
-				snprintf(urlBuffer, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedThumbnailPath).c_str(), p["id"].get<std::string>().c_str());
-				rec.strThumbnailPath = urlBuffer;
+				snprintf(rec.strThumbnailPath, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedThumbnailPath).c_str(), p["id"].get<std::string>().c_str());
 			} else {
-				rec.strThumbnailPath = "";
+				strncpy(rec.strThumbnailPath, "", PVR_ADDON_URL_STRING_LENGTH - 1);
 			}
 
 			programs.push_back(rec);
