@@ -113,19 +113,25 @@ namespace chinachu {
 				continue;
 			}
 
-			snprintf(rule.strTitle, PVR_ADDON_NAME_STRING_LENGTH - 1, "#%d: %s", i, rule.strEpgSearchString);
-
 			if (p["channels"].is<picojson::array>() && p["channels"].get<picojson::array>().size() == 1) {
 				char *endptr;
 				unsigned int iClientChannelUid = strtoul(p["channels"].get<picojson::array>()[0].get<std::string>().c_str(), &endptr, 36);
 				rule.iClientChannelUid = iClientChannelUid % CHANNEL_SID_BASE;
 			}
 
-			if (p["categories"].is<picojson::array>() && p["categories"].get<picojson::array>().size() == 1) {
-				const std::string strGenreType = p["categories"].get<picojson::array>()[0].get<std::string>();
-				rule.iGenreType = chinachu::iGenreTypePair[strGenreType] & chinachu::GENRE_TYPE_MASK;
-				rule.iGenreSubType = chinachu::iGenreTypePair[strGenreType] & chinachu::GENRE_SUBTYPE_MASK;
+			std::string strGenreType = "none";
+
+			if (p["categories"].is<picojson::array>()){
+				if (p["categories"].get<picojson::array>().size() == 1) {
+					strGenreType = p["categories"].get<picojson::array>()[0].get<std::string>();
+					rule.iGenreType = chinachu::iGenreTypePair[strGenreType] & chinachu::GENRE_TYPE_MASK;
+					rule.iGenreSubType = chinachu::iGenreTypePair[strGenreType] & chinachu::GENRE_SUBTYPE_MASK;
+				} else if (p["categories"].get<picojson::array>().size() > 1){
+					strGenreType = "any";
+				}
 			}
+
+			snprintf(rule.strTitle, PVR_ADDON_NAME_STRING_LENGTH - 1, "#%d: [%s] %s", i, strGenreType.c_str(), rule.strEpgSearchString);
 
 			rule.state = (p["isDisabled"].is<bool>() && p["isDisabled"].get<bool>()) ? PVR_TIMER_STATE_DISABLED : PVR_TIMER_STATE_SCHEDULED;
 			rule.bStartAnyTime = true;
