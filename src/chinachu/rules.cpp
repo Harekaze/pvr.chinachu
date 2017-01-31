@@ -68,15 +68,6 @@ namespace chinachu {
 					continue;
 			}
 
-
-			if (p["hour"].is<picojson::object>() &&
-				((p["hour"].get<picojson::object>()["start"].is<double>() && p["hour"].get<picojson::object>()["start"].get<double>() != 0) ||
-				(p["hour"].get<picojson::object>()["end"].is<double>() && p["hour"].get<picojson::object>()["end"].get<double>() != 24))
-			) {
-				XBMC->Log(ADDON::LOG_DEBUG, "Skipped - hour range specified rule: %d", i);
-				continue;
-			}
-
 			PVR_TIMER rule;
 			rule.iClientIndex = i + TIMER_CLIENT_START_INDEX;
 
@@ -131,7 +122,14 @@ namespace chinachu {
 				}
 			}
 
-			snprintf(rule.strTitle, PVR_ADDON_NAME_STRING_LENGTH - 1, "#%d: [%s] %s", i, strGenreType.c_str(), rule.strEpgSearchString);
+			int startTime = 0;
+			int endTime = 24;
+			if (p["hour"].is<picojson::object>()) {
+				startTime = p["hour"].get<picojson::object>()["start"].is<double>() ? (int)(p["hour"].get<picojson::object>()["start"].get<double>()) : 0;
+				endTime = p["hour"].get<picojson::object>()["end"].is<double>() ? (int)(p["hour"].get<picojson::object>()["end"].get<double>()) : 0;
+			}
+
+			snprintf(rule.strTitle, PVR_ADDON_NAME_STRING_LENGTH - 1, "#%d:[%s]%d-%d %s", i, strGenreType.c_str(), startTime, endTime, rule.strEpgSearchString);
 
 			rule.state = (p["isDisabled"].is<bool>() && p["isDisabled"].get<bool>()) ? PVR_TIMER_STATE_DISABLED : PVR_TIMER_STATE_SCHEDULED;
 			rule.bStartAnyTime = true;
