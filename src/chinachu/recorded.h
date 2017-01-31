@@ -28,29 +28,11 @@
 #include "kodi/xbmc_pvr_types.h"
 
 namespace chinachu {
-	struct RECORDING {
-		std::string strRecordingId;
-		std::string strDirectory;
-		std::string strTitle;
-		std::string strEpisodeName;
-		std::string strPlotOutline;
-		std::string strPlot;
-		std::string strChannelName;
-		std::string strStreamURL;
-		std::string strThumbnailPath;
-		int iEpisodeNumber;
-		time_t recordingTime;
-		int iDuration;
-		int iPriority;
-		unsigned int iEpgEventId;
-		int iChannelUid;
-		std::string strGenreDescription;
-	};
 	class Recorded {
 		public:
 			std::string recordedStreamingPath;
 			std::string recordedThumbnailPath;
-			std::vector<RECORDING> programs;
+			std::vector<PVR_RECORDING> programs;
 			bool refresh();
 	};
 } // namespace chinachu

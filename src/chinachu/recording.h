@@ -32,7 +32,7 @@ namespace chinachu {
 		public:
 			std::string recordingStreamingPath;
 			std::string recordingThumbnailPath;
-			std::vector<RECORDING> programs;
+			std::vector<PVR_RECORDING> programs;
 			bool refresh();
 	};
 } // namespace chinachu
