@@ -57,7 +57,7 @@ namespace chinachu {
 			if ((p["end"].get<double>() / 1000) < now) {
 				continue;
 			}
-			struct PVR_TIMER resv;
+			PVR_TIMER resv;
 			char *endptr;
 
 			resv.iEpgUid = strtoul(p["id"].get<std::string>().c_str(), &endptr, 36);
