@@ -52,6 +52,11 @@ namespace chinachu {
 
 			picojson::object &p = pa[i].get<picojson::object>();
 
+			if (p["ignore_channels"].is<picojson::array>() && p["ignore_channels"].get<picojson::array>().size() > 0) {
+				XBMC->Log(ADDON::LOG_DEBUG, "Skipped - ignore channels specified rule: %d", i);
+				continue;
+			}
+
 			if (p["reserve_titles"].is<picojson::array>() && p["reserve_titles"].get<picojson::array>().size() > 0 &&
 				p["reserve_descriptions"].is<picojson::array>() && p["reserve_descriptions"].get<picojson::array>().size() > 0) {
 					XBMC->Log(ADDON::LOG_DEBUG, "Skipped - multi reserve pattern rule: %d", i);
