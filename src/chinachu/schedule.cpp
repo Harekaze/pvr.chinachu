@@ -135,15 +135,4 @@ namespace chinachu {
 		lastUpdated = now;
 		return true;
 	}
-
-
-	std::vector<EPG_PROGRAM> Schedule::scheduleForChannel(PVR_CHANNEL ch) {
-		for (unsigned int i = 0, size = schedule.size(); i < size; i++) {
-			if (schedule[i].channel.iUniqueId == ch.iUniqueId) {
-				return schedule[i].epgs;
-			}
-		}
-		std::vector<EPG_PROGRAM> empty;
-		return empty;
-	}
 }

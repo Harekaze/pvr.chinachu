@@ -62,7 +62,6 @@ namespace chinachu {
 			std::string liveStreamingPath;
 			std::vector<CHANNEL_EPG> schedule;
 			std::vector<std::string> groupNames;
-			std::vector<EPG_PROGRAM> scheduleForChannel(PVR_CHANNEL ch);
 			bool refresh();
 	};
 } // namespace chinachu
