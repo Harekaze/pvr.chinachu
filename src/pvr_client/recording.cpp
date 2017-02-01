@@ -99,8 +99,7 @@ PVR_ERROR DeleteRecording(const PVR_RECORDING &recording) {
 }
 
 PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) {
-	picojson::value v;
-	std::string response;
+	picojson::value response;
 	const time_t refreshInterval = 10*60; // every 10 minutes
 	static time_t lastUpdated;
 	static long long total, used;
@@ -122,18 +121,10 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) {
 	}
 
 	if (chinachu::api::getStorage(response) == chinachu::api::REQUEST_FAILED) {
-		XBMC->Log(ADDON::LOG_ERROR, "[storage.json] Request failed");
-		XBMC->QueueNotification(ADDON::QUEUE_ERROR, "[storage.json] Request failed");
-		return PVR_ERROR_SERVER_ERROR;
-	}
-	const std::string err = picojson::parse(v, response);
-	if (!err.empty()) {
-		XBMC->Log(ADDON::LOG_ERROR, "[storage.json] Failed to parse JSON string: %s", err.c_str());
-		XBMC->QueueNotification(ADDON::QUEUE_ERROR, "[storage.json] Failed to parse JSON string: %s", err.c_str());
 		return PVR_ERROR_SERVER_ERROR;
 	}
 
-	picojson::object &o = v.get<picojson::object>();
+	picojson::object &o = response.get<picojson::object>();
 	total = (long long)(o["size"].get<double>() / 1024);
 	used = (long long)(o["used"].get<double>() / 1024);
 	*iTotal = total;

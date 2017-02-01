@@ -23,6 +23,7 @@
 #define CHINACHU_API_H
 
 #include <iostream>
+#include "picojson/picojson.h"
 #include "kodi/xbmc_addon_dll.h"
 
 namespace chinachu {
@@ -31,16 +32,16 @@ namespace chinachu {
 		extern std::string baseURL;
 
 		// GET /schedule.json
-		int getSchedule(std::string &response);
+		int getSchedule(picojson::value &response);
 
 		// GET /recorded.json
-		int getRecorded(std::string &response);
+		int getRecorded(picojson::value &response);
 
 		// GET /recording.json
-		int getRecording(std::string &response);
+		int getRecording(picojson::value &response);
 
 		// GET /reserves.json
-		int getReserves(std::string &response);
+		int getReserves(picojson::value &response);
 
 		// DELETE /recorded/:id.json
 		int deleteRecordedProgram(std::string id);
@@ -58,7 +59,7 @@ namespace chinachu {
 		int putProgram(std::string id);
 
 		// GET /rules.json
-		int getRules(std::string &response);
+		int getRules(picojson::value &response);
 
 		// POST /rules.json
 		int postRule(std::string type, std::string channel, std::string title, std::string genre);
@@ -73,7 +74,7 @@ namespace chinachu {
 		int putScheduler();
 
 		// GET /storage.json
-		int getStorage(std::string &response);
+		int getStorage(picojson::value &response);
 
 	} // namespace api
 } // namespace chinachu

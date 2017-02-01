@@ -31,18 +31,9 @@ extern ADDON::CHelper_libXBMC_addon *XBMC;
 
 namespace chinachu {
 	bool Reserve::refresh() {
-		picojson::value v;
-		std::string response;
+		picojson::value response;
 
 		if (chinachu::api::getReserves(response) == chinachu::api::REQUEST_FAILED) {
-			XBMC->Log(ADDON::LOG_ERROR, "[reserves.json] Request failed");
-			XBMC->QueueNotification(ADDON::QUEUE_ERROR, "[reserves.json] Request failed");
-			return false;
-		}
-		const std::string err = picojson::parse(v, response);
-		if (!err.empty()) {
-			XBMC->Log(ADDON::LOG_ERROR, "[reserves.json] Failed to parse JSON string: %s", err.c_str());
-			XBMC->QueueNotification(ADDON::QUEUE_ERROR, "[reserves.json] Failed to parse JSON string: %s", err.c_str());
 			return false;
 		}
 
@@ -51,7 +42,7 @@ namespace chinachu {
 		time_t now;
 		time(&now);
 
-		picojson::array pa = v.get<picojson::array>();
+		picojson::array pa = response.get<picojson::array>();
 		for (unsigned int i = 0, p_size = pa.size(); i < p_size; i++) {
 
 			picojson::object &p = pa[i].get<picojson::object>();

@@ -27,8 +27,7 @@ extern ADDON::CHelper_libXBMC_addon *XBMC;
 
 namespace chinachu {
 	bool Schedule::refresh() {
-		picojson::value v;
-		std::string response;
+		picojson::value response;
 		const time_t refreshInterval = 10*60; // every 10 minutes
 		static time_t lastUpdated;
 		time_t now;
@@ -39,21 +38,13 @@ namespace chinachu {
 		}
 
 		if (chinachu::api::getSchedule(response) == chinachu::api::REQUEST_FAILED) {
-			XBMC->Log(ADDON::LOG_ERROR, "[schedule.json] Request failed");
-			XBMC->QueueNotification(ADDON::QUEUE_ERROR, "[schedule.json] Request failed");
-			return false;
-		}
-		const std::string err = picojson::parse(v, response);
-		if (!err.empty()) {
-			XBMC->Log(ADDON::LOG_ERROR, "[schedule.json] Failed to parse JSON string: %s", err.c_str());
-			XBMC->QueueNotification(ADDON::QUEUE_ERROR, "[schedule.json] Failed to parse JSON string: %s", err.c_str());
 			return false;
 		}
 
 		schedule.clear();
 		groupNames.clear();
 
-		picojson::array ca = v.get<picojson::array>();
+		picojson::array ca = response.get<picojson::array>();
 		for (unsigned int i = 0, c_size = ca.size(); i < c_size; i++) {
 			picojson::object &o = ca[i].get<picojson::object>();
 			if (o["programs"].get<picojson::array>().size() == 0) {

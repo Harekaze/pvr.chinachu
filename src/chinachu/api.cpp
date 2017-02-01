@@ -31,21 +31,31 @@ namespace chinachu {
 		const int REQUEST_FAILED = -1;
 		std::string baseURL = "";
 
-		int requestGET(std::string apiPath, std::string &response) {
+		int requestGET(std::string apiPath, picojson::value &response) {
+			std::string text;
 			const std::string url = baseURL + apiPath;
 			if (void* handle = XBMC->OpenFile(url.c_str(), 0)) {
 				const unsigned int buffer_size = 4096;
 				char buffer[buffer_size];
-				response.clear();
+				text.clear();
 				while (int bytesRead = XBMC->ReadFile(handle, buffer, buffer_size)) {
-					response.append(buffer, bytesRead);
+					text.append(buffer, bytesRead);
 				}
 				XBMC->CloseFile(handle);
 			} else {
+				XBMC->Log(ADDON::LOG_ERROR, "[%s] Request failed", apiPath.c_str());
+				XBMC->QueueNotification(ADDON::QUEUE_ERROR, "[%s] Request failed", apiPath.c_str());
 				return REQUEST_FAILED;
 			}
 
-			return response.length();
+			const std::string err = picojson::parse(response, text);
+			if (!err.empty()) {
+				XBMC->Log(ADDON::LOG_ERROR, "[%s] Failed to parse JSON string: %s", apiPath.c_str(), err.c_str());
+				XBMC->QueueNotification(ADDON::QUEUE_ERROR, "[%s] Failed to parse JSON string: %s", apiPath.c_str(), err.c_str());
+				return REQUEST_FAILED;
+			}
+
+			return text.length();
 		}
 
 		int requestDELETE(std::string apiPath) {
@@ -86,25 +96,25 @@ namespace chinachu {
 		}
 
 		// GET /schedule.json
-		int getSchedule(std::string &response) {
+		int getSchedule(picojson::value &response) {
 			const std::string apiPath = "schedule.json";
 			return requestGET(apiPath, response);
 		}
 
 		// GET /recorded.json
-		int getRecorded(std::string &response) {
+		int getRecorded(picojson::value &response) {
 			const std::string apiPath = "recorded.json";
 			return requestGET(apiPath, response);
 		}
 
 		// GET /recording.json
-		int getRecording(std::string &response) {
+		int getRecording(picojson::value &response) {
 			const std::string apiPath = "recording.json";
 			return requestGET(apiPath, response);
 		}
 
 		// GET /reserves.json
-		int getReserves(std::string &response) {
+		int getReserves(picojson::value &response) {
 			const std::string apiPath = "reserves.json";
 			return requestGET(apiPath, response);
 		}
@@ -140,7 +150,7 @@ namespace chinachu {
 		}
 
 		// GET /rules.json
-		int getRules(std::string &response) {
+		int getRules(picojson::value &response) {
 			const std::string apiPath = "rules.json";
 			return requestGET(apiPath, response);
 		}
@@ -175,7 +185,7 @@ namespace chinachu {
 		}
 
 		// GET /storage.json
-		int getStorage(std::string &response) {
+		int getStorage(picojson::value &response) {
 			const std::string apiPath = "storage.json";
 			return requestGET(apiPath, response);
 		}
