@@ -30,9 +30,11 @@
 
 #define MENUHOOK_FORCE_REFRESH_RECORDING 0x01
 #define MENUHOOK_FORCE_REFRESH_TIMER 0x02
+#define MENUHOOK_FORCE_EXECUTE_SCHEDULER 0x04
 
 #define MSG_FORCE_REFRESH_RECORDING 30800
 #define MSG_FORCE_REFRESH_TIMER 30801
+#define MSG_FORCE_EXECUTE_SCHEDULER 30802
 
 chinachu::Schedule g_schedule;
 chinachu::Recorded g_recorded;
@@ -178,6 +180,13 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 	menuHookTimer.iHookId = MENUHOOK_FORCE_REFRESH_TIMER;
 	PVR->AddMenuHook(&menuHookTimer);
 
+	PVR_MENUHOOK menuHookScheduler;
+	memset(&menuHookScheduler, 0, sizeof(PVR_MENUHOOK));
+	menuHookScheduler.iLocalizedStringId = MSG_FORCE_EXECUTE_SCHEDULER;
+	menuHookScheduler.category = PVR_MENUHOOK_ALL;
+	menuHookScheduler.iHookId = MENUHOOK_FORCE_EXECUTE_SCHEDULER;
+	PVR->AddMenuHook(&menuHookScheduler);
+
 	currentStatus = ADDON_STATUS_OK;
 
 	return currentStatus;
@@ -224,6 +233,14 @@ PVR_ERROR CallMenuHook(const PVR_MENUHOOK& menuhook, const PVR_MENUHOOK_DATA &it
 		return PVR_ERROR_NO_ERROR;
 	}
 	if (menuhook.category == PVR_MENUHOOK_ALL && menuhook.iHookId == MENUHOOK_FORCE_REFRESH_TIMER) {
+		PVR->TriggerTimerUpdate();
+		return PVR_ERROR_NO_ERROR;
+	}
+	if (menuhook.category == PVR_MENUHOOK_ALL && menuhook.iHookId == MENUHOOK_FORCE_EXECUTE_SCHEDULER) {
+		if (chinachu::api::putScheduler() == chinachu::api::REQUEST_FAILED) {
+			XBMC->Log(ADDON::LOG_ERROR, "[scheduler.json] Request failed");
+			return PVR_ERROR_SERVER_ERROR;
+		}
 		PVR->TriggerTimerUpdate();
 		return PVR_ERROR_NO_ERROR;
 	}
