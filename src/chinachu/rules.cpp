@@ -68,15 +68,6 @@ namespace chinachu {
 					continue;
 			}
 
-
-			if (p["hour"].is<picojson::object>() &&
-				((p["hour"].get<picojson::object>()["start"].is<double>() && p["hour"].get<picojson::object>()["start"].get<double>() != 0) ||
-				(p["hour"].get<picojson::object>()["end"].is<double>() && p["hour"].get<picojson::object>()["end"].get<double>() != 24))
-			) {
-				XBMC->Log(ADDON::LOG_DEBUG, "Skipped - hour range specified rule: %d", i);
-				continue;
-			}
-
 			struct RULE_ITEM rule;
 
 			if (p["reserve_titles"].is<picojson::array>() && p["reserve_titles"].get<picojson::array>().size() > 0) {
@@ -110,18 +101,29 @@ namespace chinachu {
 				continue;
 			}
 
+			std::string strGenreType = "none";
+			if (p["categories"].is<picojson::array>()){
+				if (p["categories"].get<picojson::array>().size() == 1) {
+					strGenreType = p["categories"].get<picojson::array>()[0].get<std::string>();
+					rule.iGenreType = chinachu::iGenreTypePair[strGenreType] & chinachu::GENRE_TYPE_MASK;
+					rule.iGenreSubType = chinachu::iGenreTypePair[strGenreType] & chinachu::GENRE_SUBTYPE_MASK;
+				} else if (p["categories"].get<picojson::array>().size() > 1){
+					strGenreType = "any";
+				}
+			}
+			int startTime = 0;
+			int endTime = 24;
+			if (p["hour"].is<picojson::object>()) {
+				startTime = p["hour"].get<picojson::object>()["start"].is<double>() ? (int)(p["hour"].get<picojson::object>()["start"].get<double>()) : 0;
+				endTime = p["hour"].get<picojson::object>()["end"].is<double>() ? (int)(p["hour"].get<picojson::object>()["end"].get<double>()) : 0;
+			}
+
 			char title[PVR_ADDON_NAME_STRING_LENGTH];
-			snprintf(title, PVR_ADDON_NAME_STRING_LENGTH - 1, "Rule #%d: %s", i, rule.strEpgSearchString.c_str());
+			snprintf(title, PVR_ADDON_NAME_STRING_LENGTH - 1, "#%d: [%s]%d-%d %s", i, strGenreType.c_str(), startTime, endTime, rule.strEpgSearchString.c_str());
 			rule.strTitle = title;
 
 			if (p["channels"].is<picojson::array>() && p["channels"].get<picojson::array>().size() == 1) {
 				rule.strClientChannelUid = p["channels"].get<picojson::array>()[0].get<std::string>();
-			}
-
-			if (p["categories"].is<picojson::array>() && p["categories"].get<picojson::array>().size() == 1) {
-				const std::string strGenreType = p["categories"].get<picojson::array>()[0].get<std::string>();
-				rule.iGenreType = chinachu::iGenreTypePair[strGenreType] & chinachu::GENRE_TYPE_MASK;
-				rule.iGenreSubType = chinachu::iGenreTypePair[strGenreType] & chinachu::GENRE_SUBTYPE_MASK;
 			}
 
 			rule.bIsDisabled = (p["isDisabled"].is<bool>() && p["isDisabled"].get<bool>());
