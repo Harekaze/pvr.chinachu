@@ -123,11 +123,13 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) {
 
 	if (chinachu::api::getStorage(response) == chinachu::api::REQUEST_FAILED) {
 		XBMC->Log(ADDON::LOG_ERROR, "[storage.json] Request failed");
+		XBMC->QueueNotification(ADDON::QUEUE_ERROR, "[storage.json] Request failed");
 		return PVR_ERROR_SERVER_ERROR;
 	}
 	const std::string err = picojson::parse(v, response);
 	if (!err.empty()) {
 		XBMC->Log(ADDON::LOG_ERROR, "[storage.json] Failed to parse JSON string: %s", err.c_str());
+		XBMC->QueueNotification(ADDON::QUEUE_ERROR, "[storage.json] Failed to parse JSON string: %s", err.c_str());
 		return PVR_ERROR_SERVER_ERROR;
 	}
 

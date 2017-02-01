@@ -36,11 +36,13 @@ namespace chinachu {
 
 		if (chinachu::api::getReserves(response) == chinachu::api::REQUEST_FAILED) {
 			XBMC->Log(ADDON::LOG_ERROR, "[reserves.json] Request failed");
+			XBMC->QueueNotification(ADDON::QUEUE_ERROR, "[reserves.json] Request failed");
 			return false;
 		}
 		const std::string err = picojson::parse(v, response);
 		if (!err.empty()) {
 			XBMC->Log(ADDON::LOG_ERROR, "[reserves.json] Failed to parse JSON string: %s", err.c_str());
+			XBMC->QueueNotification(ADDON::QUEUE_ERROR, "[reserves.json] Failed to parse JSON string: %s", err.c_str());
 			return false;
 		}
 
