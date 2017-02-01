@@ -168,6 +168,12 @@ namespace chinachu {
 			return requestDELETE(apiPath);
 		}
 
+		// PUT /scheduler.json
+		int putScheduler() {
+			const std::string apiPath = "scheduler.json";
+			return requestPUT(apiPath);
+		}
+
 		// GET /storage.json
 		int getStorage(std::string &response) {
 			const std::string apiPath = "storage.json";
