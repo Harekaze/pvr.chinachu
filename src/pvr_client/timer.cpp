@@ -137,7 +137,7 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 		if (timer.state != rule.state) {
 			switch (timer.state) {
 				case PVR_TIMER_STATE_SCHEDULED:
-					if (chinachu::api::putRuleAction(index, true) != chinachu::api::REQUEST_FAILED) {
+					if (chinachu::api::putRuleAction(rule.iIndex, true) != chinachu::api::REQUEST_FAILED) {
 						XBMC->Log(ADDON::LOG_NOTICE, "Enable rule: #%d", index);
 						break;
 					}
@@ -145,7 +145,7 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 					XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Failed to enable rule: #%d", index);
 					return PVR_ERROR_SERVER_ERROR;
 				case PVR_TIMER_STATE_DISABLED:
-					if (chinachu::api::putRuleAction(index, false) != chinachu::api::REQUEST_FAILED) {
+					if (chinachu::api::putRuleAction(rule.iIndex, false) != chinachu::api::REQUEST_FAILED) {
 						XBMC->Log(ADDON::LOG_NOTICE, "Disable rule: #%d", index);
 						break;
 					}

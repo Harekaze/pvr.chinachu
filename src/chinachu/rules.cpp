@@ -65,6 +65,7 @@ namespace chinachu {
 			}
 
 			struct RULE_ITEM rule;
+			rule.iIndex = i;
 
 			if (p["reserve_titles"].is<picojson::array>() && p["reserve_titles"].get<picojson::array>().size() > 0) {
 				rule.bFullTextEpgSearch = false;

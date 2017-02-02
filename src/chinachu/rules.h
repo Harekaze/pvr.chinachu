@@ -29,6 +29,7 @@
 
 namespace chinachu {
 	struct RULE_ITEM {
+		unsigned int iIndex;
 		std::string strTitle;
 		std::string strEpgSearchString;
 		unsigned int iClientChannelUid;
