@@ -22,6 +22,7 @@
 #ifndef CHINACHU_SCHEDULE_H
 #define CHINACHU_SCHEDULE_H
 #include <iostream>
+#include <map>
 
 #include "picojson/picojson.h"
 #include "chinachu/genre.h"
@@ -42,26 +43,12 @@ namespace chinachu {
 		std::string strEpisodeName;
 		std::string strGenreDescription;
 	};
-	struct CHANNEL_INFO {
-		unsigned int iUniqueId;
-		unsigned int iChannelNumber;
-		unsigned int iSubChannelNumber;
-		std::string strChannelType;
-		std::string strChannelId;
-		std::string strChannelName;
-		std::string strStreamURL;
-		std::string strIconPath;
-	};
-	struct CHANNEL_EPG {
-		CHANNEL_INFO channel;
-		std::vector<EPG_PROGRAM> epgs;
-	};
 	class Schedule {
 		public:
 			std::string channelLogoPath;
 			std::string liveStreamingPath;
-			std::vector<CHANNEL_EPG> schedule;
-			std::vector<std::string> groupNames;
+			std::map<unsigned int, std::vector<EPG_PROGRAM>> schedule;
+			std::map<std::string, std::vector<PVR_CHANNEL>> channelGroups;
 			bool refresh();
 	};
 } // namespace chinachu

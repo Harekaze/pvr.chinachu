@@ -31,7 +31,7 @@ namespace chinachu {
 	struct RULE_ITEM {
 		std::string strTitle;
 		std::string strEpgSearchString;
-		std::string strClientChannelUid;
+		unsigned int iClientChannelUid;
 		PVR_TIMER_STATE state;
 		bool bFullTextEpgSearch;
 		bool bIsDisabled;

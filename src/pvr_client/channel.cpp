@@ -25,8 +25,6 @@
 #include "kodi/libXBMC_pvr.h"
 #include "chinachu/chinachu.h"
 
-chinachu::CHANNEL_INFO currentChannel;
-
 extern chinachu::Schedule g_schedule;
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
@@ -46,38 +44,25 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio) {
 		return PVR_ERROR_SERVER_ERROR;
 	}
 
-	for (unsigned int i = 0; i < g_schedule.schedule.size(); i++) {
-		const chinachu::CHANNEL_INFO &channel = g_schedule.schedule[i].channel;
-
-		PVR_CHANNEL ch;
-		memset(&ch, 0, sizeof(PVR_CHANNEL));
-
-		ch.iUniqueId         = channel.iUniqueId;
-		ch.bIsRadio          = false;
-		ch.iChannelNumber    = channel.iChannelNumber;
-		strncpy(ch.strChannelName, channel.strChannelName.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
-		strncpy(ch.strStreamURL, channel.strStreamURL.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
-		ch.bIsHidden         = false;
-		strncpy(ch.strIconPath, channel.strIconPath.c_str(), PVR_ADDON_URL_STRING_LENGTH - 1);
-		// strncpy(ch.strInputFormat, "InputFormat", PVR_ADDON_INPUT_FORMAT_STRING_LENGTH - 1); /* not implemented */
-		// ch.iEncryptionSystem = 0; /* not implemented */
-
-		PVR->TransferChannelEntry(handle, &ch);
+	for (std::pair<std::string, std::vector<PVR_CHANNEL>> schedule: g_schedule.channelGroups) {
+		for (PVR_CHANNEL channel: schedule.second) {
+			PVR->TransferChannelEntry(handle, &channel);
+		}
 	}
 
 	return PVR_ERROR_NO_ERROR;
 }
 
 int GetChannelGroupsAmount(void) {
-	return g_schedule.groupNames.size();
+	return g_schedule.channelGroups.size();
 }
 
 PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio) {
-	for (unsigned int i = 0; i < g_schedule.groupNames.size(); i++) {
+	for (std::pair<std::string, std::vector<PVR_CHANNEL>> channelGroup: g_schedule.channelGroups) {
 		PVR_CHANNEL_GROUP chGroup;
 		memset(&chGroup, 0, sizeof(PVR_CHANNEL_GROUP));
 
-		strncpy(chGroup.strGroupName, g_schedule.groupNames[i].c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
+		strncpy(chGroup.strGroupName, channelGroup.first.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 		chGroup.bIsRadio = false;
 		// chGroup.iPosition = 0; /* not implemented */
 
@@ -88,12 +73,7 @@ PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio) {
 }
 
 PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group) {
-	for (unsigned int i = 0; i < g_schedule.schedule.size(); i++) {
-		const chinachu::CHANNEL_INFO &channel = g_schedule.schedule[i].channel;
-
-		if (channel.strChannelType != group.strGroupName)
-			continue;
-
+	for (PVR_CHANNEL channel: g_schedule.channelGroups[group.strGroupName]) {
 		PVR_CHANNEL_GROUP_MEMBER chMem;
 		memset(&chMem, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
 

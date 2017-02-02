@@ -42,7 +42,7 @@ namespace chinachu {
 		}
 
 		schedule.clear();
-		groupNames.clear();
+		channelGroups.clear();
 
 		picojson::array ca = response.get<picojson::array>();
 		for (unsigned int i = 0, c_size = ca.size(); i < c_size; i++) {
@@ -51,21 +51,14 @@ namespace chinachu {
 				continue;
 			}
 
-			struct CHANNEL_EPG ch;
+			PVR_CHANNEL ch;
+			char *endptr;
 
-			ch.channel.strChannelType = o["type"].get<std::string>();
+			ch.iUniqueId = o["sid"].is<double>() ? (int)(o["sid"].get<double>()) : 0;
+			ch.bIsHidden = false;
+			ch.bIsRadio = false;
 
-			// Check whether the channel type is already listed up in groupNames vector.
-			if (find(groupNames.begin(), groupNames.end(), ch.channel.strChannelType) == groupNames.end()) {
-				// If not, add it.
-				groupNames.push_back(ch.channel.strChannelType);
-			}
-
-			std::string channel = o["channel"].get<std::string>();
-			ch.channel.iUniqueId = o["sid"].is<std::string>() ?
-				std::atoi((o["sid"].get<std::string>()).c_str()) :
-				(int)(o["sid"].get<double>());
-
+			std::string channel = o["channel"].is<std::string>() ? o["channel"].get<std::string>() : "0";
 			// Remove non-numerical charactor from channel number
 			while (channel.find_first_of("0123456789") != 0) {
 				channel.erase(channel.begin());
@@ -78,28 +71,28 @@ namespace chinachu {
 					break;
 				}
 			}
-			ch.channel.iChannelNumber = std::atoi(channel.c_str());
-			ch.channel.iSubChannelNumber = o["sid"].is<std::string>() ?
-				std::atoi((o["sid"].get<std::string>()).c_str()) :
-				(int)(o["sid"].get<double>());
-			ch.channel.strChannelId = o["id"].is<std::string>() ? o["id"].get<std::string>() : "";
+			ch.iChannelNumber = std::atoi(channel.c_str());
+
+			ch.iSubChannelNumber = o["nid"].is<double>() ? (int)(o["nid"].get<double>()) : 0;
 			// use channel id as name instead when name field isn't available.
-			ch.channel.strChannelName = o["name"].is<std::string>() ? o["name"].get<std::string>() : ch.channel.strChannelId;
-			char strStreamURL[PVR_ADDON_URL_STRING_LENGTH];
-			snprintf(strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1,
+			strncpy(ch.strChannelName, o["name"].is<std::string>() ? o["name"].get<std::string>().c_str() : o["id"].get<std::string>().c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
+			snprintf(ch.strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1,
 				(const char*)(chinachu::api::baseURL + liveStreamingPath).c_str(),
 				o["id"].get<std::string>().c_str());
-			ch.channel.strStreamURL = strStreamURL;
 
 			if (o["hasLogoData"].get<bool>()) {
-				char strIconPath[PVR_ADDON_URL_STRING_LENGTH];
-				snprintf(strIconPath, PVR_ADDON_URL_STRING_LENGTH - 1,
+				snprintf(ch.strIconPath, PVR_ADDON_URL_STRING_LENGTH - 1,
 					(const char*)(chinachu::api::baseURL + channelLogoPath).c_str(),
 					o["id"].get<std::string>().c_str());
-				ch.channel.strIconPath = strIconPath;
+			} else {
+				ch.strIconPath[0] = '\0';
 			}
 
+			const std::string strChannelType = o["type"].get<std::string>();
+			channelGroups[strChannelType].push_back(ch);
+
 			picojson::array pa = o["programs"].get<picojson::array>();
+
 			for (unsigned int j = 0, p_size = pa.size(); j < p_size; j++) {
 				picojson::object &p = pa[j].get<picojson::object>();
 				struct EPG_PROGRAM epg;
@@ -117,10 +110,8 @@ namespace chinachu {
 				epg.strGenreDescription = p["category"].is<std::string>() ? p["category"].get<std::string>() : "";
 				epg.iEpisodeNumber = o["episode"].is<double>() ? (unsigned int)(o["episode"].get<double>()) : 0;
 
-				ch.epgs.push_back(epg);
+				schedule[ch.iUniqueId].push_back(epg);
 			}
-
-			schedule.push_back(ch);
 		}
 
 		XBMC->Log(ADDON::LOG_NOTICE, "Updated schedule: channel ammount = %d", schedule.size());

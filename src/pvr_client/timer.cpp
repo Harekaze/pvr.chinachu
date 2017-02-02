@@ -51,6 +51,17 @@ extern chinachu::Rule g_rule;
 extern chinachu::Reserve g_reserve;
 extern time_t nextUpdateTime;
 
+std::string channel_id_string(unsigned int nid, unsigned int sid) {
+	const static std::string base36 = "0123456789abcdefghijklmnopqrstuvwxyz";
+	unsigned int val = nid * 100000 + sid;
+	std::string result;
+	result.reserve(14);
+	do {
+		result = base36[val % 36] + result;
+	} while (val /= 36);
+	return result;
+}
+
 extern "C" {
 
 int GetTimersAmount(void) {
@@ -71,13 +82,7 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 			timer.iClientIndex = i + TIMER_CLIENT_START_INDEX;
 			timer.state = rule.state;
 			strncpy(timer.strTitle, rule.strTitle.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
-			for (size_t j = 0; j < g_schedule.schedule.size(); j++) {
-				const chinachu::CHANNEL_INFO channel = g_schedule.schedule[j].channel;
-				if (channel.strChannelId == rule.strClientChannelUid) {
-					timer.iClientChannelUid = channel.iUniqueId;
-					break;
-				}
-			}
+			timer.iClientChannelUid = rule.iClientChannelUid;
 			timer.iGenreType = rule.iGenreType;
 			timer.iGenreSubType = rule.iGenreSubType;
 			timer.iTimerType = RULES_PATTERN_MATCHED;
@@ -223,51 +228,65 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 }
 
 PVR_ERROR AddTimer(const PVR_TIMER &timer) {
-	for (std::vector<chinachu::CHANNEL_EPG>::iterator channel = g_schedule.schedule.begin(); channel != g_schedule.schedule.end(); channel++) {
-		if ((*channel).channel.iUniqueId == timer.iClientChannelUid) {
+	for (std::pair<unsigned int, std::vector<chinachu::EPG_PROGRAM>> schedule: g_schedule.schedule) {
+		if (schedule.first == timer.iClientChannelUid) {
 			if (timer.iTimerType == CREATE_RULES_PATTERN_MATCHED) {
 				std::string genre;
 				bool isLive = false;
-				for (std::vector<chinachu::EPG_PROGRAM>::iterator program = (*channel).epgs.begin(); program != (*channel).epgs.end(); program++) {
-					if ((*program).startTime == timer.startTime && (*program).endTime == timer.endTime) {
-						genre = (*program).strGenreDescription;
+				for (chinachu::EPG_PROGRAM program: schedule.second) {
+					if (program.startTime == timer.startTime && program.endTime == timer.endTime) {
+						genre = program.strGenreDescription;
 						time_t now;
 						time(&now);
-						if ((*program).startTime < now && now < (*program).endTime) { // Ongoing recording
+						if (program.startTime < now && now < program.endTime) { // Ongoing recording
 							isLive = true;
 						}
 						break;
 					}
 				}
-				if (chinachu::api::postRule((*channel).channel.strChannelType, (*channel).channel.strChannelId, timer.strEpgSearchString, genre) != chinachu::api::REQUEST_FAILED) {
+				std::string strChannelId;
+				std::string strChannelType;
+				for (std::pair<std::string, std::vector<PVR_CHANNEL>> channelGroups: g_schedule.channelGroups) {
+					for (PVR_CHANNEL channel: channelGroups.second) {
+						if (channel.iUniqueId == timer.iClientChannelUid) {
+							strChannelType = channelGroups.first;
+							strChannelId = channel_id_string(channel.iSubChannelNumber, channel.iUniqueId);
+							break;
+						}
+					}
+					if (!strChannelId.empty()) {
+						break;
+					}
+				}
+				if (chinachu::api::postRule(strChannelType, strChannelId, timer.strEpgSearchString, genre) != chinachu::api::REQUEST_FAILED) {
 					XBMC->Log(ADDON::LOG_NOTICE, "Create new rule: [%s:%s]<%s> \"%s\"",
-						(*channel).channel.strChannelType.c_str(), (*channel).channel.strChannelId.c_str(), genre.c_str(), timer.strEpgSearchString);
+						strChannelType.c_str(), strChannelId.c_str(), genre.c_str(), timer.strEpgSearchString);
 					sleep(isLive ? 5 : 1);
 					PVR->TriggerTimerUpdate();
 					return PVR_ERROR_NO_ERROR;
 				} else {
-					XBMC->Log(ADDON::LOG_ERROR, "Failed to create new rule: %s", (*channel).channel.strChannelId.c_str());
-					XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Failed to create new rule: %s", (*channel).channel.strChannelId.c_str());
+					XBMC->Log(ADDON::LOG_ERROR, "Failed to create new rule: %s", strChannelId.c_str());
+					XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Failed to create new rule: %s", strChannelId.c_str());
 					return PVR_ERROR_SERVER_ERROR;
 				}
 				return PVR_ERROR_NO_ERROR;
 			}
-			for (std::vector<chinachu::EPG_PROGRAM>::iterator program = (*channel).epgs.begin(); program != (*channel).epgs.end(); program++) {
-				if ((*program).startTime == timer.startTime && (*program).endTime == timer.endTime) {
-					if (chinachu::api::putProgram((*program).strUniqueBroadcastId) != chinachu::api::REQUEST_FAILED) {
-						XBMC->Log(ADDON::LOG_NOTICE, "Reserved new program: %s", (*program).strUniqueBroadcastId.c_str());
+			for (chinachu::EPG_PROGRAM program: schedule.second) {
+				if (program.startTime == timer.startTime && program.endTime == timer.endTime) {
+					if (chinachu::api::putProgram(program.strUniqueBroadcastId) != chinachu::api::REQUEST_FAILED) {
+						XBMC->Log(ADDON::LOG_NOTICE, "Reserved new program: %s", program.strUniqueBroadcastId.c_str());
 						bool isLive = false;
 						time_t now;
 						time(&now);
-						if ((*program).startTime < now && now < (*program).endTime) { // Ongoing recording
+						if (program.startTime < now && now < program.endTime) { // Ongoing recording
 							isLive = true;
 						}
 						sleep(isLive ? 5 : 1);
 						PVR->TriggerTimerUpdate();
 						return PVR_ERROR_NO_ERROR;
 					} else {
-						XBMC->Log(ADDON::LOG_ERROR, "Failed to reserve new program: %s", (*program).strUniqueBroadcastId.c_str());
-						XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Failed to reserve new program: %s", (*program).strUniqueBroadcastId.c_str());
+						XBMC->Log(ADDON::LOG_ERROR, "Failed to reserve new program: %s", program.strUniqueBroadcastId.c_str());
+						XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Failed to reserve new program: %s", program.strUniqueBroadcastId.c_str());
 						return PVR_ERROR_SERVER_ERROR;
 					}
 				}
@@ -283,34 +302,34 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 
 PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
 	if (timer.iTimerType == TIMER_MANUAL_RESERVED) { // manual reserved
-		for (std::vector<chinachu::CHANNEL_EPG>::iterator channel = g_schedule.schedule.begin(); channel != g_schedule.schedule.end(); channel++) {
-			if ((*channel).channel.iUniqueId == timer.iClientChannelUid) {
-				for (std::vector<chinachu::EPG_PROGRAM>::iterator program = (*channel).epgs.begin(); program != (*channel).epgs.end(); program++) {
-					if ((*program).startTime == timer.startTime && (*program).endTime == timer.endTime) {
+		for (std::pair<unsigned int, std::vector<chinachu::EPG_PROGRAM>> schedule: g_schedule.schedule) {
+			if (schedule.first == timer.iClientChannelUid) {
+				for (chinachu::EPG_PROGRAM program: schedule.second) {
+					if (program.startTime == timer.startTime && program.endTime == timer.endTime) {
 						time_t now;
 						time(&now);
-						if ((*program).startTime < now && now < (*program).endTime) { // Ongoing recording
-							if (chinachu::api::deleteRecordingProgram((*program).strUniqueBroadcastId) != chinachu::api::REQUEST_FAILED) { // Cancel recording
-								XBMC->Log(ADDON::LOG_NOTICE, "Cancel ongoing recording program: %s", (*program).strUniqueBroadcastId.c_str());
+						if (program.startTime < now && now < program.endTime) { // Ongoing recording
+							if (chinachu::api::deleteRecordingProgram(program.strUniqueBroadcastId) != chinachu::api::REQUEST_FAILED) { // Cancel recording
+								XBMC->Log(ADDON::LOG_NOTICE, "Cancel ongoing recording program: %s", program.strUniqueBroadcastId.c_str());
 								sleep(5);
 								PVR->TriggerRecordingUpdate();
 								PVR->TriggerTimerUpdate();
 								return PVR_ERROR_NO_ERROR;
 							} else {
-								XBMC->Log(ADDON::LOG_ERROR, "Failed to cancel recording program: %s", (*program).strUniqueBroadcastId.c_str());
-								XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Failed to cancel recording program: %s", (*program).strUniqueBroadcastId.c_str());
+								XBMC->Log(ADDON::LOG_ERROR, "Failed to cancel recording program: %s", program.strUniqueBroadcastId.c_str());
+								XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Failed to cancel recording program: %s", program.strUniqueBroadcastId.c_str());
 								return PVR_ERROR_SERVER_ERROR;
 							}
 						} else {
-							if (chinachu::api::deleteReserves((*program).strUniqueBroadcastId) != chinachu::api::REQUEST_FAILED) {
-								XBMC->Log(ADDON::LOG_NOTICE, "Delete manual reserved program: %s", (*program).strUniqueBroadcastId.c_str());
+							if (chinachu::api::deleteReserves(program.strUniqueBroadcastId) != chinachu::api::REQUEST_FAILED) {
+								XBMC->Log(ADDON::LOG_NOTICE, "Delete manual reserved program: %s", program.strUniqueBroadcastId.c_str());
 								sleep(1);
 								PVR->TriggerRecordingUpdate();
 								PVR->TriggerTimerUpdate();
 								return PVR_ERROR_NO_ERROR;
 							} else {
-								XBMC->Log(ADDON::LOG_ERROR, "Failed to delete reserved program: %s", (*program).strUniqueBroadcastId.c_str());
-								XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Failed to delete reserved program: %s", (*program).strUniqueBroadcastId.c_str());
+								XBMC->Log(ADDON::LOG_ERROR, "Failed to delete reserved program: %s", program.strUniqueBroadcastId.c_str());
+								XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Failed to delete reserved program: %s", program.strUniqueBroadcastId.c_str());
 								return PVR_ERROR_SERVER_ERROR;
 							}
 						}

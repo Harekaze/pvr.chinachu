@@ -26,43 +26,34 @@
 #include "chinachu/chinachu.h"
 
 extern chinachu::Schedule g_schedule;
-extern chinachu::CHANNEL_INFO currentChannel;
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
 
 extern "C" {
 
 PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd) {
-	for (unsigned int i = 0, lim = g_schedule.schedule.size(); i < lim; i++) {
-		if (g_schedule.schedule[i].channel.iUniqueId != channel.iUniqueId) {
-			continue;
-		}
+	for (chinachu::EPG_PROGRAM epg: g_schedule.schedule[channel.iUniqueId]) {
+		if (epg.endTime < iStart) continue;
 
-		for (unsigned int j = 0, lims = g_schedule.schedule[i].epgs.size(); j < lims; j++) {
-			const chinachu::EPG_PROGRAM epg = g_schedule.schedule[i].epgs[j];
+		EPG_TAG tag;
+		memset(&tag, 0, sizeof(EPG_TAG));
 
-			if (epg.endTime < iStart) continue;
+		tag.iUniqueBroadcastId = epg.iUniqueBroadcastId;
+		tag.strTitle = epg.strTitle.c_str();
+		tag.iChannelNumber = channel.iChannelNumber;
+		tag.startTime = epg.startTime;
+		tag.endTime = epg.endTime;
+		tag.strPlotOutline = epg.strPlotOutline.c_str();
+		tag.strPlot = epg.strPlot.c_str();
+		tag.iGenreType = chinachu::iGenreTypePair[epg.strGenreDescription] & chinachu::GENRE_TYPE_MASK;
+		tag.iGenreSubType = chinachu::iGenreTypePair[epg.strGenreDescription] & chinachu::GENRE_SUBTYPE_MASK;
+		tag.iEpisodeNumber = epg.iEpisodeNumber;
+		tag.strEpisodeName = epg.strEpisodeName.c_str();
+		tag.strGenreDescription = epg.strGenreDescription.c_str();
 
-			EPG_TAG tag;
-			memset(&tag, 0, sizeof(EPG_TAG));
+		PVR->TransferEpgEntry(handle, &tag);
 
-			tag.iUniqueBroadcastId = epg.iUniqueBroadcastId;
-			tag.strTitle = epg.strTitle.c_str();
-			tag.iChannelNumber = g_schedule.schedule[i].channel.iChannelNumber;
-			tag.startTime = epg.startTime;
-			tag.endTime = epg.endTime;
-			tag.strPlotOutline = epg.strPlotOutline.c_str();
-			tag.strPlot = epg.strPlot.c_str();
-			tag.iGenreType = chinachu::iGenreTypePair[epg.strGenreDescription] & chinachu::GENRE_TYPE_MASK;
-			tag.iGenreSubType = chinachu::iGenreTypePair[epg.strGenreDescription] & chinachu::GENRE_SUBTYPE_MASK;
-			tag.iEpisodeNumber = epg.iEpisodeNumber;
-			tag.strEpisodeName = epg.strEpisodeName.c_str();
-			tag.strGenreDescription = epg.strGenreDescription.c_str();
-
-			PVR->TransferEpgEntry(handle, &tag);
-
-			if (epg.startTime > iEnd) break;
-		}
+		if (epg.startTime > iEnd) break;
 	}
 
 	return PVR_ERROR_NO_ERROR;
@@ -73,7 +64,6 @@ void CloseLiveStream(void) {
 
 bool OpenLiveStream(const PVR_CHANNEL &channel) {
 	CloseLiveStream();
-	currentChannel.iUniqueId = channel.iUniqueId;
 	return true;
 }
 
