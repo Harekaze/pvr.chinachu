@@ -46,14 +46,15 @@ namespace chinachu {
 
 		for (unsigned int i = 0, c_size = response.get<picojson::array>().size(); i < c_size; i++) {
 			picojson::object &o = response.get<picojson::array>()[i].get<picojson::object>();
-			if (o["programs"].get<picojson::array>().size() == 0) {
-				continue;
-			}
-
 			PVR_CHANNEL ch;
 
+			if (o["programs"].get<picojson::array>().size() == 0) {
+				ch.bIsHidden = true;
+			} else {
+				ch.bIsHidden = false;
+			}
+
 			ch.iUniqueId = o["sid"].is<double>() ? (int)(o["sid"].get<double>()) : 0;
-			ch.bIsHidden = false;
 			ch.bIsRadio = false;
 
 			std::string channel = o["channel"].is<std::string>() ? o["channel"].get<std::string>() : "0";
