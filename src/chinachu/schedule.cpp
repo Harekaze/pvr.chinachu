@@ -108,7 +108,7 @@ namespace chinachu {
 				epg.strPlot = p["detail"].is<std::string>() ? p["detail"].get<std::string>() : "";
 				epg.strOriginalTitle = p["fullTitle"].is<std::string>() ? p["fullTitle"].get<std::string>() : "";
 				epg.strGenreDescription = p["category"].is<std::string>() ? p["category"].get<std::string>() : "";
-				epg.iEpisodeNumber = o["episode"].is<double>() ? (unsigned int)(o["episode"].get<double>()) : 0;
+				epg.iEpisodeNumber = p["episode"].is<double>() ? (unsigned int)(p["episode"].get<double>()) : 0;
 
 				schedule[ch.iUniqueId].push_back(epg);
 			}
