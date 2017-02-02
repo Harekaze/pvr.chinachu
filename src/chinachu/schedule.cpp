@@ -51,7 +51,6 @@ namespace chinachu {
 			}
 
 			PVR_CHANNEL ch;
-			char *endptr;
 
 			ch.iUniqueId = o["sid"].is<double>() ? (int)(o["sid"].get<double>()) : 0;
 			ch.bIsHidden = false;
