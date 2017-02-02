@@ -72,14 +72,13 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 	if (g_rule.refresh() && g_reserve.refresh() && g_recording.refresh()) {
 		time_t now;
 		time(&now);
+		unsigned int index = 0;
 
-		for (unsigned int i = 0, lim = g_rule.rules.size(); i < lim; i++) {
-			const chinachu::RULE_ITEM rule = g_rule.rules[i];
-
+		for (const chinachu::RULE_ITEM rule: g_rule.rules) {
 			PVR_TIMER timer;
 			memset(&timer, 0, sizeof(PVR_TIMER));
 
-			timer.iClientIndex = i + TIMER_CLIENT_START_INDEX;
+			timer.iClientIndex = index + TIMER_CLIENT_START_INDEX;
 			timer.state = rule.state;
 			strncpy(timer.strTitle, rule.strTitle.c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 			timer.iClientChannelUid = rule.iClientChannelUid;
@@ -93,18 +92,17 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 			timer.bFullTextEpgSearch = rule.bFullTextEpgSearch;
 
 			PVR->TransferTimerEntry(handle, &timer);
+			index++;
 		}
 
-		for (unsigned int i = 0, lim = g_reserve.reserves.size(); i < lim; i++) {
-			PVR_TIMER timer = g_reserve.reserves[i];
-
+		for (PVR_TIMER timer: g_reserve.reserves) {
 			if (timer.state == PVR_TIMER_STATE_SCHEDULED) {
 				if (now < timer.startTime) {
 					timer.state = PVR_TIMER_STATE_SCHEDULED;
 				} else if (timer.startTime < now && now < timer.endTime) {
 					timer.state = PVR_TIMER_STATE_ABORTED;
-					for (unsigned int j = 0, lim = g_recording.programs.size(); j < lim; j++) {
-						if (timer.iEpgUid == g_recording.programs[j].iEpgEventId) {
+					for (const PVR_RECORDING program: g_recording.programs) {
+						if (timer.iEpgUid == program.iEpgEventId) {
 							timer.state = PVR_TIMER_STATE_RECORDING;
 							break;
 						}
@@ -119,8 +117,8 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 
 		// Set next update time
 		if (g_recording.programs.size() > 0) {
-			for (unsigned int i = 0; i < g_recording.programs.size(); i++) {
-				nextUpdateTime = std::min(nextUpdateTime, g_recording.programs[i].recordingTime + g_recording.programs[i].iDuration);
+			for (const PVR_RECORDING program: g_recording.programs) {
+				nextUpdateTime = std::min(nextUpdateTime, program.recordingTime + program.iDuration);
 			}
 		}
 
@@ -228,12 +226,12 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 }
 
 PVR_ERROR AddTimer(const PVR_TIMER &timer) {
-	for (std::pair<unsigned int, std::vector<chinachu::EPG_PROGRAM>> schedule: g_schedule.schedule) {
+	for (const std::pair<unsigned int, std::vector<chinachu::EPG_PROGRAM>> schedule: g_schedule.schedule) {
 		if (schedule.first == timer.iClientChannelUid) {
 			if (timer.iTimerType == CREATE_RULES_PATTERN_MATCHED) {
 				std::string genre;
 				bool isLive = false;
-				for (chinachu::EPG_PROGRAM program: schedule.second) {
+				for (const chinachu::EPG_PROGRAM program: schedule.second) {
 					if (program.startTime == timer.startTime && program.endTime == timer.endTime) {
 						genre = program.strGenreDescription;
 						time_t now;
@@ -246,8 +244,8 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 				}
 				std::string strChannelId;
 				std::string strChannelType;
-				for (std::pair<std::string, std::vector<PVR_CHANNEL>> channelGroups: g_schedule.channelGroups) {
-					for (PVR_CHANNEL channel: channelGroups.second) {
+				for (const std::pair<std::string, std::vector<PVR_CHANNEL>> channelGroups: g_schedule.channelGroups) {
+					for (const PVR_CHANNEL channel: channelGroups.second) {
 						if (channel.iUniqueId == timer.iClientChannelUid) {
 							strChannelType = channelGroups.first;
 							strChannelId = channel_id_string(channel.iSubChannelNumber, channel.iUniqueId);
@@ -271,7 +269,7 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 				}
 				return PVR_ERROR_NO_ERROR;
 			}
-			for (chinachu::EPG_PROGRAM program: schedule.second) {
+			for (const chinachu::EPG_PROGRAM program: schedule.second) {
 				if (program.startTime == timer.startTime && program.endTime == timer.endTime) {
 					if (chinachu::api::putProgram(program.strUniqueBroadcastId) != chinachu::api::REQUEST_FAILED) {
 						XBMC->Log(ADDON::LOG_NOTICE, "Reserved new program: %s", program.strUniqueBroadcastId.c_str());
@@ -302,9 +300,9 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 
 PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
 	if (timer.iTimerType == TIMER_MANUAL_RESERVED) { // manual reserved
-		for (std::pair<unsigned int, std::vector<chinachu::EPG_PROGRAM>> schedule: g_schedule.schedule) {
+		for (const std::pair<unsigned int, std::vector<chinachu::EPG_PROGRAM>> schedule: g_schedule.schedule) {
 			if (schedule.first == timer.iClientChannelUid) {
-				for (chinachu::EPG_PROGRAM program: schedule.second) {
+				for (const chinachu::EPG_PROGRAM program: schedule.second) {
 					if (program.startTime == timer.startTime && program.endTime == timer.endTime) {
 						time_t now;
 						time(&now);

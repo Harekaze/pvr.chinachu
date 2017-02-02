@@ -44,8 +44,8 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio) {
 		return PVR_ERROR_SERVER_ERROR;
 	}
 
-	for (std::pair<std::string, std::vector<PVR_CHANNEL>> schedule: g_schedule.channelGroups) {
-		for (PVR_CHANNEL channel: schedule.second) {
+	for (const std::pair<std::string, std::vector<PVR_CHANNEL>> schedule: g_schedule.channelGroups) {
+		for (const PVR_CHANNEL channel: schedule.second) {
 			PVR->TransferChannelEntry(handle, &channel);
 		}
 	}
@@ -58,7 +58,7 @@ int GetChannelGroupsAmount(void) {
 }
 
 PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio) {
-	for (std::pair<std::string, std::vector<PVR_CHANNEL>> channelGroup: g_schedule.channelGroups) {
+	for (const std::pair<std::string, std::vector<PVR_CHANNEL>> channelGroup: g_schedule.channelGroups) {
 		PVR_CHANNEL_GROUP chGroup;
 		memset(&chGroup, 0, sizeof(PVR_CHANNEL_GROUP));
 
@@ -73,7 +73,7 @@ PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio) {
 }
 
 PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group) {
-	for (PVR_CHANNEL channel: g_schedule.channelGroups[group.strGroupName]) {
+	for (const PVR_CHANNEL channel: g_schedule.channelGroups[group.strGroupName]) {
 		PVR_CHANNEL_GROUP_MEMBER chMem;
 		memset(&chMem, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
 

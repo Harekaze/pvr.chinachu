@@ -42,10 +42,8 @@ namespace chinachu {
 		time_t now;
 		time(&now);
 
-		picojson::array pa = response.get<picojson::array>();
-		for (unsigned int i = 0, p_size = pa.size(); i < p_size; i++) {
-
-			picojson::object &p = pa[i].get<picojson::object>();
+		for (unsigned int i = 0, p_size = response.get<picojson::array>().size(); i < p_size; i++) {
+			picojson::object &p = response.get<picojson::array>()[i].get<picojson::object>();
 			// Skip past tv program
 			if ((p["end"].get<double>() / 1000) < now) {
 				continue;

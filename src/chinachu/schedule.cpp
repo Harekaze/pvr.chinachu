@@ -44,9 +44,8 @@ namespace chinachu {
 		schedule.clear();
 		channelGroups.clear();
 
-		picojson::array ca = response.get<picojson::array>();
-		for (unsigned int i = 0, c_size = ca.size(); i < c_size; i++) {
-			picojson::object &o = ca[i].get<picojson::object>();
+		for (unsigned int i = 0, c_size = response.get<picojson::array>().size(); i < c_size; i++) {
+			picojson::object &o = response.get<picojson::array>()[i].get<picojson::object>();
 			if (o["programs"].get<picojson::array>().size() == 0) {
 				continue;
 			}
@@ -91,10 +90,8 @@ namespace chinachu {
 			const std::string strChannelType = o["type"].get<std::string>();
 			channelGroups[strChannelType].push_back(ch);
 
-			picojson::array pa = o["programs"].get<picojson::array>();
-
-			for (unsigned int j = 0, p_size = pa.size(); j < p_size; j++) {
-				picojson::object &p = pa[j].get<picojson::object>();
+			for (unsigned int j = 0, p_size = o["programs"].get<picojson::array>().size(); j < p_size; j++) {
+				picojson::object &p = o["programs"].get<picojson::array>()[j].get<picojson::object>();
 				struct EPG_PROGRAM epg;
 				char *endptr;
 

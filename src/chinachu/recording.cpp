@@ -39,9 +39,8 @@ namespace chinachu {
 		const bool showThumbnail = !recordingThumbnailPath.empty();
 		programs.clear();
 
-		picojson::array pa = response.get<picojson::array>();
-		for (unsigned int i = 0, p_size = pa.size(); i < p_size; i++) {
-			picojson::object &p = pa[i].get<picojson::object>();
+		for (unsigned int i = 0, p_size = response.get<picojson::array>().size(); i < p_size; i++) {
+			picojson::object &p = response.get<picojson::array>()[i].get<picojson::object>();
 			PVR_RECORDING rec;
 			char *endptr;
 

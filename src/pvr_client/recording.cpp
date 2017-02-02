@@ -45,14 +45,11 @@ int GetRecordingsAmount(bool deleted) {
 
 PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 	if (g_recorded.refresh()) {
-		for (unsigned int i = 0, lim = g_recorded.programs.size(); i < lim; i++) {
-			PVR_RECORDING rec = g_recorded.programs[i];
+		for (const PVR_RECORDING rec: g_recorded.programs) {
 			PVR->TransferRecordingEntry(handle, &rec);
 		}
-
 		return PVR_ERROR_NO_ERROR;
 	}
-
 	return PVR_ERROR_SERVER_ERROR;
 }
 

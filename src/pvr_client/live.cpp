@@ -32,8 +32,9 @@ extern CHelper_libXBMC_pvr *PVR;
 extern "C" {
 
 PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd) {
-	for (chinachu::EPG_PROGRAM epg: g_schedule.schedule[channel.iUniqueId]) {
+	for (const chinachu::EPG_PROGRAM epg: g_schedule.schedule[channel.iUniqueId]) {
 		if (epg.endTime < iStart) continue;
+		if (epg.startTime > iEnd) break;
 
 		EPG_TAG tag;
 		memset(&tag, 0, sizeof(EPG_TAG));
@@ -52,8 +53,6 @@ PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time
 		tag.strGenreDescription = epg.strGenreDescription.c_str();
 
 		PVR->TransferEpgEntry(handle, &tag);
-
-		if (epg.startTime > iEnd) break;
 	}
 
 	return PVR_ERROR_NO_ERROR;
