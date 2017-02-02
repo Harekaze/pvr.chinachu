@@ -182,11 +182,6 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) {
 
 	const PVR_TIMER resv = g_reserve.reserves[index];
 	// Only reserving state changing is supported
-	if (strncmp(timer.strEpgSearchString, resv.strEpgSearchString, PVR_ADDON_NAME_STRING_LENGTH - 1) != 0) {
-		XBMC->Log(ADDON::LOG_ERROR, "Unsupport search string change: %s", timer.strDirectory);
-		XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Unsupport search string change: %s", timer.strDirectory);
-		return PVR_ERROR_NOT_IMPLEMENTED;
-	}
 	if (timer.iTimerType != resv.iTimerType) {
 		XBMC->Log(ADDON::LOG_ERROR, "Unsupport timer type change: %s", timer.strDirectory);
 		XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Unsupport timer type change: %s", timer.strDirectory);
@@ -299,7 +294,7 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 }
 
 PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
-	if (timer.iTimerType == TIMER_MANUAL_RESERVED) { // manual reserved
+	if (timer.iTimerType == TIMER_MANUAL_RESERVED || timer.iTimerType == TIMER_PATTERN_MATCHED) {
 		for (const std::pair<unsigned int, std::vector<chinachu::EPG_PROGRAM>> schedule: g_schedule.schedule) {
 			if (schedule.first == timer.iClientChannelUid) {
 				for (const chinachu::EPG_PROGRAM program: schedule.second) {
@@ -318,7 +313,7 @@ PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
 								XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Failed to cancel recording program: %s", program.strUniqueBroadcastId.c_str());
 								return PVR_ERROR_SERVER_ERROR;
 							}
-						} else {
+						} else if (timer.iTimerType == TIMER_MANUAL_RESERVED) {
 							if (chinachu::api::deleteReserves(program.strUniqueBroadcastId) != chinachu::api::REQUEST_FAILED) {
 								XBMC->Log(ADDON::LOG_NOTICE, "Delete manual reserved program: %s", program.strUniqueBroadcastId.c_str());
 								sleep(1);
@@ -330,6 +325,18 @@ PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
 								XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Failed to delete reserved program: %s", program.strUniqueBroadcastId.c_str());
 								return PVR_ERROR_SERVER_ERROR;
 							}
+						} else {
+							if (chinachu::api::putReservesSkip(timer.strDirectory) != chinachu::api::REQUEST_FAILED) {
+								XBMC->Log(ADDON::LOG_NOTICE, "Skip reserving: %s", timer.strDirectory);
+								sleep(1);
+								PVR->TriggerRecordingUpdate();
+								PVR->TriggerTimerUpdate();
+								return PVR_ERROR_NO_ERROR;
+							} else {
+								XBMC->Log(ADDON::LOG_ERROR, "Failed to skip reserved program: %s", program.strUniqueBroadcastId.c_str());
+								XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Failed to skip reserved program: %s", program.strUniqueBroadcastId.c_str());
+								return PVR_ERROR_SERVER_ERROR;
+							}
 						}
 					}
 				}
@@ -337,13 +344,13 @@ PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) {
 			}
 		}
 
-		XBMC->Log(ADDON::LOG_ERROR, "Failed to delete reserved program: nothing matched");
-		XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Failed to delete reserved program: nothing matched");
+		XBMC->Log(ADDON::LOG_ERROR, "Failed to delete timer: nothing matched");
+		XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Failed to delete timer: nothing matched");
 		return PVR_ERROR_FAILED;
 	} else {
-		XBMC->Log(ADDON::LOG_ERROR, "Only manual reserved program deletion is supported");
-		XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Only manual reserved program deletion is supported");
-		return PVR_ERROR_NOT_IMPLEMENTED;
+		XBMC->Log(ADDON::LOG_ERROR, "Unknown timer type for deletion request: %d", timer.iTimerType);
+		XBMC->QueueNotification(ADDON::QUEUE_ERROR, "Unknown timer type for deletion request: %d", timer.iTimerType);
+		return PVR_ERROR_FAILED;
 	}
 }
 
