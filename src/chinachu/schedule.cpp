@@ -97,7 +97,8 @@ namespace chinachu {
 				epg.startTime = (time_t)(p["start"].get<double>() / 1000);
 				epg.endTime = (time_t)(p["end"].get<double>() / 1000);
 				epg.strUniqueBroadcastId = p["id"].get<std::string>();
-				epg.iUniqueBroadcastId = strtoul(epg.strUniqueBroadcastId.c_str(), &endptr, 36);
+				const std::string strSubstrId = epg.strUniqueBroadcastId.substr(epg.strUniqueBroadcastId.size() - 6, 6);
+				epg.iUniqueBroadcastId = strtoul(strSubstrId.c_str(), &endptr, 36);
 				epg.strTitle = p["title"].get<std::string>();
 				epg.strEpisodeName = p["subTitle"].is<std::string>() ? p["subTitle"].get<std::string>() : "";
 				epg.strPlotOutline = p["description"].is<std::string>() ? p["description"].get<std::string>() : p["subTitle"].get<std::string>();

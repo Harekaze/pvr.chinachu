@@ -59,7 +59,8 @@ namespace chinachu {
 			rec.iGenreSubType = chinachu::iGenreTypePair[strGenreType] & chinachu::GENRE_SUBTYPE_MASK;
 			std::string id = p["id"].get<std::string>();
 			std::remove(id.begin(), id.end(), '-');
-			rec.iEpgEventId = strtoul(id.c_str(), &endptr, 36);
+			const std::string strSubstrId = id.substr(id.size() - 6, 6);
+			rec.iEpgEventId = strtoul(strSubstrId.c_str(), &endptr, 36);
 			rec.channelType = PVR_RECORDING_CHANNEL_TYPE_TV;
 			rec.bIsDeleted = false;
 			const int sid = p["channel"].get<picojson::object>()["sid"].is<std::string>() ?

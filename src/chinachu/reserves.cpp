@@ -51,7 +51,8 @@ namespace chinachu {
 			struct PVR_TIMER resv;
 			char *endptr;
 
-			resv.iEpgUid = strtoul(p["id"].get<std::string>().c_str(), &endptr, 36);
+			const std::string strSubstrId = p["id"].get<std::string>().substr(p["id"].get<std::string>().size() - 6, 6);
+			resv.iEpgUid = strtoul(strSubstrId.c_str(), &endptr, 36);
 			resv.iClientIndex = resv.iEpgUid;
 			resv.iClientChannelUid = p["channel"].get<picojson::object>()["sid"].is<std::string>() ?
 				std::atoi((p["channel"].get<picojson::object>()["sid"].get<std::string>()).c_str()) :
