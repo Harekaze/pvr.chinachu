@@ -1,3 +1,20 @@
+v4.0.0
+- Support Kodi 17 Krypton
+- Add channel logo icon
+- Add new genre codes
+- Add pattern matched rule creation
+- Add list force-refresh client action into menu
+- Add scheduler execution client action into menu
+- Add rule availability status change method
+- Add read-only timer rule list
+- Add initial settings failure alert
+- Skip listing up zero-programs channels
+- Remove recorded program grouping option
+- Remove ongoing recording playback option
+- Unsupport mirakurun direct watch
+- Support Raspberry Pi independent target binary
+- Support iOS arm build target (beta)
+
 v3.3.0
 - Support Chinachu gamma
 
