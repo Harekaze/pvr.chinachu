@@ -38,7 +38,8 @@
 
 #define MSG_TIMER_MANUAL_RESERVED 30900
 #define MSG_TIMER_PATTERN_MATCHED 30901
-#define MSG_RULES_PATTERN_MATCHED 30902
+#define MSG_RULES_PATTERN_MATCHED_CREATION 30902
+#define MSG_RULES_PATTERN_MATCHED 30903
 
 #define TIMER_CLIENT_START_INDEX 1
 
@@ -393,7 +394,7 @@ PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *size) {
 	patternMatchedRuleCreation.iId = CREATE_RULES_PATTERN_MATCHED;
 	patternMatchedRuleCreation.iAttributes = PVR_TIMER_TYPE_SUPPORTS_CHANNELS |
 		PVR_TIMER_TYPE_IS_REPEATING | PVR_TIMER_TYPE_SUPPORTS_TITLE_EPG_MATCH;
-	strncpy(patternMatchedRuleCreation.strDescription, XBMC->GetLocalizedString(MSG_RULES_PATTERN_MATCHED), PVR_ADDON_TIMERTYPE_STRING_LENGTH - 1);
+	strncpy(patternMatchedRuleCreation.strDescription, XBMC->GetLocalizedString(MSG_RULES_PATTERN_MATCHED_CREATION), PVR_ADDON_TIMERTYPE_STRING_LENGTH - 1);
 	count++;
 
 	memset(&types[count], 0, sizeof(types[count]));
