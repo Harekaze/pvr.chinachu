@@ -1,7 +1,7 @@
 # Harekaze for Kodi/XBMC
 Chinachu PVR addon for Kodi
 
-[![Build status: devel-beta](https://img.shields.io/travis/Harekaze/pvr.chinachu/devel-beta.svg?maxAge=259200&style=flat-square)](https://travis-ci.org/Harekaze/pvr.chinachu/)
+[![Build status: master](https://img.shields.io/travis/Harekaze/pvr.chinachu/master.svg?maxAge=259200&style=flat-square)](https://travis-ci.org/Harekaze/pvr.chinachu/)
 [![AppVeyor](https://img.shields.io/appveyor/ci/mzyy94/pvr-chinachu.svg?maxAge=2592000&style=flat-square)](https://ci.appveyor.com/project/mzyy94/pvr-chinachu)
 [![GitHub release](https://img.shields.io/github/release/Harekaze/pvr.chinachu.svg?maxAge=259200&style=flat-square)](https://github.com/Harekaze/pvr.chinachu/releases)
 [![GitHub release downloads](https://img.shields.io/github/downloads/Harekaze/pvr.chinachu/total.svg?style=flat-square)](https://github.com/Harekaze/pvr.chinachu/releases)
