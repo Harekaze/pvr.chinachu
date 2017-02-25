@@ -43,7 +43,6 @@ chinachu::Rule g_rule;
 chinachu::Reserve g_reserve;
 ADDON::CHelper_libXBMC_addon *XBMC = NULL;
 CHelper_libXBMC_pvr *PVR = NULL;
-time_t nextUpdateTime = std::numeric_limits<time_t>::max();
 time_t lastStartTime;
 
 ADDON_STATUS currentStatus = ADDON_STATUS_UNKNOWN;

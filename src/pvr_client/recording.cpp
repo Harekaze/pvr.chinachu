@@ -35,7 +35,6 @@
 extern chinachu::Recorded g_recorded;
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
-extern time_t nextUpdateTime;
 
 extern "C" {
 
@@ -71,13 +70,6 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) {
 
 	time_t now;
 	time(&now);
-
-	// Updater
-	if (now > nextUpdateTime) {
-		nextUpdateTime = std::numeric_limits<time_t>::max();
-		PVR->TriggerTimerUpdate();
-		PVR->TriggerRecordingUpdate();
-	}
 
 	if (now - lastUpdated < refreshInterval) {
 		*iTotal = total;

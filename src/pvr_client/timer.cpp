@@ -50,7 +50,6 @@ extern chinachu::Recording g_recording;
 extern chinachu::Schedule g_schedule;
 extern chinachu::Rule g_rule;
 extern chinachu::Reserve g_reserve;
-extern time_t nextUpdateTime;
 
 std::string channel_id_string(unsigned int nid, unsigned int sid) {
 	const static std::string base36 = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -114,13 +113,6 @@ PVR_ERROR GetTimers(ADDON_HANDLE handle) {
 			}
 
 			PVR->TransferTimerEntry(handle, &timer);
-		}
-
-		// Set next update time
-		if (g_recording.programs.size() > 0) {
-			for (const PVR_RECORDING program: g_recording.programs) {
-				nextUpdateTime = std::min(nextUpdateTime, program.recordingTime + program.iDuration);
-			}
 		}
 
 		return PVR_ERROR_NO_ERROR;
