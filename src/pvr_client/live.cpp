@@ -41,6 +41,7 @@ PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time
 
 		tag.iUniqueBroadcastId = epg.iUniqueBroadcastId;
 		tag.strTitle = epg.strTitle.c_str();
+		tag.strOriginalTitle = epg.strOriginalTitle.c_str();
 		tag.iUniqueChannelId = channel.iUniqueId;
 		tag.startTime = epg.startTime;
 		tag.endTime = epg.endTime;
