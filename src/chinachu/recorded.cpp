@@ -38,8 +38,8 @@ namespace chinachu {
 		const bool showThumbnail = !recordedThumbnailPath.empty();
 		programs.clear();
 
-		for (unsigned int i = 0, p_size = response.get<picojson::array>().size(); i < p_size; i++) {
-			picojson::object &p = response.get<picojson::array>()[i].get<picojson::object>();
+		for (picojson::value &a: response.get<picojson::array>()) {
+			picojson::object &p = a.get<picojson::object>();
 			PVR_RECORDING rec;
 			char *endptr;
 

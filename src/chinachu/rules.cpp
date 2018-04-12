@@ -40,57 +40,60 @@ namespace chinachu {
 
 		rules.clear();
 
-		for (unsigned int i = 0, p_size = response.get<picojson::array>().size(); i < p_size; i++) {
-			picojson::object &p = response.get<picojson::array>()[i].get<picojson::object>();
+		unsigned int i;
+		for (picojson::value &a: response.get<picojson::array>()) {
+			picojson::object &p = a.get<picojson::object>();
 
-			if (p["ignore_channels"].is<picojson::array>() && p["ignore_channels"].get<picojson::array>().size() > 0) {
+			if (p["ignore_channels"].is<picojson::array>() && !p["ignore_channels"].get<picojson::array>().empty()) {
 				XBMC->Log(ADDON::LOG_DEBUG, "Skipped - ignore channels specified rule: %d", i);
 				continue;
 			}
 
-			if (p["reserve_titles"].is<picojson::array>() && p["reserve_titles"].get<picojson::array>().size() > 0 &&
-				p["reserve_descriptions"].is<picojson::array>() && p["reserve_descriptions"].get<picojson::array>().size() > 0) {
+			if (p["reserve_titles"].is<picojson::array>() && !p["reserve_titles"].get<picojson::array>().empty() &&
+				p["reserve_descriptions"].is<picojson::array>() && !p["reserve_descriptions"].get<picojson::array>().empty()) {
 					XBMC->Log(ADDON::LOG_DEBUG, "Skipped - multi reserve pattern rule: %d", i);
 					continue;
 			}
-			if (p["ignore_titles"].is<picojson::array>() && p["ignore_titles"].get<picojson::array>().size() > 0 &&
-				p["ignore_descriptions"].is<picojson::array>() && p["ignore_descriptions"].get<picojson::array>().size() > 0) {
+			if (p["ignore_titles"].is<picojson::array>() && !p["ignore_titles"].get<picojson::array>().empty() &&
+				p["ignore_descriptions"].is<picojson::array>() && !p["ignore_descriptions"].get<picojson::array>().empty()) {
 					XBMC->Log(ADDON::LOG_DEBUG, "Skipped - multi ignore pattern rule: %d", i);
 					continue;
 			}
-			if (p["reserve_titles"].is<picojson::array>() && p["reserve_titles"].get<picojson::array>().size() > 0 &&
-				p["ignore_descriptions"].is<picojson::array>() && p["ignore_descriptions"].get<picojson::array>().size() > 0) {
+			if (p["reserve_titles"].is<picojson::array>() && !p["reserve_titles"].get<picojson::array>().empty() &&
+				p["ignore_descriptions"].is<picojson::array>() && !p["ignore_descriptions"].get<picojson::array>().empty()) {
 					XBMC->Log(ADDON::LOG_DEBUG, "Skipped - multi reserve/ignore pattern rule: %d", i);
 					continue;
 			}
 
 			struct RULE_ITEM rule;
-			rule.iIndex = i;
+			rule.iIndex = i++;
 
-			if (p["reserve_titles"].is<picojson::array>() && p["reserve_titles"].get<picojson::array>().size() > 0) {
+			if (p["reserve_titles"].is<picojson::array>() && !p["reserve_titles"].get<picojson::array>().empty()) {
 				rule.bFullTextEpgSearch = false;
-				rule.strEpgSearchString = p["reserve_titles"].get<picojson::array>()[0].get<std::string>();
-				for (unsigned int j = 1, res_size = p["reserve_titles"].get<picojson::array>().size(); j < res_size; j++) {
-					rule.strEpgSearchString += ", ";
-					rule.strEpgSearchString += p["reserve_titles"].get<picojson::array>()[j].get<std::string>();
+				rule.strEpgSearchString = "";
+				for (picojson::value &r: p["reserve_titles"].get<picojson::array>()) {
+					if (r != *p["reserve_titles"].get<picojson::array>().begin())
+						rule.strEpgSearchString += ", ";
+					rule.strEpgSearchString += r.get<std::string>();
 				}
-				if (p["ignore_titles"].is<picojson::array>() && p["ignore_titles"].get<picojson::array>().size() > 0) {
-					for (unsigned int j = 0, res_size = p["ignore_titles"].get<picojson::array>().size(); j < res_size; j++) {
+				if (p["ignore_titles"].is<picojson::array>() && !p["ignore_titles"].get<picojson::array>().empty()) {
+					for (picojson::value &r: p["ignore_titles"].get<picojson::array>()) {
 						rule.strEpgSearchString += ", -";
-						rule.strEpgSearchString += p["ignore_titles"].get<picojson::array>()[j].get<std::string>();
+						rule.strEpgSearchString += r.get<std::string>();
 					}
 				}
-			} else if (p["reserve_descriptions"].is<picojson::array>() && p["reserve_descriptions"].get<picojson::array>().size() > 0) {
+			} else if (p["reserve_descriptions"].is<picojson::array>() && !p["reserve_descriptions"].get<picojson::array>().empty()) {
 				rule.bFullTextEpgSearch = true;
 				rule.strEpgSearchString = p["reserve_descriptions"].get<picojson::array>()[0].get<std::string>();
-				for (unsigned int j = 1, res_size = p["reserve_descriptions"].get<picojson::array>().size(); j < res_size; j++) {
-					rule.strEpgSearchString += ", ";
-					rule.strEpgSearchString += p["reserve_descriptions"].get<picojson::array>()[j].get<std::string>();
+				for (picojson::value &r: p["reserve_descriptions"].get<picojson::array>()) {
+					if (r != *p["reserve_descriptions"].get<picojson::array>().begin())
+						rule.strEpgSearchString += ", ";
+					rule.strEpgSearchString += r.get<std::string>();
 				}
-				if (p["ignore_descriptions"].is<picojson::array>() && p["ignore_descriptions"].get<picojson::array>().size() > 0) {
-					for (unsigned int j = 0, res_size = p["ignore_descriptions"].get<picojson::array>().size(); j < res_size; j++) {
+				if (p["ignore_descriptions"].is<picojson::array>() && !p["ignore_descriptions"].get<picojson::array>().empty()) {
+					for (picojson::value &r: p["ignore_descriptions"].get<picojson::array>()) {
 						rule.strEpgSearchString += ", -";
-						rule.strEpgSearchString += p["ignore_descriptions"].get<picojson::array>()[j].get<std::string>();
+						rule.strEpgSearchString += r.get<std::string>();
 					}
 				}
 			} else {
