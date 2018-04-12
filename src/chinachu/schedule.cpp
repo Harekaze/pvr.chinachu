@@ -57,20 +57,12 @@ namespace chinachu {
 			ch.bIsRadio = false;
 			ch.bIsHidden = false;
 
-			std::string channel = o["channel"].is<std::string>() ? o["channel"].get<std::string>() : "0";
-			// Remove non-numerical charactor from channel number
-			while (channel.find_first_of("0123456789") != 0) {
-				channel.erase(channel.begin());
-				// If channel number contains only charactors,
-				if (channel.empty()) {
-					// use sid instead.
-					channel = o["sid"].is<std::string>() ?
-						std::atoi((o["sid"].get<std::string>()).c_str()) :
-						(int)(o["sid"].get<double>());
-					break;
-				}
+			const std::string strChannelType = o["type"].get<std::string>();
+			if (strChannelType == "GR") {
+				ch.iChannelNumber = o["channel"].is<std::string>() ? std::atoi(o["channel"].get<std::string>().c_str()) : 0;
+			} else {
+				ch.iChannelNumber = o["sid"].is<double>() ? (int)((o["sid"].get<double>())) : 0;
 			}
-			ch.iChannelNumber = std::atoi(channel.c_str());
 
 			ch.iSubChannelNumber = o["nid"].is<double>() ? (int)(o["nid"].get<double>()) : 0;
 			// use channel id as name instead when name field isn't available.
@@ -84,7 +76,6 @@ namespace chinachu {
 				ch.strIconPath[0] = '\0';
 			}
 
-			const std::string strChannelType = o["type"].get<std::string>();
 			channelGroups[strChannelType].push_back(ch);
 
 			for (unsigned int j = 0, p_size = o["programs"].get<picojson::array>().size(); j < p_size; j++) {
