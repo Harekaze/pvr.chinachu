@@ -82,7 +82,7 @@ ADDON_STATUS ADDON_Create(void* callbacks, void* props) {
 		if (chinachu::api::baseURL.substr(0, httpPrefix.size()) != httpPrefix && chinachu::api::baseURL.substr(0, httpsPrefix.size()) != httpsPrefix) {
 			if (currentStatus == ADDON_STATUS_UNKNOWN) {
 				XBMC->QueueNotification(ADDON::QUEUE_WARNING, XBMC->GetLocalizedString(30600));
-				currentStatus = ADDON_STATUS_NEED_SAVEDSETTINGS;
+				currentStatus = ADDON_STATUS_NEED_SETTINGS;
 			}
 			return currentStatus;
 		}
@@ -199,20 +199,7 @@ void ADDON_Destroy(void) {
 	currentStatus = ADDON_STATUS_UNKNOWN;
 }
 
-
-void ADDON_Stop(void) {
-	currentStatus = ADDON_STATUS_UNKNOWN;
-}
-
 // Settings configuration
-
-bool ADDON_HasSettings() {
-	return true;
-}
-
-unsigned int ADDON_GetSettings(ADDON_StructSetting ***sSet) {
-	return 0;
-}
 
 ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue) {
 	time_t now;
@@ -248,11 +235,10 @@ PVR_ERROR CallMenuHook(const PVR_MENUHOOK& menuhook, const PVR_MENUHOOK_DATA &it
 }
 
 /* not implemented */
-void ADDON_Announce(const char *flag, const char *sender, const char *message, const void *data) {}
-void ADDON_FreeSettings(void) {}
 void OnSystemSleep() {}
 void OnSystemWake() {}
 void OnPowerSavingActivated() {}
 void OnPowerSavingDeactivated() {}
+PVR_ERROR GetStreamTimes(PVR_STREAM_TIMES *times) { return PVR_ERROR_NOT_IMPLEMENTED; }
 
 }

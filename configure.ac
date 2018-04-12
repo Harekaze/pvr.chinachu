@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([pvrchinachu], [4.0.0], [Harekaze project])
+AC_INIT([pvrchinachu], [5.0.0], [Harekaze project])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([foreign])
 LT_INIT

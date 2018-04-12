@@ -1,6 +1,6 @@
 /*
  *      Copyright (C) 2005-2013 Team XBMC
- *      http://xbmc.org
+ *      http://kodi.tv
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ namespace XFILE
 /* open without caching. regardless to file type. */
   static const unsigned int READ_NO_CACHE = 0x08;
 
-/* calcuate bitrate for file while reading */
+/* calculate bitrate for file while reading */
   static const unsigned int READ_BITRATE = 0x10;
 
 /* indicate to the caller we will seek between multiple streams in the file frequently */
@@ -78,9 +78,37 @@ typedef enum {
 enum CURLOPTIONTYPE
 {
   CURL_OPTION_OPTION,     /**< Set a general option   */
-  CURL_OPTION_PROTOCOL,   /**< Set a protocol option  */
+  CURL_OPTION_PROTOCOL,   /**< Set a protocol option (see below)  */
   CURL_OPTION_CREDENTIALS,/**< Set User and password  */
   CURL_OPTION_HEADER      /**< Add a Header           */
+};
+
+/**
+ * The following names for CURL_OPTION_PROTOCOL are possible:
+ *
+ * accept-charset: Set the "accept-charset" header
+ * acceptencoding or encoding: Set the "accept-encoding" header
+ * active-remote: Set the "active-remote" header
+ * auth: Set the authentication method. Possible values: any, anysafe, digest, ntlm
+ * connection-timeout: Set the connection timeout in seconds
+ * cookie: Set the "cookie" header
+ * customrequest: Set a custom HTTP request like DELETE
+ * noshout: Set to true if kodi detects a stream as shoutcast by mistake.
+ * postdata: Set the post body (value needs to be base64 encoded). (Implicitly sets the request to POST)
+ * referer: Set the "referer" header
+ * user-agent: Set the "user-agent" header
+ * seekable: Set the stream seekable. 1: enable, 0: disable
+ * sslcipherlist: Set list of accepted SSL ciphers.
+ */
+
+enum FileProperty
+{
+  FILE_PROPERTY_RESPONSE_PROTOCOL,          /**< Get response protocol line  */
+  FILE_PROPERTY_RESPONSE_HEADER,            /**< Get response Header value  */
+  FILE_PROPERTY_CONTENT_TYPE,               /**< Get file content-type  */
+  FILE_PROPERTY_CONTENT_CHARSET,            /**< Get file content charset  */
+  FILE_PROPERTY_MIME_TYPE,                  /**< Get file mime type  */
+  FILE_PROPERTY_EFFECTIVE_URL               /**< Get effective URL for redirected streams  */
 };
 
 }

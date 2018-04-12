@@ -14,24 +14,26 @@ Chinachu PVR addon for Kodi
 ## Supported environment
 
 ### Backend
-- Chinachu gamma [f1458c9084](https://github.com/Chinachu/Chinachu/commit/f1458c90849bf7a4d0d65383c04b1117dba593d2)
+- Chinachu gamma [a69d5e99b7](https://github.com/Chinachu/Chinachu/commit/a69d5e99b75ddd770146e65d6171704be28ec01a)
 
 ### Frontend
-- Kodi **17.x** Krypton
+- Kodi **18.x** Leia
   + for macOS
   + for Android ARM
   + for Linux x64
   + for Raspberry Pi
   + for Windows
   + for iOS (beta)
+  + for tvOS (beta)
 
 #### Old versions
 
-|  Tag       | Kodi             | Platform
+|  Tag       | Kodi             | Platforms
 |------------|:-----------------|:--
 | v0.x, v1.x | Kodi 15 Isengard | macOS/Linux/Raspberry Pi/(Windows)
 | v2.x, v3.x | Kodi 16 Jarvis   | macOS/Linux/Raspberry Pi/Windows/(Android)
 | v4.x       | Kodi 17 Krypton  | macOS/Linux/Raspberry Pi/Windows/Android/(iOS)
+| v5.x       | Kodi 18 Leia     | macOS/Linux/Raspberry Pi/Windows/Android/(iOS)/(tvOS)
 
 :warning: *No features backpors, No security backports* :warning:
 

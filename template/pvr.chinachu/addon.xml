@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="pvr.chinachu"
 		name="Harekaze (Chinachu PVR client)"
-		version="4.0.0"
+		version="5.0.0~alpha1"
 		provider-name="Harekaze project">
 	<requires>
-		<c-pluff version="0.1"/>
-		<import addon="xbmc.pvr" version="5.2.1"/>
-		<import addon="xbmc.codec" version="1.0.1"/>
+		<import addon="kodi.binary.instance.pvr" version="5.8.0"/>
+		<import addon="kodi.binary.global.main" version="1.0.12"/>
 	</requires>
 	<extension point="xbmc.pvrclient"
 		library_linux="pvr.chinachu.so"

@@ -1,7 +1,7 @@
 #pragma once
 /*
  *      Copyright (C) 2005-2013 Team XBMC
- *      http://xbmc.org
+ *      http://kodi.tv
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,10 +27,8 @@
 #undef PRAGMA_PACK_END
 
 #if defined(__GNUC__)
-#if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95)
 #define ATTRIBUTE_PACKED __attribute__ ((packed))
 #define PRAGMA_PACK 0
-#endif
 #endif
 
 #if !defined(ATTRIBUTE_PACKED)
@@ -60,6 +58,9 @@
 
 /* Set EPGTAG.iGenreType to EPG_GENRE_USE_STRING to transfer genre strings to XBMC */
 #define EPG_GENRE_USE_STRING                           0x100
+
+/* Separator to use in strings containing different tokens, for example writers, directors, actors of an event. */
+#define EPG_STRING_TOKEN_SEPARATOR ","
 
 #ifdef __cplusplus
 extern "C" {
@@ -91,22 +92,22 @@ extern "C" {
    */
   typedef struct EPG_TAG {
     unsigned int  iUniqueBroadcastId;  /*!< @brief (required) identifier for this event. Event uids must be unique for a channel. Valid uids must be greater than EPG_TAG_INVALID_UID. */
+    unsigned int  iUniqueChannelId;    /*!< @brief (required) unique identifier of the channel this event belongs to. */
     const char *  strTitle;            /*!< @brief (required) this event's title */
-    unsigned int  iChannelNumber;      /*!< @brief (required) the number of the channel this event occurs on */
     time_t        startTime;           /*!< @brief (required) start time in UTC */
     time_t        endTime;             /*!< @brief (required) end time in UTC */
     const char *  strPlotOutline;      /*!< @brief (optional) plot outline */
     const char *  strPlot;             /*!< @brief (optional) plot */
     const char *  strOriginalTitle;    /*!< @brief (optional) originaltitle */
-    const char *  strCast;             /*!< @brief (optional) cast */
-    const char *  strDirector;         /*!< @brief (optional) director */
-    const char *  strWriter;           /*!< @brief (optional) writer */
+    const char *  strCast;             /*!< @brief (optional) cast. Use EPG_STRING_TOKEN_SEPARATOR to separate different persons. */
+    const char *  strDirector;         /*!< @brief (optional) director(s). Use EPG_STRING_TOKEN_SEPARATOR to separate different persons. */
+    const char *  strWriter;           /*!< @brief (optional) writer(s). Use EPG_STRING_TOKEN_SEPARATOR to separate different persons. */
     int           iYear;               /*!< @brief (optional) year */
     const char *  strIMDBNumber;       /*!< @brief (optional) IMDBNumber */
     const char *  strIconPath;         /*!< @brief (optional) icon path */
     int           iGenreType;          /*!< @brief (optional) genre type */
     int           iGenreSubType;       /*!< @brief (optional) genre sub type */
-    const char *  strGenreDescription; /*!< @brief (optional) genre. Will be used only when iGenreType = EPG_GENRE_USE_STRING */
+    const char *  strGenreDescription; /*!< @brief (optional) genre. Will be used only when iGenreType == EPG_GENRE_USE_STRING. Use EPG_STRING_TOKEN_SEPARATOR to separate different genres. */
     time_t        firstAired;          /*!< @brief (optional) first aired in UTC */
     int           iParentalRating;     /*!< @brief (optional) parental rating */
     int           iStarRating;         /*!< @brief (optional) star rating */
@@ -116,6 +117,7 @@ extern "C" {
     int           iEpisodePartNumber;  /*!< @brief (optional) episode part number */
     const char *  strEpisodeName;      /*!< @brief (optional) episode name */
     unsigned int  iFlags;              /*!< @brief (optional) bit field of independent flags associated with the EPG entry */
+    const char *  strSeriesLink;       /*!< @brief (optional) series link for this event */
   } ATTRIBUTE_PACKED EPG_TAG;
 
 #ifdef __cplusplus

@@ -41,7 +41,7 @@ PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time
 
 		tag.iUniqueBroadcastId = epg.iUniqueBroadcastId;
 		tag.strTitle = epg.strTitle.c_str();
-		tag.iChannelNumber = channel.iChannelNumber;
+		tag.iUniqueChannelId = channel.iUniqueId;
 		tag.startTime = epg.startTime;
 		tag.endTime = epg.endTime;
 		tag.strPlotOutline = epg.strPlotOutline.c_str();
@@ -58,17 +58,38 @@ PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time
 	return PVR_ERROR_NO_ERROR;
 }
 
-void CloseLiveStream(void) {
+PVR_ERROR IsEPGTagRecordable(const EPG_TAG* tag, bool* bIsRecordable) {
+	*bIsRecordable = true;
+	return PVR_ERROR_NO_ERROR;
 }
 
+PVR_ERROR IsEPGTagPlayable(const EPG_TAG* tag, bool* bIsPlayable) {
+	*bIsPlayable = true;
+	return PVR_ERROR_NO_ERROR;
+}
+
+void* liveStreamHandle = NULL;
 bool OpenLiveStream(const PVR_CHANNEL &channel) {
-	CloseLiveStream();
-	return true;
+	std::string sId = "";
+	for (unsigned long iId = channel.iSubChannelNumber * 100000 + channel.iUniqueId; iId > 0; iId /= 36) {
+		const int i = iId % 36;
+		const char c = i < 10 ? '0' + i : 'a' + i - 10;
+		sId = c + sId;
+	}
+	char url[1024];
+	snprintf(url, sizeof(url) - 1, (const char*)(chinachu::api::baseURL + g_schedule.liveStreamingPath).c_str(), sId.c_str());
+	liveStreamHandle = XBMC->OpenFile(url, 0);
+	return liveStreamHandle != NULL;
 }
 
-bool SwitchChannel(const PVR_CHANNEL &channel) {
-	CloseLiveStream();
-	return OpenLiveStream(channel);
+void CloseLiveStream(void) {
+	if (liveStreamHandle != NULL)
+		XBMC->CloseFile(liveStreamHandle);
+	liveStreamHandle = NULL;
+}
+
+int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize) {
+	 return XBMC->ReadFile(liveStreamHandle, pBuffer, iBufferSize);
 }
 
 bool IsRealTimeStream() {
@@ -76,10 +97,8 @@ bool IsRealTimeStream() {
 }
 
 /* not implemented */
-const char* GetLiveStreamURL(const PVR_CHANNEL &channel) { return ""; }
-int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize) { return 0; }
+PVR_ERROR GetEPGTagStreamProperties(const EPG_TAG* tag, PVR_NAMED_VALUE* properties, unsigned int* iPropertiesCount) { return PVR_ERROR_NOT_IMPLEMENTED; }
 long long SeekLiveStream(long long iPosition, int iWhence) { return -1; }
-long long PositionLiveStream(void) { return -1; }
 long long LengthLiveStream(void) { return -1; }
 
 }

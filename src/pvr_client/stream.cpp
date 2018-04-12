@@ -40,8 +40,5 @@ void PauseStream(bool bPaused) {}
 bool CanSeekStream(void) { return false; }
 bool SeekTime(int time, bool backwards, double *startpts) { return false; }
 void SetSpeed(int speed) {}
-time_t GetPlayingTime() { return 0; }
-time_t GetBufferTimeStart() { return 0; }
-time_t GetBufferTimeEnd() { return 0; }
 
 }

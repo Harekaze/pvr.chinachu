@@ -53,6 +53,7 @@ namespace chinachu {
 
 			PVR_CHANNEL ch;
 			ch.iUniqueId = o["sid"].is<double>() ? (int)(o["sid"].get<double>()) : 0;
+			ch.iSubChannelNumber = o["nid"].is<double>() ? (int)(o["nid"].get<double>()) : 0;
 			ch.bIsRadio = false;
 			ch.bIsHidden = false;
 
@@ -74,9 +75,6 @@ namespace chinachu {
 			ch.iSubChannelNumber = o["nid"].is<double>() ? (int)(o["nid"].get<double>()) : 0;
 			// use channel id as name instead when name field isn't available.
 			strncpy(ch.strChannelName, o["name"].is<std::string>() ? o["name"].get<std::string>().c_str() : o["id"].get<std::string>().c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
-			snprintf(ch.strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1,
-				(const char*)(chinachu::api::baseURL + liveStreamingPath).c_str(),
-				o["id"].get<std::string>().c_str());
 
 			if (o["hasLogoData"].get<bool>()) {
 				snprintf(ch.strIconPath, PVR_ADDON_URL_STRING_LENGTH - 1,

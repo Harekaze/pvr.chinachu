@@ -52,6 +52,13 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 	return PVR_ERROR_SERVER_ERROR;
 }
 
+PVR_ERROR GetRecordingStreamProperties(const PVR_RECORDING* recording, PVR_NAMED_VALUE* properties, unsigned int* iPropertiesCount) {
+	strncpy(properties[0].strName, PVR_STREAM_PROPERTY_STREAMURL, sizeof(properties[0].strName) - 1);
+	snprintf(properties[0].strValue, sizeof(properties[0].strValue) - 1, (const char*)(chinachu::api::baseURL + g_recorded.recordedStreamingPath).c_str(), recording->strRecordingId);
+	*iPropertiesCount = 1;
+	return PVR_ERROR_NO_ERROR;
+}
+
 PVR_ERROR DeleteRecording(const PVR_RECORDING &recording) {
 	if (chinachu::api::deleteRecordedProgram(recording.strRecordingId) != chinachu::api::REQUEST_FAILED) {
 		XBMC->Log(ADDON::LOG_NOTICE, "Delete recording: %s", recording.strRecordingId);
@@ -95,6 +102,7 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) {
 PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteAllRecordingsFromTrash(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR RenameRecording(const PVR_RECORDING &recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR SetRecordingLifetime(const PVR_RECORDING* recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) { return PVR_ERROR_NOT_IMPLEMENTED; }
 int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
@@ -103,7 +111,6 @@ bool OpenRecordedStream(const PVR_RECORDING &recording) { return false; }
 void CloseRecordedStream(void) {}
 int ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize) { return 0; }
 long long SeekRecordedStream(long long iPosition, int iWhence) { return 0; }
-long long PositionRecordedStream(void) { return -1; }
 long long LengthRecordedStream(void) { return 0; }
 
 }

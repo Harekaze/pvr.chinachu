@@ -31,37 +31,25 @@ char serverUrl[1024];
 
 extern "C" {
 
-const char* GetPVRAPIVersion(void) {
-	return XBMC_PVR_API_VERSION;
-}
-
-const char* GetMininumPVRAPIVersion(void) {
-	return XBMC_PVR_MIN_API_VERSION;
-}
-
-const char* GetGUIAPIVersion(void) {
-	return KODI_GUILIB_API_VERSION;
-}
-
-const char* GetMininumGUIAPIVersion(void) {
-	return KODI_GUILIB_MIN_API_VERSION;
-}
-
 PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities) {
-	pCapabilities->bSupportsEPG                = true;
-	pCapabilities->bSupportsTV                 = true;
-	pCapabilities->bSupportsRadio              = false;
-	pCapabilities->bSupportsRecordings         = true;
-	pCapabilities->bSupportsRecordingsUndelete = false;
-	pCapabilities->bSupportsTimers             = true;
-	pCapabilities->bSupportsChannelGroups      = true;
-	pCapabilities->bSupportsChannelScan        = false;
-	pCapabilities->bSupportsChannelSettings    = false;
-	pCapabilities->bHandlesInputStream         = false;
-	pCapabilities->bHandlesDemuxing            = false;
-	pCapabilities->bSupportsRecordingPlayCount = false;
-	pCapabilities->bSupportsLastPlayedPosition = false;
-	pCapabilities->bSupportsRecordingEdl       = false;
+	pCapabilities->bSupportsEPG                      = true;
+	pCapabilities->bSupportsTV                       = true;
+	pCapabilities->bSupportsRadio                    = false;
+	pCapabilities->bSupportsRecordings               = true;
+	pCapabilities->bSupportsRecordingsUndelete       = false;
+	pCapabilities->bSupportsTimers                   = true;
+	pCapabilities->bSupportsChannelGroups            = true;
+	pCapabilities->bSupportsChannelScan              = false;
+	pCapabilities->bSupportsChannelSettings          = false;
+	pCapabilities->bHandlesInputStream               = false;
+	pCapabilities->bHandlesDemuxing                  = false;
+	pCapabilities->bSupportsRecordingPlayCount       = false;
+	pCapabilities->bSupportsLastPlayedPosition       = false;
+	pCapabilities->bSupportsRecordingEdl             = false;
+	pCapabilities->bSupportsRecordingsRename         = false;
+	pCapabilities->bSupportsRecordingsLifetimeChange = false;
+	pCapabilities->bSupportsDescrambleInfo           = false;
+	pCapabilities->iRecordingsLifetimesSize          = 0;
 
 	return PVR_ERROR_NO_ERROR;
 }
@@ -85,5 +73,8 @@ const char* GetBackendVersion(void) {
 const char* GetBackendHostname(void) {
 	return "";
 }
+
+/* not implemented */
+PVR_ERROR GetDescrambleInfo(PVR_DESCRAMBLE_INFO* descrambleInfo) { return PVR_ERROR_NOT_IMPLEMENTED; }
 
 }

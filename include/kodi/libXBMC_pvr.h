@@ -1,7 +1,7 @@
 #pragma once
 /*
  *      Copyright (C) 2005-2013 Team XBMC
- *      http://xbmc.org
+ *      http://kodi.tv
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,9 +27,6 @@
 #include "xbmc_pvr_types.h"
 #include "libXBMC_addon.h"
 
-#define PVR_HELPER_DLL_NAME XBMC_DLL_NAME("pvr")
-#define PVR_HELPER_DLL XBMC_DLL("pvr")
-
 #define DVD_TIME_BASE 1000000
 
 //! @todo original definition is in DVDClock.h
@@ -40,16 +37,15 @@ class CHelper_libXBMC_pvr
 public:
   CHelper_libXBMC_pvr(void)
   {
-    m_libXBMC_pvr = NULL;
-    m_Handle      = NULL;
+    m_Handle = nullptr;
+    m_Callbacks = nullptr;
   }
 
   ~CHelper_libXBMC_pvr(void)
   {
-    if (m_libXBMC_pvr)
+    if (m_Handle && m_Callbacks)
     {
-      PVR_unregister_me(m_Handle, m_Callbacks);
-      dlclose(m_libXBMC_pvr);
+      m_Handle->PVRLib_UnRegisterMe(m_Handle->addonData, m_Callbacks);
     }
   }
 
@@ -60,98 +56,12 @@ public:
    */
   bool RegisterMe(void* handle)
   {
-    m_Handle = handle;
-
-    std::string libBasePath;
-    libBasePath  = ((cb_array*)m_Handle)->libPath;
-    libBasePath += PVR_HELPER_DLL;
-
-    m_libXBMC_pvr = dlopen(libBasePath.c_str(), RTLD_LAZY);
-    if (m_libXBMC_pvr == NULL)
-    {
-      fprintf(stderr, "Unable to load %s\n", dlerror());
-      return false;
-    }
-
-    PVR_register_me = (void* (*)(void *HANDLE))
-      dlsym(m_libXBMC_pvr, "PVR_register_me");
-    if (PVR_register_me == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    PVR_unregister_me = (void (*)(void* HANDLE, void* CB))
-      dlsym(m_libXBMC_pvr, "PVR_unregister_me");
-    if (PVR_unregister_me == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    PVR_transfer_epg_entry = (void (*)(void* HANDLE, void* CB, const ADDON_HANDLE handle, const EPG_TAG *epgentry))
-      dlsym(m_libXBMC_pvr, "PVR_transfer_epg_entry");
-    if (PVR_transfer_epg_entry == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    PVR_transfer_channel_entry = (void (*)(void* HANDLE, void* CB, const ADDON_HANDLE handle, const PVR_CHANNEL *chan))
-      dlsym(m_libXBMC_pvr, "PVR_transfer_channel_entry");
-    if (PVR_transfer_channel_entry == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    PVR_transfer_timer_entry = (void (*)(void* HANDLE, void* CB, const ADDON_HANDLE handle, const PVR_TIMER *timer))
-      dlsym(m_libXBMC_pvr, "PVR_transfer_timer_entry");
-    if (PVR_transfer_timer_entry == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    PVR_transfer_recording_entry = (void (*)(void* HANDLE, void* CB, const ADDON_HANDLE handle, const PVR_RECORDING *recording))
-      dlsym(m_libXBMC_pvr, "PVR_transfer_recording_entry");
-    if (PVR_transfer_recording_entry == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    PVR_add_menu_hook = (void (*)(void* HANDLE, void* CB, PVR_MENUHOOK *hook))
-      dlsym(m_libXBMC_pvr, "PVR_add_menu_hook");
-    if (PVR_add_menu_hook == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    PVR_recording = (void (*)(void* HANDLE, void* CB, const char *Name, const char *FileName, bool On))
-      dlsym(m_libXBMC_pvr, "PVR_recording");
-    if (PVR_recording == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    PVR_trigger_timer_update = (void (*)(void* HANDLE, void* CB))
-      dlsym(m_libXBMC_pvr, "PVR_trigger_timer_update");
-    if (PVR_trigger_timer_update == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    PVR_trigger_recording_update = (void (*)(void* HANDLE, void* CB))
-      dlsym(m_libXBMC_pvr, "PVR_trigger_recording_update");
-    if (PVR_trigger_recording_update == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    PVR_trigger_channel_update = (void (*)(void* HANDLE, void* CB))
-      dlsym(m_libXBMC_pvr, "PVR_trigger_channel_update");
-    if (PVR_trigger_channel_update == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    PVR_trigger_channel_groups_update = (void (*)(void* HANDLE, void* CB))
-      dlsym(m_libXBMC_pvr, "PVR_trigger_channel_groups_update");
-    if (PVR_trigger_channel_groups_update == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    PVR_trigger_epg_update = (void (*)(void* HANDLE, void* CB, unsigned int iChannelUid))
-      dlsym(m_libXBMC_pvr, "PVR_trigger_epg_update");
-    if (PVR_trigger_epg_update == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    PVR_transfer_channel_group  = (void (*)(void* HANDLE, void* CB, const ADDON_HANDLE handle, const PVR_CHANNEL_GROUP *group))
-      dlsym(m_libXBMC_pvr, "PVR_transfer_channel_group");
-    if (PVR_transfer_channel_group == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    PVR_transfer_channel_group_member = (void (*)(void* HANDLE, void* CB, const ADDON_HANDLE handle, const PVR_CHANNEL_GROUP_MEMBER *member))
-      dlsym(m_libXBMC_pvr, "PVR_transfer_channel_group_member");
-    if (PVR_transfer_channel_group_member == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-#ifdef USE_DEMUX
-    PVR_free_demux_packet = (void (*)(void* HANDLE, void* CB, DemuxPacket* pPacket))
-      dlsym(m_libXBMC_pvr, "PVR_free_demux_packet");
-    if (PVR_free_demux_packet == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    PVR_allocate_demux_packet = (DemuxPacket* (*)(void* HANDLE, void* CB, int iDataSize))
-      dlsym(m_libXBMC_pvr, "PVR_allocate_demux_packet");
-    if (PVR_allocate_demux_packet == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-#endif
-
-    PVR_connection_state_change = (void (*)(void* HANDLE, void* CB, const char *strConnectionString, PVR_CONNECTION_STATE newState, const char *strMessage))
-      dlsym(m_libXBMC_pvr, "PVR_connection_state_change");
-    if (PVR_connection_state_change == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    PVR_epg_event_state_change = (void (*)(void* HANDLE, void* CB, EPG_TAG* tag, unsigned int iUniqueChannelId, EPG_EVENT_STATE newState))
-      dlsym(m_libXBMC_pvr, "PVR_epg_event_state_change");
-    if (PVR_epg_event_state_change == NULL) { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
-
-    m_Callbacks = PVR_register_me(m_Handle);
+    m_Handle = static_cast<AddonCB*>(handle);
+    if (m_Handle)
+      m_Callbacks = (AddonInstance_PVR*)m_Handle->PVRLib_RegisterMe(m_Handle->addonData);
+    if (!m_Callbacks)
+      fprintf(stderr, "libXBMC_pvr-ERROR: PVRLib_register_me can't get callback table from Kodi !!!\n");
+  
     return m_Callbacks != NULL;
   }
 
@@ -162,7 +72,7 @@ public:
    */
   void TransferEpgEntry(const ADDON_HANDLE handle, const EPG_TAG* entry)
   {
-    return PVR_transfer_epg_entry(m_Handle, m_Callbacks, handle, entry);
+    return m_Callbacks->toKodi.TransferEpgEntry(m_Callbacks->toKodi.kodiInstance, handle, entry);
   }
 
   /*!
@@ -172,7 +82,7 @@ public:
    */
   void TransferChannelEntry(const ADDON_HANDLE handle, const PVR_CHANNEL* entry)
   {
-    return PVR_transfer_channel_entry(m_Handle, m_Callbacks, handle, entry);
+    return m_Callbacks->toKodi.TransferChannelEntry(m_Callbacks->toKodi.kodiInstance, handle, entry);
   }
 
   /*!
@@ -182,7 +92,7 @@ public:
    */
   void TransferTimerEntry(const ADDON_HANDLE handle, const PVR_TIMER* entry)
   {
-    return PVR_transfer_timer_entry(m_Handle, m_Callbacks, handle, entry);
+    return m_Callbacks->toKodi.TransferTimerEntry(m_Callbacks->toKodi.kodiInstance, handle, entry);
   }
 
   /*!
@@ -192,7 +102,7 @@ public:
    */
   void TransferRecordingEntry(const ADDON_HANDLE handle, const PVR_RECORDING* entry)
   {
-    return PVR_transfer_recording_entry(m_Handle, m_Callbacks, handle, entry);
+    return m_Callbacks->toKodi.TransferRecordingEntry(m_Callbacks->toKodi.kodiInstance, handle, entry);
   }
 
   /*!
@@ -202,7 +112,7 @@ public:
    */
   void TransferChannelGroup(const ADDON_HANDLE handle, const PVR_CHANNEL_GROUP* entry)
   {
-    return PVR_transfer_channel_group(m_Handle, m_Callbacks, handle, entry);
+    return m_Callbacks->toKodi.TransferChannelGroup(m_Callbacks->toKodi.kodiInstance, handle, entry);
   }
 
   /*!
@@ -212,7 +122,7 @@ public:
    */
   void TransferChannelGroupMember(const ADDON_HANDLE handle, const PVR_CHANNEL_GROUP_MEMBER* entry)
   {
-    return PVR_transfer_channel_group_member(m_Handle, m_Callbacks, handle, entry);
+    return m_Callbacks->toKodi.TransferChannelGroupMember(m_Callbacks->toKodi.kodiInstance, handle, entry);
   }
 
   /*!
@@ -221,7 +131,7 @@ public:
    */
   void AddMenuHook(PVR_MENUHOOK* hook)
   {
-    return PVR_add_menu_hook(m_Handle, m_Callbacks, hook);
+    return m_Callbacks->toKodi.AddMenuHook(m_Callbacks->toKodi.kodiInstance, hook);
   }
 
   /*!
@@ -232,7 +142,7 @@ public:
    */
   void Recording(const char* strRecordingName, const char* strFileName, bool bOn)
   {
-    return PVR_recording(m_Handle, m_Callbacks, strRecordingName, strFileName, bOn);
+    return m_Callbacks->toKodi.Recording(m_Callbacks->toKodi.kodiInstance, strRecordingName, strFileName, bOn);
   }
 
   /*!
@@ -240,7 +150,7 @@ public:
    */
   void TriggerTimerUpdate(void)
   {
-    return PVR_trigger_timer_update(m_Handle, m_Callbacks);
+    return m_Callbacks->toKodi.TriggerTimerUpdate(m_Callbacks->toKodi.kodiInstance);
   }
 
   /*!
@@ -248,7 +158,7 @@ public:
    */
   void TriggerRecordingUpdate(void)
   {
-    return PVR_trigger_recording_update(m_Handle, m_Callbacks);
+    return m_Callbacks->toKodi.TriggerRecordingUpdate(m_Callbacks->toKodi.kodiInstance);
   }
 
   /*!
@@ -256,7 +166,7 @@ public:
    */
   void TriggerChannelUpdate(void)
   {
-    return PVR_trigger_channel_update(m_Handle, m_Callbacks);
+    return m_Callbacks->toKodi.TriggerChannelUpdate(m_Callbacks->toKodi.kodiInstance);
   }
 
   /*!
@@ -265,7 +175,7 @@ public:
    */
   void TriggerEpgUpdate(unsigned int iChannelUid)
   {
-    return PVR_trigger_epg_update(m_Handle, m_Callbacks, iChannelUid);
+    return m_Callbacks->toKodi.TriggerEpgUpdate(m_Callbacks->toKodi.kodiInstance, iChannelUid);
   }
 
   /*!
@@ -273,7 +183,7 @@ public:
    */
   void TriggerChannelGroupsUpdate(void)
   {
-    return PVR_trigger_channel_groups_update(m_Handle, m_Callbacks);
+    return m_Callbacks->toKodi.TriggerChannelGroupsUpdate(m_Callbacks->toKodi.kodiInstance);
   }
 
 #ifdef USE_DEMUX
@@ -283,7 +193,7 @@ public:
    */
   void FreeDemuxPacket(DemuxPacket* pPacket)
   {
-    return PVR_free_demux_packet(m_Handle, m_Callbacks, pPacket);
+    return m_Callbacks->toKodi.FreeDemuxPacket(m_Callbacks->toKodi.kodiInstance, pPacket);
   }
 
   /*!
@@ -293,7 +203,7 @@ public:
    */
   DemuxPacket* AllocateDemuxPacket(int iDataSize)
   {
-    return PVR_allocate_demux_packet(m_Handle, m_Callbacks, iDataSize);
+    return m_Callbacks->toKodi.AllocateDemuxPacket(m_Callbacks->toKodi.kodiInstance, iDataSize);
   }
 #endif
 
@@ -306,50 +216,31 @@ public:
    */
   void ConnectionStateChange(const char *strConnectionString, PVR_CONNECTION_STATE newState, const char *strMessage)
   {
-    return PVR_connection_state_change(m_Handle, m_Callbacks, strConnectionString, newState, strMessage);
+    return m_Callbacks->toKodi.ConnectionStateChange(m_Callbacks->toKodi.kodiInstance, strConnectionString, newState, strMessage);
   }
 
   /*!
    * @brief Notify a state change for an EPG event
    * @param tag The EPG event.
-   * @param iUniqueChannelId The unique id of the channel for the EPG event
    * @param newState The new state. For EPG_EVENT_CREATED and EPG_EVENT_UPDATED, tag must be filled with all available
    *        event data, not just a delta. For EPG_EVENT_DELETED, it is sufficient to fill EPG_TAG.iUniqueBroadcastId
    */
-  void EpgEventStateChange(EPG_TAG *tag, unsigned int iUniqueChannelId, EPG_EVENT_STATE newState)
+  void EpgEventStateChange(EPG_TAG *tag, EPG_EVENT_STATE newState)
   {
-    return PVR_epg_event_state_change(m_Handle, m_Callbacks, tag, iUniqueChannelId, newState);
+    return m_Callbacks->toKodi.EpgEventStateChange(m_Callbacks->toKodi.kodiInstance, tag, newState);
   }
 
-protected:
-  void* (*PVR_register_me)(void*);
-  void (*PVR_unregister_me)(void*, void*);
-  void (*PVR_transfer_epg_entry)(void*, void*, const ADDON_HANDLE, const EPG_TAG*);
-  void (*PVR_transfer_channel_entry)(void*, void*, const ADDON_HANDLE, const PVR_CHANNEL*);
-  void (*PVR_transfer_timer_entry)(void*, void*, const ADDON_HANDLE, const PVR_TIMER*);
-  void (*PVR_transfer_recording_entry)(void*, void*, const ADDON_HANDLE, const PVR_RECORDING*);
-  void (*PVR_add_menu_hook)(void*, void*, PVR_MENUHOOK*);
-  void (*PVR_recording)(void*, void*, const char*, const char*, bool);
-  void (*PVR_trigger_channel_update)(void*, void*);
-  void (*PVR_trigger_channel_groups_update)(void*, void*);
-  void (*PVR_trigger_timer_update)(void*, void*);
-  void (*PVR_trigger_recording_update)(void* , void*);
-  void (*PVR_trigger_epg_update)(void*, void*, unsigned int);
-  void (*PVR_transfer_channel_group)(void*, void*, const ADDON_HANDLE, const PVR_CHANNEL_GROUP*);
-  void (*PVR_transfer_channel_group_member)(void*, void*, const ADDON_HANDLE, const PVR_CHANNEL_GROUP_MEMBER*);
-#ifdef USE_DEMUX
-  void (*PVR_free_demux_packet)(void*, void*, DemuxPacket*);
-  DemuxPacket* (*PVR_allocate_demux_packet)(void*, void*, int);
-#endif
-  void (*PVR_connection_state_change)(void*, void*, const char*, PVR_CONNECTION_STATE, const char*);
-  void (*PVR_epg_event_state_change)(void*, void*, EPG_TAG*, unsigned int, EPG_EVENT_STATE);
+  /*!
+   * @brief Get the codec id used by XBMC
+   * @param strCodecName The name of the codec
+   * @return The codec_id, or a codec_id with 0 values when not supported
+   */
+  xbmc_codec_t GetCodecByName(const char* strCodecName)
+  {
+    return m_Callbacks->toKodi.GetCodecByName(m_Callbacks->toKodi.kodiInstance, strCodecName);
+  }
 
 private:
-  void* m_libXBMC_pvr;
-  void* m_Handle;
-  void* m_Callbacks;
-  struct cb_array
-  {
-    const char* libPath;
-  };
+  AddonCB* m_Handle;
+  AddonInstance_PVR *m_Callbacks;
 };

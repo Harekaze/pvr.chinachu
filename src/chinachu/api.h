@@ -24,7 +24,6 @@
 
 #include <iostream>
 #include "picojson/picojson.h"
-#include "kodi/xbmc_addon_dll.h"
 
 namespace chinachu {
 	namespace api {
