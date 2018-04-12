@@ -1,5 +1,5 @@
 /*
- *         Copyright (C) 2015-2017 Yuki MIZUNO
+ *         Copyright (C) 2015-2018 Yuki MIZUNO
  *         https://github.com/Harekaze/pvr.chinachu/
  *
  *
