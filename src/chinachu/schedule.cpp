@@ -53,17 +53,9 @@ namespace chinachu {
 
 			PVR_CHANNEL ch;
 			ch.iUniqueId = o["sid"].is<double>() ? (int)(o["sid"].get<double>()) : 0;
-			ch.iSubChannelNumber = o["nid"].is<double>() ? (int)(o["nid"].get<double>()) : 0;
 			ch.bIsRadio = false;
 			ch.bIsHidden = false;
-
-			const std::string strChannelType = o["type"].get<std::string>();
-			if (strChannelType == "GR") {
-				ch.iChannelNumber = o["channel"].is<std::string>() ? std::atoi(o["channel"].get<std::string>().c_str()) : 0;
-			} else {
-				ch.iChannelNumber = o["sid"].is<double>() ? (int)((o["sid"].get<double>())) : 0;
-			}
-
+			ch.iChannelNumber = o["n"].is<double>() ? (int)((o["n"].get<double>())) + 1 : 0;
 			ch.iSubChannelNumber = o["nid"].is<double>() ? (int)(o["nid"].get<double>()) : 0;
 			// use channel id as name instead when name field isn't available.
 			strncpy(ch.strChannelName, o["name"].is<std::string>() ? o["name"].get<std::string>().c_str() : o["id"].get<std::string>().c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
@@ -76,6 +68,7 @@ namespace chinachu {
 				ch.strIconPath[0] = '\0';
 			}
 
+			const std::string strChannelType = o["type"].get<std::string>();
 			channelGroups[strChannelType].push_back(ch);
 
 			for (unsigned int j = 0, p_size = o["programs"].get<picojson::array>().size(); j < p_size; j++) {
