@@ -4,7 +4,7 @@
 		version="5.0.0~alpha1"
 		provider-name="Harekaze project">
 	<requires>
-		<import addon="kodi.binary.instance.pvr" version="5.8.0"/>
+		<import addon="kodi.binary.instance.pvr" version="5.10.0"/>
 		<import addon="kodi.binary.global.main" version="1.0.12"/>
 	</requires>
 	<extension point="xbmc.pvrclient"

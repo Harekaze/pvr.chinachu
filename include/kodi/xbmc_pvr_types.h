@@ -1,24 +1,12 @@
-#pragma once
-
 /*
- *      Copyright (C) 2005-2015 Team Kodi
- *      http://kodi.tv
+ *  Copyright (C) 2005-2018 Team Kodi
+ *  This file is part of Kodi - https://kodi.tv
  *
- *  This Program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2, or (at your option)
- *  any later version.
- *
- *  This Program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Kodi; see the file COPYING.  If not, see
- *  <http://www.gnu.org/licenses/>.
- *
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+ *  See LICENSES/README.md for more information.
  */
+
+#pragma once
 
 #ifndef TARGET_WINDOWS
 #ifndef __cdecl
@@ -36,7 +24,7 @@
 #include "xbmc_epg_types.h"
 
 /*! @note Define "USE_DEMUX" at compile time if demuxing in the PVR add-on is used.
- *        Also XBMC's "DVDDemuxPacket.h" file must be in the include path of the add-on,
+ *        Also, "DVDDemuxPacket.h" file must be in the include path of the add-on,
  *        and the add-on should set bHandlesDemuxing to true.
  */
 #ifdef USE_DEMUX
@@ -79,7 +67,8 @@ struct DemuxPacket;
 #define PVR_STREAM_MAX_PROPERTIES     20
 #define PVR_STREAM_PROPERTY_STREAMURL "streamurl" /*!< @brief the URL of the stream that should be played. */
 #define PVR_STREAM_PROPERTY_INPUTSTREAMADDON  "inputstreamaddon" /*!< @brief the name of the inputstream add-on that should be used by Kodi to play the stream denoted by PVR_STREAM_PROPERTY_STREAMURL. Leave blank to use Kodi's built-in playing capabilities. */
-#define PVR_STREAM_PROPERTY_MIMETYPE "mimetype" /*!< @brief the Mime-Type of the stream that should be played. */
+#define PVR_STREAM_PROPERTY_MIMETYPE "mimetype" /*!< @brief the MIME type of the stream that should be played. */
+#define PVR_STREAM_PROPERTY_ISREALTIMESTREAM "isrealtimestream" /*!< @brief "true" to denote that the stream that should be played is a realtime stream. Any other value indicates that this is no realtime stream.*/
 
 /* using the default avformat's MAX_STREAMS value to be safe */
 #define PVR_STREAM_MAX_STREAMS 20
@@ -202,7 +191,7 @@ extern "C" {
   {
     PVR_ERROR_NO_ERROR           = 0,  /*!< @brief no error occurred */
     PVR_ERROR_UNKNOWN            = -1, /*!< @brief an unknown error occurred */
-    PVR_ERROR_NOT_IMPLEMENTED    = -2, /*!< @brief the method that XBMC called is not implemented by the add-on */
+    PVR_ERROR_NOT_IMPLEMENTED    = -2, /*!< @brief the method that Kodi called is not implemented by the add-on */
     PVR_ERROR_SERVER_ERROR       = -3, /*!< @brief the backend reported an error, or the add-on isn't connected */
     PVR_ERROR_SERVER_TIMEOUT     = -4, /*!< @brief the command was sent to the backend, but the response timed out */
     PVR_ERROR_REJECTED           = -5, /*!< @brief the command was rejected by the backend */
@@ -303,6 +292,7 @@ extern "C" {
   typedef struct PVR_ADDON_CAPABILITIES
   {
     bool bSupportsEPG;                  /*!< @brief true if the add-on provides EPG information */
+    bool bSupportsEPGEdl;               /*!< @brief true if the backend supports retrieving an edit decision list for an EPG tag. */
     bool bSupportsTV;                   /*!< @brief true if this add-on provides TV channels */
     bool bSupportsRadio;                /*!< @brief true if this add-on supports radio channels */
     bool bSupportsRecordings;           /*!< @brief true if this add-on supports playback of recordings stored on the backend */
@@ -311,7 +301,7 @@ extern "C" {
     bool bSupportsChannelGroups;        /*!< @brief true if this add-on supports channel groups */
     bool bSupportsChannelScan;          /*!< @brief true if this add-on support scanning for new channels on the backend */
     bool bSupportsChannelSettings;      /*!< @brief true if this add-on supports the following functions: DeleteChannel, RenameChannel, DialogChannelSettings and DialogAddChannel */
-    bool bHandlesInputStream;           /*!< @brief true if this add-on provides an input stream. false if XBMC handles the stream. */
+    bool bHandlesInputStream;           /*!< @brief true if this add-on provides an input stream. false if Kodi handles the stream. */
     bool bHandlesDemuxing;              /*!< @brief true if this add-on demultiplexes packets. */
     bool bSupportsRecordingPlayCount;   /*!< @brief true if the backend supports play count for recordings. */
     bool bSupportsLastPlayedPosition;   /*!< @brief true if the backend supports store/retrieve of last played position for recordings. */
@@ -627,7 +617,7 @@ extern "C" {
   } AddonToKodiFuncTable_PVR;
 
   /*!
-   * @brief Structure to transfer the methods from xbmc_pvr_dll.h to XBMC
+   * @brief Structure to transfer the methods from xbmc_pvr_dll.h to Kodi
    */
   typedef struct KodiToAddonFuncTable_PVR
   {
@@ -643,6 +633,7 @@ extern "C" {
     PVR_ERROR (__cdecl* GetEPGForChannel)(ADDON_HANDLE, const PVR_CHANNEL&, time_t, time_t);
     PVR_ERROR (__cdecl* IsEPGTagRecordable)(const EPG_TAG*, bool*);
     PVR_ERROR (__cdecl* IsEPGTagPlayable)(const EPG_TAG*, bool*);
+    PVR_ERROR (__cdecl* GetEPGTagEdl)(const EPG_TAG*, PVR_EDL_ENTRY[], int*);
     PVR_ERROR (__cdecl* GetEPGTagStreamProperties)(const EPG_TAG*, PVR_NAMED_VALUE*, unsigned int*);
     int (__cdecl* GetChannelGroupsAmount)(void);
     PVR_ERROR (__cdecl* GetChannelGroups)(ADDON_HANDLE, bool);
@@ -704,6 +695,7 @@ extern "C" {
     void (__cdecl* OnPowerSavingActivated)(void);
     void (__cdecl* OnPowerSavingDeactivated)(void);
     PVR_ERROR (__cdecl* GetStreamTimes)(PVR_STREAM_TIMES*);
+    PVR_ERROR (__cdecl* GetStreamReadChunkSize)(int*);
   } KodiToAddonFuncTable_PVR;
 
   typedef struct AddonInstance_PVR

@@ -1,23 +1,12 @@
-#pragma once
 /*
- *      Copyright (C) 2005-2013 Team XBMC
- *      http://kodi.tv
+ *  Copyright (C) 2005-2018 Team Kodi
+ *  This file is part of Kodi - https://kodi.tv
  *
- *  This Program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2, or (at your option)
- *  any later version.
- *
- *  This Program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with XBMC; see the file COPYING.  If not, see
- *  <http://www.gnu.org/licenses/>.
- *
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+ *  See LICENSES/README.md for more information.
  */
+
+#pragma once
 
 #include <string>
 #include <vector>
@@ -71,8 +60,6 @@ typedef void* (*KODIGUILib_RegisterMe)(void *addonData);
 typedef void (*KODIGUILib_UnRegisterMe)(void *addonData, void *cbTable);
 typedef void* (*KODIPVRLib_RegisterMe)(void *addonData);
 typedef void (*KODIPVRLib_UnRegisterMe)(void *addonData, void *cbTable);
-typedef void* (*KODIADSPLib_RegisterMe)(void *addonData);
-typedef void (*KODIADSPLib_UnRegisterMe)(void *addonData, void *cbTable);
 typedef void* (*KODICodecLib_RegisterMe)(void *addonData);
 typedef void (*KODICodecLib_UnRegisterMe)(void *addonData, void *cbTable);
 typedef void* (*KODIINPUTSTREAMLib_RegisterMe)(void *addonData);
@@ -96,8 +83,6 @@ typedef struct AddonCB
   KODIGUILib_UnRegisterMe           GUILib_UnRegisterMe;
   KODIPVRLib_RegisterMe             PVRLib_RegisterMe;
   KODIPVRLib_UnRegisterMe           PVRLib_UnRegisterMe;
-  KODIADSPLib_RegisterMe            ADSPLib_RegisterMe;
-  KODIADSPLib_UnRegisterMe          ADSPLib_UnRegisterMe;
   KODIINPUTSTREAMLib_RegisterMe     INPUTSTREAMLib_RegisterMe;
   KODIINPUTSTREAMLib_UnRegisterMe   INPUTSTREAMLib_UnRegisterMe;
   KODIPeripheralLib_RegisterMe      PeripheralLib_RegisterMe;
@@ -199,7 +184,7 @@ namespace ADDON
         m_Callbacks = (KodiAPI::AddOn::CB_AddOnLib*)m_Handle->AddOnLib_RegisterMe(m_Handle->addonData);
       if (!m_Callbacks)
         fprintf(stderr, "libXBMC_addon-ERROR: AddOnLib_RegisterMe can't get callback table from Kodi !!!\n");
-    
+
       return m_Callbacks != nullptr;
     }
 
@@ -207,14 +192,18 @@ namespace ADDON
      * @brief Add a message to XBMC's log.
      * @param loglevel The log level of the message.
      * @param format The format of the message to pass to XBMC.
+     * @note This method uses limited buffer (16k) for the formatted output.
+     * So data, which will not fit into it, will be silently discarded.
      */
     void Log(const addon_log_t loglevel, const char *format, ... )
     {
       char buffer[16384];
+      static constexpr size_t len = sizeof (buffer) - 1;
       va_list args;
       va_start (args, format);
-      vsprintf (buffer, format, args);
+      vsnprintf (buffer, len, format, args);
       va_end (args);
+      buffer[len] = '\0'; // to be sure it's null-terminated
       m_Callbacks->Log(m_Handle->addonData, loglevel, buffer);
     }
 
@@ -301,7 +290,7 @@ namespace ADDON
     {
       m_Callbacks->FreeString(m_Handle->addonData, str);
     }
-    
+
     /*!
      * @brief Free the memory used by arr including its elements
      * @param arr The string array to free
