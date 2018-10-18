@@ -1,23 +1,12 @@
-#pragma once
 /*
- *      Copyright (C) 2005-2017 Team Kodi
- *      http://kodi.tv
+ *  Copyright (C) 2005-2018 Team Kodi
+ *  This file is part of Kodi - https://kodi.tv
  *
- *  This Program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2, or (at your option)
- *  any later version.
- *
- *  This Program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Kodi; see the file COPYING.  If not, see
- *  <http://www.gnu.org/licenses/>.
- *
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+ *  See LICENSES/README.md for more information.
  */
+
+#pragma once
 
 /*
  * Parts with a comment named "internal" are only used inside header and not
@@ -34,7 +23,7 @@ extern "C"
 struct AddonInstance_Visualization;
 
 typedef enum VIS_ACTION : unsigned int /* internal */
-{ 
+{
   VIS_ACTION_NONE = 0,
   VIS_ACTION_NEXT_PRESET,
   VIS_ACTION_PREV_PRESET,
@@ -318,8 +307,7 @@ namespace addon
     /// Used by an add-on that only supports visualizations.
     ///
     CInstanceVisualization()
-      : IAddonInstance(ADDON_INSTANCE_VISUALIZATION),
-        m_presetLockedByUser(false)
+      : IAddonInstance(ADDON_INSTANCE_VISUALIZATION)
     {
       if (CAddonBase::m_interface->globalSingleInstance != nullptr)
         throw std::logic_error("kodi::addon::CInstanceVisualization: Cannot create multiple instances of add-on.");
@@ -341,8 +329,7 @@ namespace addon
     /// @warning Only use `instance` from the CreateInstance call
     ///
     explicit CInstanceVisualization(KODI_HANDLE instance)
-      : IAddonInstance(ADDON_INSTANCE_VISUALIZATION),
-        m_presetLockedByUser(false)
+      : IAddonInstance(ADDON_INSTANCE_VISUALIZATION)
     {
       if (CAddonBase::m_interface->globalSingleInstance != nullptr)
         throw std::logic_error("kodi::addon::CInstanceVisualization: Creation of multiple together with single instance way is not allowed!");
@@ -690,7 +677,7 @@ namespace addon
     {
       addon->toAddon.addonInstance->AudioData(audioData, audioDataLength, freqData, freqDataLength);
     }
-    
+
     inline static bool ADDON_IsDirty(const AddonInstance_Visualization* addon)
     {
       return addon->toAddon.addonInstance->IsDirty();
@@ -758,7 +745,7 @@ namespace addon
       return addon->toAddon.addonInstance->IsLocked();
     }
 
-    bool m_presetLockedByUser;
+    bool m_presetLockedByUser = false;
     AddonInstance_Visualization* m_instanceData;
   };
 

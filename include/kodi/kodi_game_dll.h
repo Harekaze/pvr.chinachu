@@ -1,24 +1,12 @@
 /*
- *      Copyright (C) 2014-2017 Team Kodi
- *      http://kodi.tv
+ *  Copyright (C) 2014-2018 Team Kodi
+ *  This file is part of Kodi - https://kodi.tv
  *
- *  This Program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2, or (at your option)
- *  any later version.
- *
- *  This Program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this Program; see the file COPYING.  If not, see
- *  <http://www.gnu.org/licenses/>.
- *
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+ *  See LICENSES/README.md for more information.
  */
-#ifndef KODI_GAME_DLL_H_
-#define KODI_GAME_DLL_H_
+
+#pragma once
 
 #include "kodi_game_types.h"
 
@@ -40,7 +28,7 @@ GAME_ERROR LoadGame(const char* url);
 /*!
  * \brief Load a game that requires multiple files
  *
- * \param type The game stype
+ * \param type The game type
  * \param urls An array of urls
  * \param urlCount The number of urls in the array
  *
@@ -69,13 +57,13 @@ GAME_ERROR LoadStandalone(void);
 GAME_ERROR UnloadGame(void);
 
 /*!
- * \brief Get information about the loaded game
+ * \brief Get timing information about the loaded game
  *
  * \param info The info structure to fill
  *
  * \return the error, or GAME_ERROR_NO_ERROR if info was filled
  */
-GAME_ERROR GetGameInfo(game_system_av_info* info);
+GAME_ERROR GetGameTiming(game_system_timing* timing_info);
 
 /*!
  * \brief Get region of the loaded game
@@ -145,7 +133,7 @@ GAME_ERROR HwContextDestroy(void);
 bool HasFeature(const char* controller_id, const char* feature_name);
 
 /*!
- * \brief Get the input topolgy that specifies which controllers can be connected
+ * \brief Get the input topology that specifies which controllers can be connected
  *
  * \return The input topology, or null to use the default
  *
@@ -311,7 +299,7 @@ void __declspec(dllexport) get_addon(void* ptr)
   pClient->toAddon.LoadGameSpecial          = LoadGameSpecial;
   pClient->toAddon.LoadStandalone           = LoadStandalone;
   pClient->toAddon.UnloadGame               = UnloadGame;
-  pClient->toAddon.GetGameInfo              = GetGameInfo;
+  pClient->toAddon.GetGameTiming            = GetGameTiming;
   pClient->toAddon.GetRegion                = GetRegion;
   pClient->toAddon.RequiresGameLoop         = RequiresGameLoop;
   pClient->toAddon.RunFrame                 = RunFrame;
@@ -337,4 +325,3 @@ void __declspec(dllexport) get_addon(void* ptr)
 }
 #endif
 
-#endif // KODI_GAME_DLL_H_

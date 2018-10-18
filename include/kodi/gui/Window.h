@@ -1,23 +1,12 @@
-#pragma once
 /*
- *      Copyright (C) 2005-2017 Team Kodi
- *      http://kodi.tv
+ *  Copyright (C) 2005-2018 Team Kodi
+ *  This file is part of Kodi - https://kodi.tv
  *
- *  This Program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2, or (at your option)
- *  any later version.
- *
- *  This Program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with KODI; see the file COPYING.  If not, see
- *  <http://www.gnu.org/licenses/>.
- *
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+ *  See LICENSES/README.md for more information.
  */
+
+#pragma once
 
 #include "../AddonBase.h"
 #include "ListItem.h"
@@ -98,7 +87,7 @@ namespace gui
       if (!m_controlHandle)
         kodi::Log(ADDON_LOG_FATAL, "kodi::gui::CWindow can't create window class from Kodi !!!");
       m_interface->kodi_gui->window->set_callbacks(m_interface->kodiBase, m_controlHandle, this,
-                                                   CBOnInit, CBOnFocus, CBOnClick, CBOnAction, 
+                                                   CBOnInit, CBOnFocus, CBOnClick, CBOnAction,
                                                    CBGetContextButtons, CBOnContextButton);
     }
     //--------------------------------------------------------------------------
@@ -867,7 +856,7 @@ namespace gui
       static_cast<CWindow*>(cbhdl)->GetContextButtons(itemNumber, buttonList);
       if (!buttonList.empty())
       {
-        unsigned int presentSize = buttonList.size();
+        unsigned int presentSize = static_cast<unsigned int>(buttonList.size());
         if (presentSize > *size)
           kodi::Log(ADDON_LOG_WARNING, "GetContextButtons: More as allowed '%i' entries present!", *size);
         else

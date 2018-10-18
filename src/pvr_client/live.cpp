@@ -99,6 +99,7 @@ bool IsRealTimeStream() {
 
 /* not implemented */
 PVR_ERROR GetEPGTagStreamProperties(const EPG_TAG* tag, PVR_NAMED_VALUE* properties, unsigned int* iPropertiesCount) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR GetEPGTagEdl(const EPG_TAG* epgTag, PVR_EDL_ENTRY edl[], int *size) { return PVR_ERROR_NOT_IMPLEMENTED; };
 long long SeekLiveStream(long long iPosition, int iWhence) { return -1; }
 long long LengthLiveStream(void) { return -1; }
 
