@@ -66,7 +66,10 @@ namespace chinachu {
 			const int sid = p["channel"].get<picojson::object>()["sid"].is<std::string>() ?
 				std::atoi((p["channel"].get<picojson::object>()["sid"].get<std::string>()).c_str()) :
 				(int)(p["channel"].get<picojson::object>()["sid"].get<double>());
-			rec.iChannelUid = sid;
+			const int nid = p["channel"].get<picojson::object>()["nid"].is<std::string>() ?
+				std::atoi((p["channel"].get<picojson::object>()["nid"].get<std::string>()).c_str()) :
+				(int)(p["channel"].get<picojson::object>()["nid"].get<double>());
+			rec.iChannelUid = sid+nid*100000;
 			snprintf(rec.strStreamURL, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedStreamingPath).c_str(), p["id"].get<std::string>().c_str());
 			if (showThumbnail) {
 				snprintf(rec.strThumbnailPath, PVR_ADDON_URL_STRING_LENGTH - 1, (const char*)(chinachu::api::baseURL + recordedThumbnailPath).c_str(), p["id"].get<std::string>().c_str());

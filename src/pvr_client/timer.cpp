@@ -236,7 +236,7 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer) {
 					for (const PVR_CHANNEL channel: channelGroups.second) {
 						if (channel.iUniqueId == timer.iClientChannelUid) {
 							strChannelType = channelGroups.first;
-							strChannelId = channel_id_string(channel.iSubChannelNumber, channel.iUniqueId);
+							strChannelId = channel_id_string(channel.iSubChannelNumber, channel.iUniqueId % 100000);
 							break;
 						}
 					}

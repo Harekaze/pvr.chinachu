@@ -121,7 +121,7 @@ namespace chinachu {
 
 			if (p["channels"].is<picojson::array>() && p["channels"].get<picojson::array>().size() == 1) {
 				char *endptr;
-				rule.iClientChannelUid = strtoul(p["channels"].get<picojson::array>()[0].get<std::string>().c_str(), &endptr, 36) % 100000;
+				rule.iClientChannelUid = strtoul(p["channels"].get<picojson::array>()[0].get<std::string>().c_str(), &endptr, 36);
 			}
 
 			rule.bIsDisabled = (p["isDisabled"].is<bool>() && p["isDisabled"].get<bool>());

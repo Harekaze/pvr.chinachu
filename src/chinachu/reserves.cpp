@@ -56,7 +56,13 @@ namespace chinachu {
 			resv.iClientIndex = resv.iEpgUid;
 			resv.iClientChannelUid = p["channel"].get<picojson::object>()["sid"].is<std::string>() ?
 				std::atoi((p["channel"].get<picojson::object>()["sid"].get<std::string>()).c_str()) :
-				(int)(p["channel"].get<picojson::object>()["sid"].get<double>());
+				(int)(p["channel"].get<picojson::object>()["sid"].get<double>())
+				+
+				(p["channel"].get<picojson::object>()["nid"].is<std::string>() ?
+				std::atoi((p["channel"].get<picojson::object>()["nid"].get<std::string>()).c_str()) :
+				(int)(p["channel"].get<picojson::object>()["nid"].get<double>())) * 100000;
+
+
 			strncpy(resv.strTitle, p["fullTitle"].get<std::string>().c_str(), PVR_ADDON_NAME_STRING_LENGTH - 1);
 			strncpy(resv.strSummary, p["detail"].get<std::string>().c_str(), PVR_ADDON_DESC_STRING_LENGTH - 1);
 			strncpy(resv.strDirectory, p["id"].get<std::string>().c_str(), PVR_ADDON_URL_STRING_LENGTH - 1); // instead of strProgramId
