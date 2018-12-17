@@ -50,3 +50,10 @@ libs/
 *.pvr
 *.dll
 *.zip
+/VS2015/.vs/pvr.chinachu/v14/.suo
+/VS2015/chinachu/Release/chinachu.Build.CppClean.log
+/VS2015/chinachu/Release/chinachu.log
+/VS2015/pvr_client/Release/pvr.chinachu.Build.CppClean.log
+/VS2015/pvr_client/Release/pvr_client.log
+/VS2015/pvr.chinachu.VC.db
+/VS2015/pvr.chinachu.VC.VC.opendb

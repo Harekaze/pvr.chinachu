@@ -52,24 +52,11 @@ namespace chinachu {
 			}
 
 			PVR_CHANNEL ch;
-			ch.iUniqueId = o["sid"].is<double>() ? (int)(o["sid"].get<double>()) : 0;
+			ch.iUniqueId = (o["sid"].is<double>() ? (int)(o["sid"].get<double>()) : 0)+(o["nid"].is<double>() ? (int)(o["nid"].get<double>()) : 0) * 100000;
 			ch.bIsRadio = false;
 			ch.bIsHidden = false;
 
-			std::string channel = o["channel"].is<std::string>() ? o["channel"].get<std::string>() : "0";
-			// Remove non-numerical charactor from channel number
-			while (channel.find_first_of("0123456789") != 0) {
-				channel.erase(channel.begin());
-				// If channel number contains only charactors,
-				if (channel.empty()) {
-					// use sid instead.
-					channel = o["sid"].is<std::string>() ?
-						std::atoi((o["sid"].get<std::string>()).c_str()) :
-						(int)(o["sid"].get<double>());
-					break;
-				}
-			}
-			ch.iChannelNumber = std::atoi(channel.c_str());
+			ch.iChannelNumber = o["n"].is<double>() ? (int)(o["n"].get<double>()) : 0;
 
 			ch.iSubChannelNumber = o["nid"].is<double>() ? (int)(o["nid"].get<double>()) : 0;
 			// use channel id as name instead when name field isn't available.
