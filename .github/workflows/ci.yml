@@ -1,0 +1,61 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        mobile: [true, false]
+        exclude:
+        - os: windows-latest
+          mobile: true
+        include:
+        - mobile: false
+          platform: desktop
+        - os: macOS-latest
+          mobile: true
+          args: --host=arm-apple-darwin
+          platform: ios
+        - os: ubuntu-latest
+          mobile: true
+          platform: android
+      fail-fast: false
+    steps:
+    - uses: actions/checkout@v1
+    # Windows Build
+    - name: build (windows)
+      if: matrix.os == 'windows-latest'
+      run: ./build.ps1
+      shell: powershell
+    # Android Build
+    - name: build (android)
+      if: matrix.platform == 'android'
+      run: /usr/local/lib/android/sdk/ndk-bundle/ndk-build APP_ABI=armeabi-v7a
+    - name: pack (android)
+      if: matrix.platform == 'android'
+      run: ./jni/pack.sh APP_ABI=armeabi-v7a
+    # macOS Prepare
+    - name: prepare (macos)
+      if: matrix.os == 'macOS-latest'
+      run: brew install libtool automake
+    # Linux/macOS/iOS Build
+    - name: bootstrap
+      if: matrix.os != 'windows-latest' && matrix.platform != 'android'
+      run: ./bootstrap
+    - name: configure
+      if: matrix.os != 'windows-latest' && matrix.platform != 'android'
+      run: ./configure ${{ matrix.args }}
+    - name: make
+      if: matrix.os != 'windows-latest' && matrix.platform != 'android'
+      run: make
+    # Upload artifact
+    - name: upload artifact
+      if: matrix.platform != ''
+      uses: actions/upload-artifact@master
+      with:
+        name: ${{format('pvr.chinachu.{0}-{1}-{2}', matrix.os, matrix.platform, github.sha)}}
+        path: dist/pvr.chinachu
+
