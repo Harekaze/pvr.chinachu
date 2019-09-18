@@ -40,7 +40,7 @@ namespace chinachu {
 
 		rules.clear();
 
-		unsigned int i;
+		unsigned int i = 0;
 		for (picojson::value &a: response.get<picojson::array>()) {
 			picojson::object &p = a.get<picojson::object>();
 
