@@ -1,4 +1,4 @@
-& ${env:ProgramFiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe .\VS2015\pvr.chinachu.sln /t:Clean,Build /p:Configuration=Release /p:Platform=x86
+& ${env:ProgramFiles(x86)}\Microsoft` Visual` Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe .\VS2019\pvr.chinachu.sln /t:Clean,Build /p:Configuration=Release /p:Platform=x86
 New-Item dist -ItemType Directory
 Copy-Item -r .\template\pvr.chinachu .\dist\
 Copy-Item .\ChangeLog.txt .\dist\pvr.chinachu

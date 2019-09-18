@@ -66,7 +66,7 @@ $ ls pvr.chinachu.zip
 ### Windows
 
 Requirements:
-- Visual Studio 2015
+- Visual Studio 2019
 - PowerShell v5
 
 ```powershell

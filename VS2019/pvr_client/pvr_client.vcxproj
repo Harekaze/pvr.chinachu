@@ -11,21 +11,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{7C081EBB-5B67-4F16-8421-654C46E7A8D4}</ProjectGuid>
-    <RootNamespace>chinachu</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectGuid>{C3B65033-2A88-4B45-8DDB-EC990CF0DEF0}</ProjectGuid>
+    <RootNamespace>pvr_client</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -42,15 +42,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetExt>.lib</TargetExt>
+    <TargetExt>.dll</TargetExt>
+    <TargetName>pvr.chinachu</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>pvr.chinachu</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>$(DefineConstants);NOMINMAX;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;__WINDOWS__;TARGET_WINDOWS;_WINDOWS;_MSVC;WIN32;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\include;..\..\src</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NOMINMAX;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;__WINDOWS__;TARGET_WINDOWS;_WINDOWS;_MSVC;WIN32;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -64,8 +68,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\include;..\..\src</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NOMINMAX;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;__WINDOWS__;TARGET_WINDOWS;_WINDOWS;_MSVC;WIN32;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>$(DefineConstants);NOMINMAX;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;__WINDOWS__;TARGET_WINDOWS;_WINDOWS;_MSVC;WIN32;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -74,22 +77,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\chinachu\api.cpp" />
-    <ClCompile Include="..\..\src\chinachu\recorded.cpp" />
-    <ClCompile Include="..\..\src\chinachu\recording.cpp" />
-    <ClCompile Include="..\..\src\chinachu\reserves.cpp" />
-    <ClCompile Include="..\..\src\chinachu\rules.cpp" />
-    <ClCompile Include="..\..\src\chinachu\schedule.cpp" />
+    <ClCompile Include="..\..\src\dlfcn-win32\dlfcn-win32.cpp" />
+    <ClCompile Include="..\..\src\pvr_client\channel.cpp" />
+    <ClCompile Include="..\..\src\pvr_client\demux.cpp" />
+    <ClCompile Include="..\..\src\pvr_client\information.cpp" />
+    <ClCompile Include="..\..\src\pvr_client\initialize.cpp" />
+    <ClCompile Include="..\..\src\pvr_client\live.cpp" />
+    <ClCompile Include="..\..\src\pvr_client\recording.cpp" />
+    <ClCompile Include="..\..\src\pvr_client\stream.cpp" />
+    <ClCompile Include="..\..\src\pvr_client\timer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\chinachu\genre.h" />
-    <ClInclude Include="..\..\src\chinachu\api.h" />
-    <ClInclude Include="..\..\src\chinachu\chinachu.h" />
-    <ClInclude Include="..\..\src\chinachu\recorded.h" />
-    <ClInclude Include="..\..\src\chinachu\recording.h" />
-    <ClInclude Include="..\..\src\chinachu\reserves.h" />
-    <ClInclude Include="..\..\src\chinachu\rules.h" />
-    <ClInclude Include="..\..\src\chinachu\schedule.h" />
+    <ProjectReference Include="..\chinachu\chinachu.vcxproj">
+      <Project>{7c081ebb-5b67-4f16-8421-654c46e7a8d4}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="pvr_client.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
