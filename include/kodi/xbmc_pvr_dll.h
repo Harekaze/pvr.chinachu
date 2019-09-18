@@ -316,7 +316,7 @@ extern "C"
   /*!
    * Set the last watched position of a recording on the backend.
    * @param recording The recording.
-   * @param position The last watched position in seconds
+   * @param lastplayedposition The last watched position in seconds
    * @return PVR_ERROR_NO_ERROR if the position has been stored successfully.
    * @remarks Required if bSupportsLastPlayedPosition is set to true.
    *          Return PVR_ERROR_NOT_IMPLEMENTED if this add-on won't provide this function.
@@ -413,6 +413,7 @@ extern "C"
    * @param channel The channel to stream.
    * @return True if the stream has been opened successfully, false otherwise.
    * @remarks Required if bHandlesInputStream or bHandlesDemuxing is set to true.
+   *          CloseLiveStream() will always be called by Kodi prior to calling this function.
    *          Return false if this add-on won't provide this function.
    */
   bool OpenLiveStream(const PVR_CHANNEL& channel);
@@ -483,7 +484,7 @@ extern "C"
 
   /*!
    * Get the stream properties for a recording from the backend.
-   * @param[in] channel The recording to get the stream properties for.
+   * @param[in] recording The recording to get the stream properties for.
    * @param[inout] properties in: an array for the properties to return, out: the properties required to play the stream.
    * @param[inout] iPropertiesCount in: the size of the properties array, out: the number of properties returned.
    * @return PVR_ERROR_NO_ERROR if the stream is available.
@@ -497,7 +498,7 @@ extern "C"
    * Get the stream properties of the stream that's currently being read.
    * @param pProperties The properties of the currently playing stream.
    * @return PVR_ERROR_NO_ERROR if the properties have been fetched successfully.
-   * @remarks Required if bHandlesInputStream or bHandlesDemuxing is set to true.
+   * @remarks Required if bHandlesDemuxing is set to true.
    *          Return PVR_ERROR_NOT_IMPLEMENTED if this add-on won't provide this function.
    */
   PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties);
@@ -523,6 +524,7 @@ extern "C"
    * @param recording The recording to open.
    * @return True if the stream has been opened successfully, false otherwise.
    * @remarks Optional, and only used if bSupportsRecordings is set to true.
+   *          CloseRecordedStream() will always be called by Kodi prior to calling this function.
    *          Return false if this add-on won't provide this function.
    */
   bool OpenRecordedStream(const PVR_RECORDING& recording);
@@ -676,7 +678,9 @@ extern "C"
   void OnPowerSavingDeactivated();
 
   /*!
-   * Get stream times. Intermediate, will be moved to inputstream
+   * Get stream times.
+   * @param times A pointer to the data to be filled by the implementation.
+   * @return PVR_ERROR_NO_ERROR on success.
    */
   PVR_ERROR GetStreamTimes(PVR_STREAM_TIMES *times);
 

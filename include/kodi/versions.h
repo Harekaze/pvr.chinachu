@@ -30,7 +30,7 @@
  * overview.
  */
 
-#define ADDON_GLOBAL_VERSION_MAIN                     "1.0.13"
+#define ADDON_GLOBAL_VERSION_MAIN                     "1.0.14"
 #define ADDON_GLOBAL_VERSION_MAIN_MIN                 "1.0.12"
 #define ADDON_GLOBAL_VERSION_MAIN_XML_ID              "kodi.binary.global.main"
 #define ADDON_GLOBAL_VERSION_MAIN_DEPENDS             "AddonBase.h" \
@@ -75,8 +75,8 @@
 #define ADDON_INSTANCE_VERSION_AUDIOENCODER_XML_ID    "kodi.binary.instance.audioencoder"
 #define ADDON_INSTANCE_VERSION_AUDIOENCODER_DEPENDS   "addon-instance/AudioEncoder.h"
 
-#define ADDON_INSTANCE_VERSION_GAME                   "1.0.38"
-#define ADDON_INSTANCE_VERSION_GAME_MIN               "1.0.38"
+#define ADDON_INSTANCE_VERSION_GAME                   "1.1.0"
+#define ADDON_INSTANCE_VERSION_GAME_MIN               "1.1.0"
 #define ADDON_INSTANCE_VERSION_GAME_XML_ID            "kodi.binary.instance.game"
 #define ADDON_INSTANCE_VERSION_GAME_DEPENDS           "kodi_game_dll.h" \
                                                       "kodi_game_types.h" \
@@ -87,7 +87,7 @@
 #define ADDON_INSTANCE_VERSION_IMAGEDECODER_XML_ID    "kodi.binary.instance.imagedecoder"
 #define ADDON_INSTANCE_VERSION_IMAGEDECODER_DEPENDS   "addon-instance/ImageDecoder.h"
 
-#define ADDON_INSTANCE_VERSION_INPUTSTREAM            "2.0.7"
+#define ADDON_INSTANCE_VERSION_INPUTSTREAM            "2.0.8"
 #define ADDON_INSTANCE_VERSION_INPUTSTREAM_MIN        "2.0.7"
 #define ADDON_INSTANCE_VERSION_INPUTSTREAM_XML_ID     "kodi.binary.instance.inputstream"
 #define ADDON_INSTANCE_VERSION_INPUTSTREAM_DEPENDS    "addon-instance/Inputstream.h"
@@ -98,7 +98,7 @@
 #define ADDON_INSTANCE_VERSION_PERIPHERAL_DEPENDS     "addon-instance/Peripheral.h" \
                                                       "addon-instance/PeripheralUtils.h"
 
-#define ADDON_INSTANCE_VERSION_PVR                    "5.10.1"
+#define ADDON_INSTANCE_VERSION_PVR                    "5.10.3"
 #define ADDON_INSTANCE_VERSION_PVR_MIN                "5.10.0"
 #define ADDON_INSTANCE_VERSION_PVR_XML_ID             "kodi.binary.instance.pvr"
 #define ADDON_INSTANCE_VERSION_PVR_DEPENDS            "xbmc_pvr_dll.h" \

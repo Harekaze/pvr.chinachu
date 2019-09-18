@@ -1,5 +1,4 @@
 set(HEADERS AddonBase.h
-            AudioEngine.h
             Filesystem.h
             General.h
             Network.h
@@ -18,6 +17,10 @@ set(HEADERS AddonBase.h
             xbmc_epg_types.h
             xbmc_pvr_dll.h
             xbmc_pvr_types.h)
+
+if(CORE_SYSTEM_NAME STREQUAL android)
+  list(APPEND SOURCES platform/android/System.h)
+endif()
 
 if(NOT ENABLE_STATIC_LIBS)
   core_add_library(addons_kodi-addon-dev-kit_include_kodi)

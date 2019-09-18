@@ -123,7 +123,7 @@ public:
   /*!
    * \brief Get a symbol from the hardware context
    *
-   * \param symbol The symbol's name
+   * \param sym The symbol's name
    *
    * \return A function pointer for the specified symbol
    */
@@ -135,15 +135,15 @@ public:
   // --- Input callbacks -------------------------------------------------------
 
   /*!
-  * \brief Notify the port of an input event
-  *
-  * \param event The input event
-  *
-  * Input events can arrive for the following sources:
-  *   - GAME_INPUT_EVENT_MOTOR
-  *
-  * \return true if the event was handled, false otherwise
-  */
+   * \brief Notify the port of an input event
+   *
+   * \param event The input event
+   *
+   * Input events can arrive for the following sources:
+   *   - GAME_INPUT_EVENT_MOTOR
+   *
+   * \return true if the event was handled, false otherwise
+   */
   bool InputEvent(const game_input_event& event)
   {
     return m_callbacks->toKodi.InputEvent(m_callbacks->toKodi.kodiInstance, &event);
