@@ -17,8 +17,8 @@ case $host in
 		CXX=$(xcrun --sdk iphoneos --find clang++)
 		LD=$(xcrun --sdk iphoneos --find ld)
 		SYSROOT=$(xcrun --sdk iphoneos --show-sdk-path)
-		AC_SUBST(AM_CPPFLAGS_EXT, "-arch armv7 -D__arm__ -isysroot $SYSROOT")
-		AC_SUBST(LDFLAGS_EXT, "-arch armv7 -isysroot $SYSROOT")
+		AC_SUBST(AM_CPPFLAGS_EXT, "-arch arm64 -D__arm__ -isysroot $SYSROOT")
+		AC_SUBST(LDFLAGS_EXT, "-arch arm64 -isysroot $SYSROOT")
 		;;
 	*-apple-*)
 		ADDONNAME=pvr.chinachu.dylib
