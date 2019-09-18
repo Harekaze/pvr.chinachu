@@ -3,7 +3,7 @@ New-Item dist -ItemType Directory
 Copy-Item -r .\template\pvr.chinachu .\dist\
 Copy-Item .\ChangeLog.txt .\dist\pvr.chinachu
 Copy-Item .\LICENSE .\dist\pvr.chinachu
-Copy-Item .\VS2015\Release\pvr.chinachu.dll .\dist\pvr.chinachu
+Copy-Item .\VS2019\Release\pvr.chinachu.dll .\dist\pvr.chinachu
 Set-Location .\dist
 Compress-Archive -Force -CompressionLevel NoCompression -Path .\pvr.chinachu -DestinationPath ..\pvr.chinachu.zip
 Write-Warning "PowerShell command 'Compress-Archive' creates broken zip file.
