@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="pvr.chinachu"
 		name="Harekaze (Chinachu PVR client)"
-		version="5.0.0~alpha1"
+		version="5.0.0"
 		provider-name="Harekaze project">
 	<requires>
 		<import addon="kodi.binary.instance.pvr" version="5.10.0"/>
