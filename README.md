@@ -48,6 +48,7 @@ Chinachu PVR addon for Kodi
 $ ./bootstrap
 $ ./configure
 $ make
+$ make release
 $ ls pvr.chinachu.zip
 ```
 > TIPS: If a warning about AC_CHECK_HEADER_STDBOOL has occurred, install gnulib and execute bootstrap with

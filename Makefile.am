@@ -2,14 +2,22 @@ SUBDIRS = src
 
 ACLOCAL_AMFLAGS = -I m4
 
+.PHONY: all
 all:
-	cp -r template/pvr.chinachu .
-	cp ChangeLog.txt pvr.chinachu/
-	cp LICENSE pvr.chinachu/
-	cp src/$(ADDONNAME) pvr.chinachu/$(ADDONNAME)
-	$(STRIP) -x pvr.chinachu/$(ADDONNAME)
-	zip -9 -r ./pvr.chinachu.zip pvr.chinachu
-	rm -rf pvr.chinachu
+	$(MAKE) -C ./src
+	mkdir -p dist
+	cp -r template/pvr.chinachu dist/
+	cp ChangeLog.txt dist/pvr.chinachu/
+	cp LICENSE dist/pvr.chinachu/
+	cp src/$(ADDONNAME) dist/pvr.chinachu/$(ADDONNAME)
+	$(STRIP) -x dist/pvr.chinachu/$(ADDONNAME)
 
-clean-local:
+.PHONY: release
+release: all
+	cd dist; zip -9 -r ../pvr.chinachu.zip ./pvr.chinachu
+
+.PHONY: clean
+clean:
+	$(MAKE) clean -C ./src
+	rm -rf ./dist/
 	rm -f ./pvr.chinachu.zip

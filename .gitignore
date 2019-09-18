@@ -46,6 +46,7 @@ m4/
 missing
 obj/
 libs/
+dist/
 
 *.pvr
 *.dll

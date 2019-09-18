@@ -18,9 +18,9 @@ fi
 
 set -eux
 which zip
-cp -r template/pvr.chinachu .
-cp ChangeLog.txt pvr.chinachu/
-cp LICENSE pvr.chinachu/
-cp libs/${APP_ABI}/${ADDONNAME} pvr.chinachu/${ADDONNAME}
-zip -9 -r ./pvr.chinachu.zip pvr.chinachu
-rm -rf pvr.chinachu
+mkdir -p dist
+cp -r template/pvr.chinachu dist/
+cp ChangeLog.txt dist/pvr.chinachu/
+cp LICENSE dist/pvr.chinachu/
+cp libs/${APP_ABI}/${ADDONNAME} dist/pvr.chinachu/${ADDONNAME}
+cd dist; zip -9 -r ../pvr.chinachu.zip pvr.chinachu
