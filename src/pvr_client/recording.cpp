@@ -27,6 +27,7 @@
 #include "chinachu/chinachu.h"
 
 #if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
 #define sleep(sec) Sleep(sec)
 #else
 #include <unistd.h>
