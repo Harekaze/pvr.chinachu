@@ -1,3 +1,6 @@
+v5.0.0
+- Support Kodi 18 Leia
+
 v4.0.0
 - Support Kodi 17 Krypton
 - Add channel logo icon
